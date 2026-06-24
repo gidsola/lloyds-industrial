@@ -24,7 +24,7 @@
         <div class="wp-block-buttons" style="margin-top:28px">
             <!-- wp:button {"backgroundColor":"accent","textColor":"white"} -->
             <div class="wp-block-button">
-                <a class="wp-block-button__link has-white-color has-accent-background-color has-text-color has-background wp-element-button">Speak To A Specialist</a>
+                <a class="wp-block-button__link has-white-color has-accent-background-color has-body-text-color has-background wp-element-button">Speak To A Specialist</a>
             </div>
             <!-- /wp:button -->
         </div>

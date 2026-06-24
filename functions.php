@@ -8,6 +8,7 @@ if (!defined('ABSPATH')) {
 
 require_once get_template_directory() . '/inc/setup.php';
 require_once get_template_directory() . '/inc/brand.php';
+require_once get_template_directory() . '/inc/theme-json.php';
 require_once get_template_directory() . '/inc/assets.php';
 
 require_once get_template_directory() . '/inc/patterns.php';

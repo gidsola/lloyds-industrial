@@ -234,7 +234,7 @@ a {
 .li-hero-cover .wp-block-cover__background {
     background:
         radial-gradient(circle at 80% 20%, color-mix(in srgb, var(--li-accent) 24%, transparent), transparent 30%),
-        linear-gradient(120deg, color-mix(in srgb, var(--li-hero-overlay) 84%, transparent), color-mix(in srgb, var(--li-hero-overlay) 52%, transparent)) !important;
+        linear-gradient(120deg, color-mix(in srgb, var(--li-hero-overlay) 84%, transparent), color-mix(in srgb, var(--li-hero-overlay) 52%, transparent));
 }
 
 .li-hero-cover h1 {
@@ -250,11 +250,14 @@ a {
 /* Typography Helpers */
 
 .li-eyebrow {
-    color: var(--li-accent);
     font-size: 0.82rem;
     font-weight: 800;
     letter-spacing: 0.16em;
     text-transform: uppercase;
+}
+
+.li-eyebrow:not(.has-text-color) {
+    color: var(--li-accent);
 }
 
 .li-products-hero h1 {

@@ -16,7 +16,7 @@
         <div class="wp-block-column is-vertically-aligned-center">
 
             <!-- wp:paragraph {"className":"li-eyebrow","textColor":"accent"} -->
-            <p class="li-eyebrow has-accent-color has-text-color">B2B Ordering</p>
+            <p class="li-eyebrow has-accent-color has-body-text-color">B2B Ordering</p>
             <!-- /wp:paragraph -->
 
             <!-- wp:heading -->

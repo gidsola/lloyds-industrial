@@ -17,15 +17,15 @@
         <div class="wp-block-group alignwide">
 
             <!-- wp:paragraph {"className":"li-eyebrow","textColor":"accent"} -->
-            <p class="li-eyebrow has-accent-color has-text-color">Canadian Manufacturing Since 1919</p>
+            <p class="li-eyebrow has-accent-color has-body-text-color">Canadian Manufacturing Since 1919</p>
             <!-- /wp:paragraph -->
 
             <!-- wp:heading {"level":1,"textColor":"white"} -->
-            <h1 class="wp-block-heading has-white-color has-text-color">Industrial Chemistry Engineered For Performance</h1>
+            <h1 class="wp-block-heading has-white-color has-body-text-color">Industrial Chemistry Engineered For Performance</h1>
             <!-- /wp:heading -->
 
             <!-- wp:paragraph {"textColor":"white","fontSize":"medium"} -->
-            <p class="has-white-color has-text-color has-medium-font-size">Trusted by utilities, transportation, manufacturing, agriculture and infrastructure professionals across North America.</p>
+            <p class="has-white-color has-body-text-color has-medium-font-size">Trusted by utilities, transportation, manufacturing, agriculture and infrastructure professionals across North America.</p>
             <!-- /wp:paragraph -->
 
             <!-- wp:buttons {"style":{"spacing":{"margin":{"top":"32px"}}}} -->
@@ -33,13 +33,13 @@
 
                 <!-- wp:button {"url":"/industries","backgroundColor":"accent","textColor":"white"} -->
                 <div class="wp-block-button">
-                    <a class="wp-block-button__link has-white-color has-accent-background-color has-text-color has-background wp-element-button" href="/industries">Explore Solutions</a>
+                    <a class="wp-block-button__link has-white-color has-accent-background-color has-body-text-color has-background wp-element-button" href="/industries">Explore Solutions</a>
                 </div>
                 <!-- /wp:button -->
 
                 <!-- wp:button {"url":"/documentation","textColor":"white","className":"is-style-outline"} -->
                 <div class="wp-block-button is-style-outline">
-                    <a class="wp-block-button__link has-white-color has-text-color wp-element-button" href="/documentation">Technical Resources</a>
+                    <a class="wp-block-button__link has-white-color has-body-text-color wp-element-button" href="/documentation">Technical Resources</a>
                 </div>
                 <!-- /wp:button -->
 

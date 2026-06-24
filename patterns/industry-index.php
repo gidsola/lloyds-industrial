@@ -13,7 +13,7 @@
     <div class="wp-block-group alignwide">
 
         <!-- wp:paragraph {"align":"center","className":"li-eyebrow","textColor":"accent"} -->
-        <p class="has-text-align-center li-eyebrow has-accent-color has-text-color">Markets Served</p>
+        <p class="has-text-align-center li-eyebrow has-accent-color has-body-text-color">Markets Served</p>
         <!-- /wp:paragraph -->
 
         <!-- wp:heading {"textAlign":"center"} -->

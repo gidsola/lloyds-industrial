@@ -13,15 +13,15 @@
     <div class="wp-block-group alignwide">
 
         <!-- wp:paragraph {"align":"center","className":"li-eyebrow","textColor":"accent"} -->
-        <p class="has-text-align-center li-eyebrow has-accent-color has-text-color">Industries</p>
+        <p class="has-text-align-center li-eyebrow has-accent-color has-body-text-color">Industries</p>
         <!-- /wp:paragraph -->
 
         <!-- wp:heading {"textAlign":"center"} -->
         <h2 class="wp-block-heading has-text-align-center">Solutions Built For Critical Infrastructure</h2>
         <!-- /wp:heading -->
 
-        <!-- wp:paragraph {"align":"center","textColor":"text"} -->
-        <p class="has-text-align-center has-text-color has-text-color">Supporting Canada's most demanding industrial environments.</p>
+        <!-- wp:paragraph {"align":"center","textColor":"body-text"} -->
+        <p class="has-text-align-center has-body-text-color has-body-text-color">Supporting Canada's most demanding industrial environments.</p>
         <!-- /wp:paragraph -->
 
         <!-- wp:columns {"align":"wide","className":"li-card-grid"} -->

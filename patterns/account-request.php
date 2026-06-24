@@ -16,7 +16,7 @@
         <div class="wp-block-column is-vertically-aligned-center">
 
             <!-- wp:paragraph {"className":"li-eyebrow","textColor":"accent"} -->
-            <p class="li-eyebrow has-accent-color has-text-color">Customer Access</p>
+            <p class="li-eyebrow has-accent-color has-body-text-color">Customer Access</p>
             <!-- /wp:paragraph -->
 
             <!-- wp:heading -->
@@ -45,7 +45,7 @@
             <div class="wp-block-buttons">
                 <!-- wp:button {"backgroundColor":"accent","textColor":"white"} -->
                 <div class="wp-block-button">
-                    <a class="wp-block-button__link has-white-color has-accent-background-color has-text-color has-background wp-element-button">Request Access</a>
+                    <a class="wp-block-button__link has-white-color has-accent-background-color has-body-text-color has-background wp-element-button">Request Access</a>
                 </div>
                 <!-- /wp:button -->
             </div>
