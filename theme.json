@@ -256,6 +256,10 @@
     { "name": "page-contact", "title": "Contact Page", "postTypes": ["page"] },
     { "name": "page-account", "title": "Account Page", "postTypes": ["page"] }
   ],
+  "templateParts": [
+    { "name": "header", "title": "Header", "area": "header" },
+    { "name": "footer", "title": "Footer", "area": "footer" }
+  ],
   "styles": {
     "spacing": {
       "blockGap": "0"
