@@ -1,0 +1,11 @@
+.editor-styles-wrapper .li-video-hero {
+    min-height: 680px;
+}
+
+.editor-styles-wrapper .li-video-hero video {
+    display: none;
+}
+
+.editor-styles-wrapper .wp-block {
+    max-width: none;
+}

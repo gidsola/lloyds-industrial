@@ -1,0 +1,45 @@
+<!-- wp:template-part {"slug":"header","theme":"lloyds-industrial","tagName":"header"} /-->
+
+<!-- wp:group {"align":"full","backgroundColor":"surface","style":{"spacing":{"padding":{"top":"90px","bottom":"90px"}}}} -->
+<div class="wp-block-group alignfull has-surface-background-color has-background" style="padding-top:90px;padding-bottom:90px">
+
+    <!-- wp:group {"align":"wide","layout":{"type":"constrained","contentSize":"900px"}} -->
+    <div class="wp-block-group alignwide">
+
+        <!-- wp:heading {"level":1} -->
+        <h1 class="wp-block-heading">Insights &amp; Resources</h1>
+        <!-- /wp:heading -->
+
+        <!-- wp:paragraph -->
+        <p>Company updates, industry knowledge and product guidance.</p>
+        <!-- /wp:paragraph -->
+
+    </div>
+    <!-- /wp:group -->
+
+</div>
+<!-- /wp:group -->
+
+<!-- wp:query {"queryId":11,"query":{"perPage":9,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","inherit":true}} -->
+<div class="wp-block-query">
+
+    <!-- wp:post-template {"align":"wide","layout":{"type":"grid","columnCount":3}} -->
+        <!-- wp:group {"className":"li-card","layout":{"type":"constrained"}} -->
+        <div class="wp-block-group li-card">
+            <!-- wp:post-featured-image {"isLink":true,"aspectRatio":"16/10"} /-->
+            <!-- wp:post-title {"level":3,"isLink":true} /-->
+            <!-- wp:post-excerpt {"moreText":"Read more"} /-->
+        </div>
+        <!-- /wp:group -->
+    <!-- /wp:post-template -->
+
+    <!-- wp:query-pagination {"layout":{"type":"flex","justifyContent":"center"}} -->
+        <!-- wp:query-pagination-previous /-->
+        <!-- wp:query-pagination-numbers /-->
+        <!-- wp:query-pagination-next /-->
+    <!-- /wp:query-pagination -->
+
+</div>
+<!-- /wp:query -->
+
+<!-- wp:template-part {"slug":"footer","theme":"lloyds-industrial","tagName":"footer"} /-->

@@ -1,0 +1,45 @@
+<!-- wp:template-part {"slug":"header","theme":"lloyds-industrial","tagName":"header"} /-->
+
+<!-- wp:group {"align":"full","backgroundColor":"surface","style":{"spacing":{"padding":{"top":"80px","bottom":"80px"}}}} -->
+<div class="wp-block-group alignfull has-surface-background-color has-background" style="padding-top:80px;padding-bottom:80px">
+
+    <!-- wp:group {"align":"wide","layout":{"type":"constrained","contentSize":"920px"}} -->
+    <div class="wp-block-group alignwide">
+
+        <!-- wp:query-title {"type":"search"} /-->
+
+        <!-- wp:search {"label":"Search","showLabel":false,"placeholder":"Search products, resources and pages...","buttonText":"Search"} /-->
+
+    </div>
+    <!-- /wp:group -->
+
+</div>
+<!-- /wp:group -->
+
+<!-- wp:query {"queryId":9,"query":{"perPage":12,"pages":0,"offset":0,"postType":"any","order":"desc","orderBy":"relevance","author":"","search":"","exclude":[],"sticky":"","inherit":true}} -->
+<div class="wp-block-query">
+
+    <!-- wp:post-template {"align":"wide","layout":{"type":"grid","columnCount":3}} -->
+
+        <!-- wp:group {"className":"li-card","layout":{"type":"constrained"}} -->
+        <div class="wp-block-group li-card">
+
+            <!-- wp:post-title {"level":3,"isLink":true} /-->
+
+            <!-- wp:post-excerpt {"moreText":"Read more"} /-->
+
+        </div>
+        <!-- /wp:group -->
+
+    <!-- /wp:post-template -->
+
+    <!-- wp:query-pagination {"layout":{"type":"flex","justifyContent":"center"}} -->
+        <!-- wp:query-pagination-previous /-->
+        <!-- wp:query-pagination-numbers /-->
+        <!-- wp:query-pagination-next /-->
+    <!-- /wp:query-pagination -->
+
+</div>
+<!-- /wp:query -->
+
+<!-- wp:template-part {"slug":"footer","theme":"lloyds-industrial","tagName":"footer"} /-->

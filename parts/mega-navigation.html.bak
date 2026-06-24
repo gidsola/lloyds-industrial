@@ -1,0 +1,24 @@
+<!-- wp:group {"align":"full","className":"li-mega-nav"} -->
+<div class="wp-block-group alignfull li-mega-nav">
+
+    <!-- wp:group {"align":"wide","className":"li-mega-nav__inner","layout":{"type":"flex","justifyContent":"center"}} -->
+    <div class="wp-block-group alignwide li-mega-nav__inner">
+
+        <!-- wp:html -->
+        <nav class="li-mega-menu" aria-label="Primary">
+
+            <a href="/products">Products</a>
+            <a href="/industries">Industries</a>
+            <a href="/documentation">Documentation</a>
+            <a href="/partners">Partners</a>
+            <a href="/about">About</a>
+            <a href="/contact">Contact</a>
+
+        </nav>
+        <!-- /wp:html -->
+
+    </div>
+    <!-- /wp:group -->
+
+</div>
+<!-- /wp:group -->

@@ -1,0 +1,48 @@
+<!-- wp:template-part {"slug":"header","theme":"lloyds-industrial","tagName":"header"} /-->
+
+<!-- wp:group {"align":"full","backgroundColor":"primary","textColor":"white","style":{"spacing":{"padding":{"top":"100px","bottom":"100px"}}}} -->
+<div class="wp-block-group alignfull has-white-color has-primary-background-color has-text-color has-background" style="padding-top:100px;padding-bottom:100px">
+
+    <!-- wp:group {"align":"wide","layout":{"type":"constrained","contentSize":"920px","justifyContent":"left"}} -->
+    <div class="wp-block-group alignwide">
+
+        <!-- wp:paragraph {"className":"li-eyebrow","textColor":"accent"} -->
+        <p class="li-eyebrow has-accent-color has-text-color">Industry Solutions</p>
+        <!-- /wp:paragraph -->
+
+        <!-- wp:query-title {"type":"archive","textColor":"white"} /-->
+
+        <!-- wp:term-description /-->
+
+    </div>
+    <!-- /wp:group -->
+
+</div>
+<!-- /wp:group -->
+
+<!-- wp:pattern {"slug":"lloyds-industrial/product-search"} /-->
+
+<!-- wp:group {"align":"full","backgroundColor":"surface","style":{"spacing":{"padding":{"top":"70px","bottom":"90px"}}}} -->
+<div class="wp-block-group alignfull has-surface-background-color has-background" style="padding-top:70px;padding-bottom:90px">
+
+    <!-- wp:woocommerce/product-collection {"queryId":3,"query":{"perPage":12,"pages":0,"offset":0,"postType":"product","order":"asc","orderBy":"title","search":"","exclude":[],"inherit":true},"displayLayout":{"type":"flex","columns":3,"shrinkColumns":true},"dimensions":{"widthType":"fill"},"align":"wide"} -->
+    <div class="wp-block-woocommerce-product-collection alignwide">
+        <!-- wp:woocommerce/product-template -->
+            <!-- wp:group {"className":"li-product-card","layout":{"type":"constrained"}} -->
+            <div class="wp-block-group li-product-card">
+                <!-- wp:woocommerce/product-image {"imageSizing":"thumbnail","isDescendentOfQueryLoop":true} /-->
+                <!-- wp:post-title {"level":3,"isLink":true} /-->
+                <!-- wp:post-excerpt {"moreText":"","excerptLength":20} /-->
+                <!-- wp:read-more {"content":"View Product","className":"li-button-primary"} /-->
+            </div>
+            <!-- /wp:group -->
+        <!-- /wp:woocommerce/product-template -->
+    </div>
+    <!-- /wp:woocommerce/product-collection -->
+
+</div>
+<!-- /wp:group -->
+
+<!-- wp:pattern {"slug":"lloyds-industrial/contact-specialist"} /-->
+
+<!-- wp:template-part {"slug":"footer","theme":"lloyds-industrial","tagName":"footer"} /-->

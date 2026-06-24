@@ -1,0 +1,76 @@
+<!-- wp:template-part {"slug":"header","theme":"lloyds-industrial","tagName":"header"} /-->
+
+<!-- wp:pattern {"slug":"lloyds-industrial/products-hero"} /-->
+
+<!-- wp:pattern {"slug":"lloyds-industrial/product-search"} /-->
+
+<!-- wp:pattern {"slug":"lloyds-industrial/product-category-cards"} /-->
+
+<!-- wp:group {"align":"full","backgroundColor":"surface","style":{"spacing":{"padding":{"top":"90px","bottom":"90px"}}}} -->
+<div class="wp-block-group alignfull has-surface-background-color has-background" style="padding-top:90px;padding-bottom:90px">
+
+    <!-- wp:group {"align":"wide","layout":{"type":"default"}} -->
+    <div class="wp-block-group alignwide">
+
+        <!-- wp:group {"layout":{"type":"flex","justifyContent":"space-between","verticalAlignment":"center"},"style":{"spacing":{"margin":{"bottom":"40px"}}}} -->
+        <div class="wp-block-group" style="margin-bottom:40px">
+            <!-- wp:heading -->
+            <h2 class="wp-block-heading">Featured Products</h2>
+            <!-- /wp:heading -->
+
+            <!-- wp:woocommerce/product-results-count /-->
+        </div>
+        <!-- /wp:group -->
+
+        <!-- wp:woocommerce/product-collection {"queryId":1,"query":{"perPage":12,"pages":0,"offset":0,"postType":"product","order":"asc","orderBy":"title","search":"","exclude":[],"inherit":true},"displayLayout":{"type":"flex","columns":3,"shrinkColumns":true},"dimensions":{"widthType":"fill"},"queryContextIncludes":["collection"],"align":"wide"} -->
+        <div class="wp-block-woocommerce-product-collection alignwide">
+            <!-- wp:woocommerce/product-template -->
+                <!-- wp:group {"className":"li-product-card","layout":{"type":"constrained"}} -->
+                <div class="wp-block-group li-product-card">
+
+                    <!-- wp:woocommerce/product-image {"imageSizing":"thumbnail","isDescendentOfQueryLoop":true} /-->
+
+                    <!-- wp:post-terms {"term":"product_cat","className":"li-product-category"} /-->
+
+                    <!-- wp:post-title {"level":3,"isLink":true} /-->
+
+                    <!-- wp:post-excerpt {"moreText":"","excerptLength":20} /-->
+
+                    <!-- wp:group {"className":"li-product-actions","layout":{"type":"flex","flexWrap":"wrap"}} -->
+                    <div class="wp-block-group li-product-actions">
+                        <!-- wp:read-more {"content":"View Product","className":"li-button-primary"} /-->
+                        <!-- wp:paragraph {"className":"li-doc-link"} -->
+                        <p class="li-doc-link"><a href="#">Documentation</a></p>
+                        <!-- /wp:paragraph -->
+                    </div>
+                    <!-- /wp:group -->
+
+                </div>
+                <!-- /wp:group -->
+            <!-- /wp:woocommerce/product-template -->
+
+            <!-- wp:query-pagination {"layout":{"type":"flex","justifyContent":"center"}} -->
+                <!-- wp:query-pagination-previous /-->
+                <!-- wp:query-pagination-numbers /-->
+                <!-- wp:query-pagination-next /-->
+            <!-- /wp:query-pagination -->
+
+            <!-- wp:woocommerce/product-collection-no-results -->
+                <!-- wp:paragraph -->
+                <p>No products found.</p>
+                <!-- /wp:paragraph -->
+            <!-- /wp:woocommerce/product-collection-no-results -->
+        </div>
+        <!-- /wp:woocommerce/product-collection -->
+
+    </div>
+    <!-- /wp:group -->
+
+</div>
+<!-- /wp:group -->
+
+<!-- wp:pattern {"slug":"lloyds-industrial/product-docs-banner"} /-->
+
+<!-- wp:pattern {"slug":"lloyds-industrial/contact-specialist"} /-->
+
+<!-- wp:template-part {"slug":"footer","theme":"lloyds-industrial","tagName":"footer"} /-->
