@@ -31,7 +31,8 @@ function li_bootstrap_default_site(): void
         return;
     }
 
-    $pages = li_bootstrap_create_pages();
+    $media = li_get_starter_media();
+    $pages = li_bootstrap_create_pages($media);
 
     li_bootstrap_set_reading_options($pages);
     li_bootstrap_create_navigation($pages);
@@ -42,14 +43,14 @@ function li_bootstrap_default_site(): void
     flush_rewrite_rules();
 }
 
-function li_bootstrap_create_pages(): array
+function li_bootstrap_create_pages(array $media = []): array
 {
     $page_definitions = [
         'home' => [
             'title'    => 'Home',
             'slug'     => 'home',
             'template' => '',
-            'content'  => li_get_starter_content('home'),
+            'content'  => li_get_starter_content('home', $media),
         ],
 
         'products' => [
@@ -258,7 +259,7 @@ function li_navigation_link_block(string $label, int $page_id, array $children =
     );
 }
 
-function li_get_starter_content(string $file): string
+function li_get_starter_content(string $file, array $media = []): string
 {
     $path = get_template_directory() . '/starter-content/' . $file . '.html';
 
@@ -268,7 +269,84 @@ function li_get_starter_content(string $file): string
 
     $content = file_get_contents($path);
 
-    return is_string($content) ? $content : '';
+    if (!is_string($content)) {
+        return '';
+    }
+
+    foreach ($media as $key => $value) {
+        $content = str_replace('{{' . $key . '}}', (string) $value, $content);
+    }
+
+    return $content;
+}
+
+function li_import_starter_media(string $relative_path, string $title): int
+{
+    $theme_path = get_template_directory() . '/' . ltrim($relative_path, '/');
+
+    if (!file_exists($theme_path)) {
+        return 0;
+    }
+
+    $existing = get_posts([
+        'post_type'      => 'attachment',
+        'post_status'    => 'inherit',
+        'posts_per_page' => 1,
+        'meta_key'       => '_li_starter_media_source',
+        'meta_value'     => $relative_path,
+        'fields'         => 'ids',
+    ]);
+
+    if (!empty($existing[0])) {
+        return (int) $existing[0];
+    }
+
+    require_once ABSPATH . 'wp-admin/includes/file.php';
+    require_once ABSPATH . 'wp-admin/includes/media.php';
+    require_once ABSPATH . 'wp-admin/includes/image.php';
+
+    $upload = wp_upload_bits(
+        basename($theme_path),
+        null,
+        file_get_contents($theme_path)
+    );
+
+    if (!empty($upload['error'])) {
+        return 0;
+    }
+
+    $filetype = wp_check_filetype($upload['file']);
+
+    $attachment_id = wp_insert_attachment([
+        'post_mime_type' => $filetype['type'] ?: 'image/webp',
+        'post_title'     => sanitize_text_field($title),
+        'post_content'   => '',
+        'post_status'    => 'inherit',
+    ], $upload['file']);
+
+    if (is_wp_error($attachment_id) || !$attachment_id) {
+        return 0;
+    }
+
+    $metadata = wp_generate_attachment_metadata((int) $attachment_id, $upload['file']);
+    wp_update_attachment_metadata((int) $attachment_id, $metadata);
+
+    update_post_meta((int) $attachment_id, '_li_starter_media_source', $relative_path);
+
+    return (int) $attachment_id;
+}
+
+function li_get_starter_media(): array
+{
+    $hero_id = li_import_starter_media(
+        'assets/images/industrial-hero.webp',
+        'Industrial Hero'
+    );
+
+    return [
+        'hero_id'  => $hero_id,
+        'hero_url' => $hero_id ? wp_get_attachment_url($hero_id) : '',
+    ];
 }
 
 function li_bootstrap_create_woocommerce_pages(array $pages): void

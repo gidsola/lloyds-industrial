@@ -1,7 +1,7 @@
-<!-- wp:cover {"url":"/wp-content/themes/lloyds-industrial/assets/images/industrial-hero.webp","dimRatio":70,"overlayColor":"primary","minHeight":760,"minHeightUnit":"px","align":"full","className":"li-hero-cover"} -->
+<!-- wp:cover {"url":"{{hero_url}}","id":{{hero_id}},"dimRatio":70,"overlayColor":"primary","minHeight":760,"minHeightUnit":"px","align":"full","className":"li-hero-cover"} -->
 <div class="wp-block-cover alignfull li-hero-cover" style="min-height:760px">
     <span aria-hidden="true" class="wp-block-cover__background has-primary-background-color has-background-dim-70 has-background-dim"></span>
-    <img class="wp-block-cover__image-background" alt="" src="/wp-content/themes/lloyds-industrial/assets/images/industrial-hero.webp" data-object-fit="cover"/>
+    <img class="wp-block-cover__image-background wp-image-{{hero_id}}" alt="" src="{{hero_url}}" data-object-fit="cover"/>
     <div class="wp-block-cover__inner-container">
 
         <!-- wp:group {"align":"wide","layout":{"type":"constrained","contentSize":"920px","justifyContent":"left"}} -->

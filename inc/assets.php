@@ -54,6 +54,11 @@ add_action('enqueue_block_editor_assets', function (): void {
         filemtime(get_template_directory() . '/assets/css/main.css')
     );
 
+    wp_add_inline_style(
+        'lloyds-editor-main',
+        li_get_dynamic_brand_css()
+    );
+
     wp_enqueue_style(
         'lloyds-editor',
         get_template_directory_uri() . '/assets/css/editor.css',
@@ -66,17 +71,18 @@ function li_get_dynamic_brand_css(): string
 {
     $brand = li_get_brand_settings();
 
-    $primary   = sanitize_hex_color($brand['primary_color']) ?: '#173449';
-    $secondary = sanitize_hex_color($brand['secondary_color']) ?: '#234A64';
-    $accent    = sanitize_hex_color($brand['accent_color']) ?: '#D8A03F';
-    $surface   = sanitize_hex_color($brand['surface_color']) ?: '#F7F9FB';
-    $text      = sanitize_hex_color($brand['text_color']) ?: '#1C252D';
-    $header_bg = sanitize_hex_color($brand['header_bg']) ?: '#FFFFFF';
-    $footer_bg = sanitize_hex_color($brand['footer_bg']) ?: '#173449';
-    $overlay   = sanitize_hex_color($brand['hero_overlay']) ?: '#08141E';
+    $primary   = sanitize_hex_color($brand['primary_color'] ?? '') ?: '#173449';
+    $secondary = sanitize_hex_color($brand['secondary_color'] ?? '') ?: '#234A64';
+    $accent    = sanitize_hex_color($brand['accent_color'] ?? '') ?: '#D8A03F';
+    $surface   = sanitize_hex_color($brand['surface_color'] ?? '') ?: '#F7F9FB';
+    $text      = sanitize_hex_color($brand['text_color'] ?? '') ?: '#1C252D';
+    $header_bg = sanitize_hex_color($brand['header_bg'] ?? '') ?: '#FFFFFF';
+    $footer_bg = sanitize_hex_color($brand['footer_bg'] ?? '') ?: '#173449';
+    $overlay   = sanitize_hex_color($brand['hero_overlay'] ?? '') ?: '#08141E';
 
     return sprintf(
-        ':root{
+        ':root,
+        .editor-styles-wrapper {
             --wp--preset--color--primary:%1$s;
             --wp--preset--color--secondary:%2$s;
             --wp--preset--color--accent:%3$s;
@@ -93,15 +99,59 @@ function li_get_dynamic_brand_css(): string
             --li-hero-overlay:%8$s;
         }
 
-        .has-primary-background-color{background-color:%1$s!important;}
-        .has-secondary-background-color{background-color:%2$s!important;}
-        .has-accent-background-color{background-color:%3$s!important;}
-        .has-surface-background-color{background-color:%4$s!important;}
+        .has-primary-background-color,
+        .editor-styles-wrapper .has-primary-background-color {
+            background-color:%1$s!important;
+        }
 
-        .has-primary-color{color:%1$s!important;}
-        .has-secondary-color{color:%2$s!important;}
-        .has-accent-color{color:%3$s!important;}
-        .has-text-color{color:%5$s!important;}',
+        .has-secondary-background-color,
+        .editor-styles-wrapper .has-secondary-background-color {
+            background-color:%2$s!important;
+        }
+
+        .has-accent-background-color,
+        .editor-styles-wrapper .has-accent-background-color,
+        .wp-block-button__link.has-accent-background-color,
+        .editor-styles-wrapper .wp-block-button__link.has-accent-background-color {
+            background-color:%3$s!important;
+        }
+
+        .has-surface-background-color,
+        .editor-styles-wrapper .has-surface-background-color {
+            background-color:%4$s!important;
+        }
+
+        .has-primary-color,
+        .editor-styles-wrapper .has-primary-color {
+            color:%1$s!important;
+        }
+
+        .has-secondary-color,
+        .editor-styles-wrapper .has-secondary-color {
+            color:%2$s!important;
+        }
+
+        .has-accent-color,
+        .editor-styles-wrapper .has-accent-color,
+        .wp-block-button__link.has-accent-color,
+        .editor-styles-wrapper .wp-block-button__link.has-accent-color {
+            color:%3$s!important;
+        }
+
+        .has-text-color,
+        .editor-styles-wrapper .has-text-color {
+            color:%5$s!important;
+        }
+
+        .site-header,
+        .editor-styles-wrapper .site-header {
+            background-color:%6$s!important;
+        }
+
+        .li-footer,
+        .editor-styles-wrapper .li-footer {
+            background-color:%7$s!important;
+        }',
         esc_html($primary),
         esc_html($secondary),
         esc_html($accent),
