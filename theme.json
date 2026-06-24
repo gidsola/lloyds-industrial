@@ -252,6 +252,7 @@
     { "name": "page-industries", "title": "Industries Page", "postTypes": ["page"] },
     { "name": "page-documentation", "title": "Documentation Page", "postTypes": ["page"] },
     { "name": "page-partners", "title": "Partners Page", "postTypes": ["page"] },
+    { "name": "page-about", "title": "About Page", "postTypes": ["page"] },
     { "name": "page-contact", "title": "Contact Page", "postTypes": ["page"] },
     { "name": "page-account", "title": "Account Page", "postTypes": ["page"] }
   ],

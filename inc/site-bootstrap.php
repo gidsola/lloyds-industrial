@@ -84,7 +84,7 @@ function li_bootstrap_create_pages(array $media = []): array
         'about' => [
             'title'    => 'About',
             'slug'     => 'about',
-            'template' => '',
+            'template' => 'page-about',
             'content'  => li_get_starter_content('about'),
         ],
 

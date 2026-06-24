@@ -1,61 +1,89 @@
 <!-- wp:group {"align":"full","backgroundColor":"primary","textColor":"white","style":{"spacing":{"padding":{"top":"110px","bottom":"110px"}}}} -->
-<div class="wp-block-group alignfull has-white-color has-primary-background-color has-body-text-color has-background" style="padding-top:110px;padding-bottom:110px">
+<div class="wp-block-group alignfull has-white-color has-primary-background-color has-text-color has-background" style="padding-top:110px;padding-bottom:110px">
+
     <!-- wp:group {"align":"wide","layout":{"type":"constrained","contentSize":"900px","justifyContent":"left"}} -->
     <div class="wp-block-group alignwide">
-        <!-- wp:paragraph {"className":"li-eyebrow","textColor":"accent"} -->
-        <p class="li-eyebrow has-accent-color has-body-text-color">Customer Portal</p>
+
+        <!-- wp:paragraph {"className":"li-eyebrow"} -->
+        <p class="li-eyebrow">Customer Portal</p>
         <!-- /wp:paragraph -->
 
-        <!-- wp:heading {"level":1,"textColor":"white"} -->
-        <h1 class="wp-block-heading has-white-color has-body-text-color">Customer Account Access</h1>
+        <!-- wp:heading {"level":1} -->
+        <h1 class="wp-block-heading">Customer Account Access</h1>
         <!-- /wp:heading -->
 
-        <!-- wp:paragraph {"fontSize":"medium","textColor":"white"} -->
-        <p class="has-white-color has-body-text-color has-medium-font-size">Verified users can access approved documents, account resources, and order-related information.</p>
+        <!-- wp:paragraph {"fontSize":"medium"} -->
+        <p class="has-medium-font-size">
+            Verified users can access approved documents, account resources, and order-related information.
+        </p>
         <!-- /wp:paragraph -->
+
     </div>
     <!-- /wp:group -->
+
 </div>
 <!-- /wp:group -->
 
+
 <!-- wp:group {"align":"full","backgroundColor":"surface","style":{"spacing":{"padding":{"top":"90px","bottom":"110px"}}}} -->
 <div class="wp-block-group alignfull has-surface-background-color has-background" style="padding-top:90px;padding-bottom:110px">
+
     <!-- wp:columns {"align":"wide","verticalAlignment":"top"} -->
     <div class="wp-block-columns alignwide are-vertically-aligned-top">
-        <!-- wp:column {"className":"li-card"} -->
-        <div class="wp-block-column li-card">
-            <!-- wp:heading {"level":2} -->
-            <h2 class="wp-block-heading">Existing Customers</h2>
-            <!-- /wp:heading -->
-            <!-- wp:paragraph -->
-            <p>Log in to access approved customer documentation and account resources.</p>
-            <!-- /wp:paragraph -->
-            <!-- wp:shortcode -->
-            [woocommerce_my_account]
-            <!-- /wp:shortcode -->
-        </div>
-        <!-- /wp:column -->
 
         <!-- wp:column {"className":"li-card"} -->
         <div class="wp-block-column li-card">
+
+            <!-- wp:heading {"level":2} -->
+            <h2 class="wp-block-heading">Existing Customers</h2>
+            <!-- /wp:heading -->
+
+            <!-- wp:paragraph -->
+            <p>
+                Log in to access approved customer documentation and account resources.
+            </p>
+            <!-- /wp:paragraph -->
+
+            <!-- wp:shortcode -->
+            [woocommerce_my_account]
+            <!-- /wp:shortcode -->
+
+        </div>
+        <!-- /wp:column -->
+
+
+        <!-- wp:column {"className":"li-card"} -->
+        <div class="wp-block-column li-card">
+
             <!-- wp:heading {"level":2} -->
             <h2 class="wp-block-heading">Request Access</h2>
             <!-- /wp:heading -->
+
             <!-- wp:paragraph -->
-            <p>Need access to controlled SDS, TDS, or distributor resources? Request verification from the Lloyds team.</p>
+            <p>
+                Need access to controlled SDS, TDS, or distributor resources? Request verification from the Lloyds team.
+            </p>
             <!-- /wp:paragraph -->
+
             <!-- wp:buttons -->
             <div class="wp-block-buttons">
-                <!-- wp:button {"url":"/contact","backgroundColor":"accent","textColor":"body-text"} -->
+
+                <!-- wp:button -->
                 <div class="wp-block-button">
-                    <a class="wp-block-button__link has-body-text-color has-accent-background-color has-body-text-color has-background wp-element-button" href="/contact">Request Access</a>
+                    <a class="wp-block-button__link wp-element-button" href="/contact">
+                        Request Access
+                    </a>
                 </div>
                 <!-- /wp:button -->
+
             </div>
             <!-- /wp:buttons -->
+
         </div>
         <!-- /wp:column -->
+
     </div>
     <!-- /wp:columns -->
+
 </div>
 <!-- /wp:group -->
