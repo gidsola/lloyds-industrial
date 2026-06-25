@@ -41,7 +41,7 @@ function li_render_product_documents_block(): string
             <p class="li-eyebrow"><?php esc_html_e('Documentation', 'lloyds-industrial'); ?></p>
             <h2><?php esc_html_e('Product Documents', 'lloyds-industrial'); ?></h2>
             <p>
-                <?php esc_html_e('Access public product resources and approved customer documentation.', 'lloyds-industrial'); ?>
+                <?php esc_html_e('Access public technical resources. SDS downloads are available to customers who purchased this product.', 'lloyds-industrial'); ?>
             </p>
         </div>
 
@@ -54,8 +54,9 @@ function li_render_product_documents_block(): string
                 <?php foreach ($documents as $document): ?>
                     <?php
                     $access_level = (string) get_post_meta($document->ID, '_li_access_level', true);
-                    $access_level = $access_level ?: 'customer';
+                    $access_level = $access_level ?: 'public';
                     $download_url = li_get_document_download_url($document->ID);
+                    $is_sds = li_is_sds_document($document->ID);
                     $types = wp_get_post_terms($document->ID, 'li_document_type', ['fields' => 'names']);
                     ?>
                     <article class="li-doc-card">
@@ -76,6 +77,10 @@ function li_render_product_documents_block(): string
                                 <a class="li-button-primary" href="<?php echo esc_url(li_get_secure_document_url($document->ID)); ?>">
                                     <?php esc_html_e('Download', 'lloyds-industrial'); ?>
                                 </a>
+                            <?php elseif ($is_sds && is_user_logged_in()): ?>
+                                <span class="li-button-primary" aria-disabled="true">
+                                    <?php esc_html_e('Purchase Required', 'lloyds-industrial'); ?>
+                                </span>
                             <?php else: ?>
                                 <a class="li-button-primary" href="<?php echo esc_url(wp_login_url(get_permalink($product_id))); ?>">
                                     <?php esc_html_e('Login Required', 'lloyds-industrial'); ?>

@@ -24,7 +24,7 @@
             <!-- /wp:heading -->
 
             <!-- wp:paragraph -->
-            <p>Verified customers and distributors can request access to approved SDS, TDS and controlled technical resources.</p>
+            <p>Customers can get help matching SDS access to the account and order history for purchased products.</p>
             <!-- /wp:paragraph -->
 
         </div>

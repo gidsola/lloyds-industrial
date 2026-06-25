@@ -23,12 +23,6 @@ add_action('woocommerce_product_options_general_product_data', function (): void
         'desc_tip'    => true,
     ]);
 
-    woocommerce_wp_checkbox([
-        'id'          => '_li_requires_document_login',
-        'label'       => __('Require login for documents', 'lloyds-industrial'),
-        'description' => __('Restrict product documentation to verified users.', 'lloyds-industrial'),
-    ]);
-
     echo '</div>';
 });
 
@@ -48,10 +42,4 @@ add_action('woocommerce_process_product_meta', function (int $post_id): void {
             sanitize_text_field(wp_unslash($_POST['_li_certifications']))
         );
     }
-
-    update_post_meta(
-        $post_id,
-        '_li_requires_document_login',
-        isset($_POST['_li_requires_document_login']) ? '1' : '0'
-    );
 });

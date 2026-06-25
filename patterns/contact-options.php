@@ -32,7 +32,7 @@
                 <h3 class="wp-block-heading">Customer Access</h3>
                 <!-- /wp:heading -->
                 <!-- wp:paragraph -->
-                <p>Request verified access to controlled SDS, TDS and customer resources.</p>
+                <p>Get help matching SDS access to a customer account and product order history.</p>
                 <!-- /wp:paragraph -->
             </div>
             <!-- /wp:column -->

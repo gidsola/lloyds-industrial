@@ -38,7 +38,7 @@
             <!-- /wp:heading -->
 
             <!-- wp:paragraph -->
-            <p>Replace this placeholder with your selected form plugin shortcode.</p>
+            <p>Share the product, quantity, application, and account details so the sales team can route the request accurately.</p>
             <!-- /wp:paragraph -->
 
             <!-- wp:shortcode -->

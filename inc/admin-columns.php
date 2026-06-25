@@ -17,24 +17,24 @@ add_filter('manage_li_document_posts_columns', function (array $columns): array 
 add_action('manage_li_document_posts_custom_column', function (string $column, int $post_id): void {
     if ($column === 'li_document_type') {
         $terms = wp_get_post_terms($post_id, 'li_document_type', ['fields' => 'names']);
-        echo esc_html($terms ? implode(', ', $terms) : '—');
+        echo esc_html($terms ? implode(', ', $terms) : '-');
     }
 
     if ($column === 'li_access_level') {
         $access = get_post_meta($post_id, '_li_access_level', true);
-        echo esc_html($access ?: 'customer');
+        $access = in_array($access, ['public', 'internal'], true) ? $access : 'public';
+        echo esc_html($access ?: 'public');
     }
 
     if ($column === 'li_related_product') {
         $product_id = (int) get_post_meta($post_id, '_li_related_product_id', true);
-        echo $product_id ? '<a href="' . esc_url(get_edit_post_link($product_id)) . '">' . esc_html(get_the_title($product_id)) . '</a>' : '—';
+        echo $product_id ? '<a href="' . esc_url(get_edit_post_link($product_id)) . '">' . esc_html(get_the_title($product_id)) . '</a>' : '-';
     }
 }, 10, 2);
 
 add_filter('manage_edit-product_columns', function (array $columns): array {
     $columns['li_industries'] = __('Industries', 'lloyds-industrial');
     $columns['li_applications'] = __('Applications', 'lloyds-industrial');
-    $columns['li_docs_required'] = __('Docs', 'lloyds-industrial');
 
     return $columns;
 });
@@ -42,17 +42,11 @@ add_filter('manage_edit-product_columns', function (array $columns): array {
 add_action('manage_product_posts_custom_column', function (string $column, int $post_id): void {
     if ($column === 'li_industries') {
         $terms = wp_get_post_terms($post_id, 'li_industry', ['fields' => 'names']);
-        echo esc_html($terms ? implode(', ', $terms) : '—');
+        echo esc_html($terms ? implode(', ', $terms) : '-');
     }
 
     if ($column === 'li_applications') {
         $terms = wp_get_post_terms($post_id, 'li_application', ['fields' => 'names']);
-        echo esc_html($terms ? implode(', ', $terms) : '—');
-    }
-
-    if ($column === 'li_docs_required') {
-        echo get_post_meta($post_id, '_li_requires_document_login', true)
-            ? esc_html__('Login', 'lloyds-industrial')
-            : esc_html__('Public', 'lloyds-industrial');
+        echo esc_html($terms ? implode(', ', $terms) : '-');
     }
 }, 10, 2);

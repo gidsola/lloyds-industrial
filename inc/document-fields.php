@@ -25,8 +25,8 @@ function li_render_document_settings_metabox(WP_Post $post): void
     $related_product_id = (int) get_post_meta($post->ID, '_li_related_product_id', true);
     $access_level = (string) get_post_meta($post->ID, '_li_access_level', true);
 
-    if (!$access_level) {
-        $access_level = 'customer';
+    if (!$access_level || !in_array($access_level, ['public', 'internal'], true)) {
+        $access_level = 'public';
     }
 
     ?>
@@ -64,12 +64,6 @@ function li_render_document_settings_metabox(WP_Post $post): void
             <option value="public" <?php selected($access_level, 'public'); ?>>
                 <?php esc_html_e('Public', 'lloyds-industrial'); ?>
             </option>
-            <option value="customer" <?php selected($access_level, 'customer'); ?>>
-                <?php esc_html_e('Verified Customer', 'lloyds-industrial'); ?>
-            </option>
-            <option value="distributor" <?php selected($access_level, 'distributor'); ?>>
-                <?php esc_html_e('Distributor', 'lloyds-industrial'); ?>
-            </option>
             <option value="internal" <?php selected($access_level, 'internal'); ?>>
                 <?php esc_html_e('Internal', 'lloyds-industrial'); ?>
             </option>
@@ -90,7 +84,7 @@ add_action('save_post_li_document', function (int $post_id): void {
         return;
     }
 
-    if (!current_user_can('edit_post', $post_id)) {
+    if (!current_user_can('manage_li_documents') && !current_user_can('manage_options')) {
         return;
     }
 
@@ -108,10 +102,10 @@ add_action('save_post_li_document', function (int $post_id): void {
 
     $access_level = isset($_POST['li_access_level'])
         ? sanitize_key(wp_unslash($_POST['li_access_level']))
-        : 'customer';
+        : 'public';
 
-    if (!in_array($access_level, ['public', 'customer', 'distributor', 'internal'], true)) {
-        $access_level = 'customer';
+    if (!in_array($access_level, ['public', 'internal'], true)) {
+        $access_level = 'public';
     }
 
     update_post_meta($post_id, '_li_access_level', $access_level);

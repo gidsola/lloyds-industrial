@@ -39,19 +39,46 @@ add_action('admin_init', function (): void {
     );
 
     add_settings_field(
-        'li_documents_mode',
-        __('Documentation Access Mode', 'lloyds-industrial'),
-        'li_render_documents_mode_field',
-        'lloyds-industrial-settings',
-        'li_brand_section'
-    );
-
-    add_settings_field(
         'li_quote_mode',
         __('Quote Mode', 'lloyds-industrial'),
         'li_render_quote_mode_field',
         'lloyds-industrial-settings',
         'li_brand_section'
+    );
+});
+
+add_action('admin_init', function (): void {
+    if (!current_user_can('manage_options') || !isset($_GET['li_migrate_sds_documents'])) {
+        return;
+    }
+
+    check_admin_referer('li_migrate_sds_documents');
+
+    $result = li_migrate_sds_documents_to_protected_storage();
+
+    set_transient('li_sds_migration_result', $result, MINUTE_IN_SECONDS);
+
+    wp_safe_redirect(admin_url('themes.php?page=lloyds-industrial-settings'));
+    exit;
+});
+
+add_action('admin_notices', function (): void {
+    $result = get_transient('li_sds_migration_result');
+
+    if (!is_array($result)) {
+        return;
+    }
+
+    delete_transient('li_sds_migration_result');
+
+    printf(
+        '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
+        esc_html(sprintf(
+            __('SDS migration complete. Copied: %1$d. Skipped: %2$d. Failed: %3$d.', 'lloyds-industrial'),
+            (int) ($result['migrated'] ?? 0),
+            (int) ($result['skipped'] ?? 0),
+            (int) ($result['failed'] ?? 0)
+        ))
     );
 });
 
@@ -62,11 +89,7 @@ function li_sanitize_theme_settings(array $settings): array
 
         'quote_mode' => !empty($settings['quote_mode']),
 
-        'documents_mode' => in_array(
-            $settings['documents_mode'] ?? 'controlled',
-            ['controlled', 'public', 'private'],
-            true
-        ) ? $settings['documents_mode'] : 'controlled',
+        'documents_mode' => 'controlled',
     ];
 }
 
@@ -87,25 +110,6 @@ function li_render_partner_mode_field(): void
     <?php
 }
 
-function li_render_documents_mode_field(): void
-{
-    $settings = get_option('li_theme_settings', []);
-    $mode = $settings['documents_mode'] ?? 'controlled';
-    ?>
-    <select name="li_theme_settings[documents_mode]">
-        <option value="controlled" <?php selected($mode, 'controlled'); ?>>
-            <?php esc_html_e('Controlled customer access', 'lloyds-industrial'); ?>
-        </option>
-        <option value="public" <?php selected($mode, 'public'); ?>>
-            <?php esc_html_e('Public resources only', 'lloyds-industrial'); ?>
-        </option>
-        <option value="private" <?php selected($mode, 'private'); ?>>
-            <?php esc_html_e('Private/internal only', 'lloyds-industrial'); ?>
-        </option>
-    </select>
-    <?php
-}
-
 function li_render_settings_page(): void
 {
     ?>
@@ -119,6 +123,18 @@ function li_render_settings_page(): void
             submit_button();
             ?>
         </form>
+
+        <hr>
+
+        <h2><?php esc_html_e('Protected SDS Storage', 'lloyds-industrial'); ?></h2>
+        <p>
+            <?php esc_html_e('Copy existing SDS attachment files into protected storage. Original media files are left untouched.', 'lloyds-industrial'); ?>
+        </p>
+        <p>
+            <a class="button button-secondary" href="<?php echo esc_url(wp_nonce_url(admin_url('themes.php?page=lloyds-industrial-settings&li_migrate_sds_documents=1'), 'li_migrate_sds_documents')); ?>">
+                <?php esc_html_e('Migrate SDS Files', 'lloyds-industrial'); ?>
+            </a>
+        </p>
     </div>
     <?php
 }

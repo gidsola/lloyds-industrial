@@ -19,7 +19,7 @@ add_action('init', function (): void {
         'show_in_menu'        => true,
         'show_in_rest'        => true,
         'menu_icon'           => 'dashicons-media-document',
-        'supports'            => ['title', 'editor', 'excerpt', 'custom-fields'],
+        'supports'            => ['title', 'editor', 'excerpt'],
         'capability_type'     => 'post',
         'map_meta_cap'        => true,
         'exclude_from_search' => true,
@@ -57,6 +57,14 @@ add_action('init', function (): void {
         'single'            => true,
         'show_in_rest'      => true,
         'sanitize_callback' => 'sanitize_key',
+        'auth_callback'     => fn (): bool => current_user_can('manage_li_documents') || current_user_can('manage_options'),
+    ]);
+
+    register_post_meta('li_document', '_li_protected_document_path', [
+        'type'              => 'string',
+        'single'            => true,
+        'show_in_rest'      => false,
+        'sanitize_callback' => 'sanitize_text_field',
         'auth_callback'     => fn (): bool => current_user_can('manage_li_documents') || current_user_can('manage_options'),
     ]);
 });

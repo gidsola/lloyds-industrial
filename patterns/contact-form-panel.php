@@ -24,7 +24,7 @@
             <!-- /wp:heading -->
 
             <!-- wp:paragraph -->
-            <p>Use a production form plugin here such as Gravity Forms, Fluent Forms or WS Form. Recommended routing categories: product support, documentation access, distributor inquiry and general contact.</p>
+            <p>Choose product support, SDS access, quote requests, distributor inquiry, or general contact so the request reaches the right team.</p>
             <!-- /wp:paragraph -->
 
         </div>

@@ -32,7 +32,7 @@
                 <p>Industrial lubrication and maintenance products.</p>
                 <!-- /wp:paragraph -->
                 <!-- wp:paragraph {"className":"li-card-link"} -->
-                <p class="li-card-link"><a href="#">View Products →</a></p>
+                <p class="li-card-link"><a href="/product-category/lubricants">View Products</a></p>
                 <!-- /wp:paragraph -->
             </div>
             <!-- /wp:column -->
@@ -46,7 +46,7 @@
                 <p>Heavy-duty cleaning solutions for demanding applications.</p>
                 <!-- /wp:paragraph -->
                 <!-- wp:paragraph {"className":"li-card-link"} -->
-                <p class="li-card-link"><a href="#">View Products →</a></p>
+                <p class="li-card-link"><a href="/product-category/degreasers">View Products</a></p>
                 <!-- /wp:paragraph -->
             </div>
             <!-- /wp:column -->
@@ -60,7 +60,7 @@
                 <p>Asset preservation technologies for equipment and infrastructure.</p>
                 <!-- /wp:paragraph -->
                 <!-- wp:paragraph {"className":"li-card-link"} -->
-                <p class="li-card-link"><a href="#">View Products →</a></p>
+                <p class="li-card-link"><a href="/product-category/corrosion-protection">View Products</a></p>
                 <!-- /wp:paragraph -->
             </div>
             <!-- /wp:column -->

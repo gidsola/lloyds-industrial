@@ -46,8 +46,8 @@ function li_rest_get_products(WP_REST_Request $request): WP_REST_Response
             'applications'   => wp_get_post_terms($product->ID, 'li_application', ['fields' => 'names']),
             'certifications' => get_post_meta($product->ID, '_li_certifications', true),
             'documents'      => [
-                'login_required' => (bool) get_post_meta($product->ID, '_li_requires_document_login', true),
-                'endpoint'       => rest_url('lloyds/v1/products/' . $product->ID . '/documents'),
+                'authorization' => 'sds_purchase_history',
+                'endpoint'      => rest_url('lloyds/v1/products/' . $product->ID . '/documents'),
             ],
         ];
     }
@@ -79,10 +79,12 @@ function li_rest_get_product_documents(WP_REST_Request $request): WP_REST_Respon
         $access_level = (string) get_post_meta($document->ID, '_li_access_level', true);
 
         if (!$access_level) {
-            $access_level = 'customer';
+            $access_level = 'public';
         }
 
         $download_url = li_get_document_download_url($document->ID);
+        $is_sds = li_is_sds_document($document->ID);
+        $has_access = $download_url !== null;
 
         $documents[] = [
             'id'             => $document->ID,
@@ -90,9 +92,11 @@ function li_rest_get_product_documents(WP_REST_Request $request): WP_REST_Respon
             'type'           => wp_get_post_terms($document->ID, 'li_document_type', ['fields' => 'names']),
             'excerpt'        => get_the_excerpt($document),
             'access_level'   => $access_level,
-            'available'      => $download_url !== null,
+            'is_sds'         => $is_sds,
+            'available'      => $has_access,
             'download_url'   => $download_url,
-            'login_required' => $download_url === null && $access_level !== 'public',
+            'login_required' => !$has_access && $is_sds && !is_user_logged_in(),
+            'purchase_required' => !$has_access && $is_sds && is_user_logged_in(),
         ];
     }
 

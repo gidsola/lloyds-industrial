@@ -37,10 +37,10 @@
             <!-- wp:column {"className":"li-card"} -->
             <div class="wp-block-column li-card">
                 <!-- wp:heading {"level":3} -->
-                <h3 class="wp-block-heading">Customer Documentation</h3>
+                <h3 class="wp-block-heading">SDS By Purchase History</h3>
                 <!-- /wp:heading -->
                 <!-- wp:paragraph -->
-                <p>Controlled access to approved SDS, TDS and technical resources for verified customers.</p>
+                <p>Registered customers can download SDS files for products they have purchased.</p>
                 <!-- /wp:paragraph -->
             </div>
             <!-- /wp:column -->
