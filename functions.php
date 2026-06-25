@@ -8,6 +8,7 @@ if (!defined('ABSPATH')) {
 
 require_once get_template_directory() . '/inc/setup.php';
 require_once get_template_directory() . '/inc/brand.php';
+require_once get_template_directory() . '/inc/layout.php';
 require_once get_template_directory() . '/inc/theme-json.php';
 require_once get_template_directory() . '/inc/assets.php';
 
@@ -35,3 +36,5 @@ require_once get_template_directory() . '/inc/admin-columns.php';
 require_once get_template_directory() . '/inc/api.php';
 require_once get_template_directory() . '/inc/site-bootstrap.php';
 require_once get_template_directory() . '/inc/activation.php';
+
+require_once get_template_directory() . '/inc/mega-menu.php';

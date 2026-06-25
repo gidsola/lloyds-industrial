@@ -1,43 +1,33 @@
-<!-- wp:group {"align":"full","className":"li-announcement"} -->
-<div class="wp-block-group alignfull li-announcement">
-    <!-- wp:group {"align":"wide","className":"li-announcement__inner","layout":{"type":"flex","justifyContent":"space-between","flexWrap":"wrap"}} -->
-    <div class="wp-block-group alignwide li-announcement__inner">
-        <!-- wp:paragraph -->
-        <p>Industrial chemical solutions engineered for modern industry.</p>
-        <!-- /wp:paragraph -->
+<!-- wp:group {"align":"full","className":"li-site-header-stack","layout":{"type":"default"}} -->
+<div class="wp-block-group alignfull li-site-header-stack">
 
-        <!-- wp:paragraph -->
-        <p><a href="/contact">Contact technical support</a></p>
-        <!-- /wp:paragraph -->
-    </div>
-    <!-- /wp:group -->
-</div>
-<!-- /wp:group -->
+    <!-- wp:shortcode -->
+    [li_announcement_bar]
+    <!-- /wp:shortcode -->
 
-<!-- wp:group {"align":"full","className":"site-header"} -->
-<div class="wp-block-group alignfull site-header">
+    <!-- wp:group {"align":"full","className":"site-header"} -->
+    <div class="wp-block-group alignfull site-header">
 
-    <!-- wp:group {"align":"wide","className":"li-header-inner","layout":{"type":"flex","justifyContent":"space-between","verticalAlignment":"center"}} -->
-    <div class="wp-block-group alignwide li-header-inner">
+        <!-- wp:group {"align":"wide","className":"li-header-inner","layout":{"type":"flex","justifyContent":"space-between","verticalAlignment":"center"}} -->
+        <div class="wp-block-group alignwide li-header-inner">
 
-        <!-- wp:group {"className":"li-brand","layout":{"type":"flex","verticalAlignment":"center"}} -->
-        <div class="wp-block-group li-brand">
-            <!-- wp:site-logo {"width":54} /-->
-            <!-- wp:site-title {"level":0,"className":"li-site-title"} /-->
+            <!-- wp:group {"className":"li-brand","layout":{"type":"flex","verticalAlignment":"center"}} -->
+            <div class="wp-block-group li-brand">
+                <!-- wp:site-logo {"width":54} /-->
+                <!-- wp:site-title {"level":0,"className":"li-site-title"} /-->
+            </div>
+            <!-- /wp:group -->
+
+            <!-- wp:shortcode -->
+            [li_mega_menu]
+            <!-- /wp:shortcode -->
+
+            <!-- wp:shortcode -->
+            [li_header_actions]
+            <!-- /wp:shortcode -->
+
         </div>
         <!-- /wp:group -->
-
-        <!-- wp:navigation {"overlayMenu":"mobile","className":"li-mega-menu","layout":{"type":"flex","justifyContent":"center"}} /-->
-
-        <!-- wp:buttons {"className":"li-header-actions"} -->
-        <div class="wp-block-buttons li-header-actions">
-            <!-- wp:button {"backgroundColor":"accent","textColor":"white"} -->
-            <div class="wp-block-button">
-                <a class="wp-block-button__link has-white-color has-accent-background-color has-body-text-color has-background wp-element-button" href="/contact">Contact</a>
-            </div>
-            <!-- /wp:button -->
-        </div>
-        <!-- /wp:buttons -->
 
     </div>
     <!-- /wp:group -->

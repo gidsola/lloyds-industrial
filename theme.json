@@ -257,6 +257,7 @@
     { "name": "page-account", "title": "Account Page", "postTypes": ["page"] }
   ],
   "templateParts": [
+    { "name": "announcement-bar", "title": "Announcement Bar", "area": "header" },
     { "name": "header", "title": "Header", "area": "header" },
     { "name": "footer", "title": "Footer", "area": "footer" }
   ],

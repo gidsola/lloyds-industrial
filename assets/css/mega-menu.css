@@ -1,0 +1,433 @@
+/* ============================================
+   Lloyds Industrial - Mega Menu Styles
+   ============================================ */
+
+/* Base Variables */
+:root {
+    --li-mega-menu-bg: #ffffff;
+    --li-mega-menu-text: #333333;
+    --li-mega-menu-hover: #0066cc;
+    --li-mega-menu-border: #e0e0e0;
+    --li-mega-menu-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --li-mega-menu-transition: all 0.2s ease;
+    --li-mega-menu-zindex: 1000;
+    --li-mega-menu-dropdown-zindex: calc(var(--li-mega-menu-zindex) + 10);
+}
+
+/* ============================================
+   Mega Menu Container
+   ============================================ */
+.li-mega-menu {
+    position: relative;
+    z-index: var(--li-mega-menu-zindex);
+}
+
+.li-mega-menu__list {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 0;
+}
+
+/* ============================================
+   Top-Level Menu Items
+   ============================================ */
+.li-mega-menu__item--top-level {
+    position: relative;
+}
+
+.li-mega-menu__item--top-level > .li-mega-menu__link {
+    display: block;
+    padding: 1rem 1.25rem;
+    color: var(--li-mega-menu-text);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 1.4;
+    transition: var(--li-mega-menu-transition);
+    position: relative;
+}
+
+.li-mega-menu__item--top-level > .li-mega-menu__link:hover,
+.li-mega-menu__item--top-level > .li-mega-menu__link:focus {
+    color: var(--li-mega-menu-hover);
+    background-color: transparent;
+}
+
+.li-mega-menu__item--top-level > .li-mega-menu__link li-mega-menu__link--has-dropdown::after {
+    content: '▼';
+    font-size: 0.7em;
+    margin-left: 0.5rem;
+    opacity: 0.6;
+}
+
+.li-mega-menu__item--top-level:hover > .li-mega-menu__link li-mega-menu__link--has-dropdown::after {
+    opacity: 1;
+}
+
+/* Link Content Structure */
+.li-mega-menu__link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: inherit;
+    transition: var(--li-mega-menu-transition);
+}
+
+.li-mega-menu__icon {
+    font-size: 1.1em;
+    line-height: 1;
+    opacity: 0.8;
+}
+
+.li-mega-menu__badge {
+    display: inline-block;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.li-mega-menu__label {
+    display: inline-block;
+}
+
+.li-mega-menu__description {
+    display: block;
+    font-size: 0.85rem;
+    opacity: 0.7;
+    line-height: 1.4;
+    margin-top: 0.25rem;
+}
+
+.li-mega-menu__image {
+    max-width: 24px;
+    max-height: 24px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+/* ============================================
+   Dropdown Panels
+   ============================================ */
+.li-mega-menu__dropdown {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background: var(--li-mega-menu-bg);
+    box-shadow: var(--li-mega-menu-shadow);
+    border: 1px solid var(--li-mega-menu-border);
+    border-top: none;
+    min-width: 220px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: var(--li-mega-menu-transition);
+    z-index: var(--li-mega-menu-dropdown-zindex);
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.li-mega-menu__item--top-level:hover > .li-mega-menu__dropdown,
+.li-mega-menu__item--top-level:focus-within > .li-mega-menu__dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Column Layout */
+.li-mega-menu__dropdown--cols-1 {
+    min-width: 220px;
+    max-width: 300px;
+}
+
+.li-mega-menu__dropdown--cols-2 {
+    min-width: 400px;
+    max-width: 600px;
+}
+
+.li-mega-menu__dropdown--cols-3 {
+    min-width: 600px;
+    max-width: 800px;
+}
+
+.li-mega-menu__dropdown--cols-4 {
+    min-width: 800px;
+    max-width: 1000px;
+}
+
+.li-mega-menu__column {
+    flex: 1;
+    min-width: 180px;
+    padding: 1rem;
+    border-right: 1px solid var(--li-mega-menu-border);
+}
+
+.li-mega-menu__column:last-child {
+    border-right: none;
+}
+
+.li-mega-menu__sublist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.li-mega-menu__sublist .li-mega-menu__item {
+    margin-bottom: 0.25rem;
+}
+
+.li-mega-menu__sublist .li-mega-menu__link {
+    padding: 0.75rem 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 400;
+    border-radius: 0.25rem;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.li-mega-menu__sublist .li-mega-menu__link:hover,
+.li-mega-menu__sublist .li-mega-menu__link:focus {
+    background-color: #f5f5f5;
+    color: var(--li-mega-menu-hover);
+}
+
+.li-mega-menu__sublist .li-mega-menu__icon {
+    font-size: 1.2em;
+    margin-right: 0.5rem;
+}
+
+.li-mega-menu__sublist .li-mega-menu__badge {
+    margin-left: auto;
+    margin-right: 0;
+}
+
+/* Featured Panel */
+.li-mega-menu__featured {
+    flex: 0 0 100%;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-bottom: 1px solid var(--li-mega-menu-border);
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.li-featured-panel {
+    width: 100%;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.li-featured-panel__image {
+    flex: 0 0 80px;
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.li-featured-panel__content {
+    flex: 1;
+}
+
+.li-featured-panel__title {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.li-featured-panel__text {
+    margin: 0 0 1rem 0;
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.5;
+}
+
+.li-featured-panel__button {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: var(--li-mega-menu-hover);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 0.25rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: var(--li-mega-menu-transition);
+}
+
+.li-featured-panel__button:hover,
+.li-featured-panel__button:focus {
+    background: #0055aa;
+    color: #fff;
+}
+
+/* ============================================
+   Mobile Styles
+   ============================================ */
+@media (max-width: 960px) {
+    .li-mega-menu__list {
+        flex-direction: column;
+    }
+
+    .li-mega-menu__item--top-level {
+        border-bottom: 1px solid var(--li-mega-menu-border);
+    }
+
+    .li-mega-menu__item--top-level:last-child {
+        border-bottom: none;
+    }
+
+    .li-mega-menu__dropdown {
+        position: static;
+        display: none;
+        box-shadow: none;
+        border: none;
+        border-top: 1px solid var(--li-mega-menu-border);
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        max-width: none;
+        min-width: 100%;
+    }
+
+    .li-mega-menu__dropdown li-mega-menu__dropdown--cols-1,
+    .li-mega-menu__dropdown li-mega-menu__dropdown--cols-2,
+    .li-mega-menu__dropdown li-mega-menu__dropdown--cols-3,
+    .li-mega-menu__dropdown li-mega-menu__dropdown--cols-4 {
+        min-width: 100%;
+        max-width: none;
+    }
+
+    .li-mega-menu__column {
+        flex: 0 0 100%;
+        max-width: none;
+        border: none;
+        border-top: none;
+        padding: 0.5rem 0;
+    }
+
+    .li-mega-menu__column:first-child {
+        padding-top: 0;
+    }
+
+    .li-mega-menu__item--top-level.has-dropdown > .li-mega-menu__link::after {
+        content: '▶';
+        transform: rotate(0deg);
+        transition: transform 0.2s ease;
+    }
+
+    .li-mega-menu__item--top-level.has-dropdown.open > .li-mega-menu__link::after {
+        transform: rotate(90deg);
+    }
+
+    .li-mega-menu__item--top-level.has-dropdown.open > .li-mega-menu__dropdown {
+        display: block;
+    }
+
+    .li-mega-menu__item--top-level > .li-mega-menu__dropdown {
+        display: block;
+    }
+
+    .li-mega-menu__dropdown > .li-mega-menu__column {
+        padding: 0.5rem 1rem;
+    }
+
+    .li-mega-menu__dropdown > .li-mega-menu__column:first-child {
+        padding-top: 0;
+    }
+
+    /* Mobile menu toggle behavior */
+    .li-mega-menu__item--top-level > .li-mega-menu__link {
+        padding: 1rem;
+        justify-content: space-between;
+    }
+
+    .li-mega-menu__featured {
+        display: none;
+    }
+}
+
+/* ============================================
+   Accessibility
+   ============================================ */
+.li-mega-menu__link:focus {
+    outline: 2px solid var(--li-mega-menu-hover);
+    outline-offset: -2px;
+}
+
+/* Keyboard navigation support */
+.li-mega-menu__item--top-level:focus-within .li-mega-menu__dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* ============================================
+   Touch Devices
+   ============================================ */
+@media (hover: none) and (pointer: coarse) {
+    /* On touch devices, show dropdown on click/tap */
+    .li-mega-menu__item--top-level:hover > .li-mega-menu__dropdown {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .li-mega-menu__item--top-level.open > .li-mega-menu__dropdown {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   Rtl Support
+   ============================================ */
+[dir="rtl"] .li-mega-menu__item--top-level > .li-mega-menu__link li-mega-menu__link--has-dropdown::after {
+    content: '◀';
+    margin-right: 0.5rem;
+    margin-left: 0;
+}
+
+[dir="rtl"] .li-mega-menu__dropdown {
+    left: auto;
+    right: 0;
+}
+
+/* ============================================
+   Animations
+   ============================================ */
+@keyframes liMegaMenuFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.li-mega-menu__dropdown {
+    animation: liMegaMenuFadeIn 0.2s ease forwards;
+}
+
+/* ============================================
+   Print Styles
+   ============================================ */
+@media print {
+    .li-mega-menu__dropdown {
+        display: none !important;
+    }
+}
