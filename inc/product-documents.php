@@ -87,6 +87,17 @@ function li_save_product_sds_document(int $product_id, int $file_id): int
         return 0;
     }
 
+    if ($document_id && !$file_id) {
+        li_delete_protected_document_copy($document_id);
+        delete_post_meta($document_id, '_li_document_file_id');
+        wp_update_post([
+            'ID'          => $document_id,
+            'post_status' => 'draft',
+        ]);
+
+        return $document_id;
+    }
+
     if (!$document_id) {
         $document_id = wp_insert_post([
             'post_title'  => sprintf(
@@ -103,6 +114,11 @@ function li_save_product_sds_document(int $product_id, int $file_id): int
         }
 
         $document_id = (int) $document_id;
+    } elseif (get_post_status($document_id) !== 'publish') {
+        wp_update_post([
+            'ID'          => $document_id,
+            'post_status' => 'publish',
+        ]);
     }
 
     $term_id = li_ensure_sds_document_type_term();
@@ -112,7 +128,7 @@ function li_save_product_sds_document(int $product_id, int $file_id): int
     }
 
     update_post_meta($document_id, '_li_related_product_id', $product_id);
-    update_post_meta($document_id, '_li_access_level', 'public');
+    update_post_meta($document_id, '_li_access_level', 'sds_purchase');
 
     $existing_file_id = li_get_document_file_id($document_id);
 

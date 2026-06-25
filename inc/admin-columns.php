@@ -21,9 +21,7 @@ add_action('manage_li_document_posts_custom_column', function (string $column, i
     }
 
     if ($column === 'li_access_level') {
-        $access = get_post_meta($post_id, '_li_access_level', true);
-        $access = in_array($access, ['public', 'internal'], true) ? $access : 'public';
-        echo esc_html($access ?: 'public');
+        echo esc_html(li_get_document_access_label($post_id));
     }
 
     if ($column === 'li_related_product') {

@@ -84,6 +84,7 @@ function li_rest_get_product_documents(WP_REST_Request $request): WP_REST_Respon
 
         $download_url = li_get_document_download_url($document->ID);
         $is_sds = li_is_sds_document($document->ID);
+        $access_level = $is_sds ? 'sds_purchase' : $access_level;
         $has_access = $download_url !== null;
 
         $documents[] = [

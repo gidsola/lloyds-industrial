@@ -36,6 +36,8 @@ add_action('init', function (): void {
         'hierarchical' => true,
     ]);
 
+    li_ensure_default_document_types();
+
     register_post_meta('li_document', '_li_document_file_id', [
         'type'              => 'integer',
         'single'            => true,
@@ -68,3 +70,8 @@ add_action('init', function (): void {
         'auth_callback'     => fn (): bool => current_user_can('manage_li_documents') || current_user_can('manage_options'),
     ]);
 });
+
+function li_ensure_default_document_types(): void
+{
+    li_ensure_sds_document_type_term();
+}

@@ -30,6 +30,21 @@ function li_is_sds_document(int $document_id): bool
     return false;
 }
 
+function li_get_document_access_label(int $document_id): string
+{
+    if (li_is_sds_document($document_id)) {
+        return __('SDS - Purchase Required', 'lloyds-industrial');
+    }
+
+    $access_level = (string) get_post_meta($document_id, '_li_access_level', true);
+
+    if ($access_level === 'internal') {
+        return __('Internal', 'lloyds-industrial');
+    }
+
+    return __('Public', 'lloyds-industrial');
+}
+
 function li_user_bought_document_product(int $document_id, int $user_id): bool
 {
     $product_id = (int) get_post_meta($document_id, '_li_related_product_id', true);

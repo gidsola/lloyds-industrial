@@ -69,6 +69,18 @@ add_action('admin_enqueue_scripts', function (): void {
         filemtime(get_template_directory() . '/assets/js/admin.js'),
         true
     );
+
+    wp_localize_script('lloyds-admin', 'lloydsAdmin', [
+        'ajaxUrl' => admin_url('admin-ajax.php'),
+        'nonce'   => wp_create_nonce('li_admin_search_products'),
+    ]);
+
+    wp_register_style('lloyds-admin-style', false, [], null);
+    wp_enqueue_style('lloyds-admin-style');
+    wp_add_inline_style(
+        'lloyds-admin-style',
+        '.li-product-search-results{margin-top:6px;border:1px solid #c3c4c7;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.08)}.li-product-search-results__item{display:block;width:100%;padding:8px 10px;border:0;border-bottom:1px solid #dcdcde;background:#fff;text-align:left;cursor:pointer}.li-product-search-results__item:hover,.li-product-search-results__item:focus{background:#f0f6fc}.li-product-search-results__empty{padding:8px 10px;color:#646970}'
+    );
 });
 
 function li_enqueue_google_fonts(string $handle = 'lloyds-fonts'): void

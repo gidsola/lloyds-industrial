@@ -25,6 +25,8 @@ function li_render_document_settings_metabox(WP_Post $post): void
     $related_product_id = (int) get_post_meta($post->ID, '_li_related_product_id', true);
     $access_level = (string) get_post_meta($post->ID, '_li_access_level', true);
     $file_label = $file_id ? get_the_title($file_id) : __('No file selected', 'lloyds-industrial');
+    $is_sds = li_is_sds_document($post->ID);
+    $related_product_title = $related_product_id ? get_the_title($related_product_id) : '';
 
     if (!$access_level || !in_array($access_level, ['public', 'internal'], true)) {
         $access_level = 'public';
@@ -67,12 +69,26 @@ function li_render_document_settings_metabox(WP_Post $post): void
         <label for="li_related_product_id">
             <strong><?php esc_html_e('Related Product ID', 'lloyds-industrial'); ?></strong>
         </label>
+        <span data-li-product-finder>
+            <input
+                type="search"
+                class="widefat"
+                placeholder="<?php esc_attr_e('Search products by name...', 'lloyds-industrial'); ?>"
+                value="<?php echo esc_attr($related_product_title); ?>"
+                data-li-product-search
+            >
+            <span class="description">
+                <?php esc_html_e('Search and select a product, or enter the product ID manually below.', 'lloyds-industrial'); ?>
+            </span>
+            <div class="li-product-search-results" data-li-product-results hidden></div>
+        </span>
         <input
             type="number"
             id="li_related_product_id"
             name="li_related_product_id"
             value="<?php echo esc_attr((string) $related_product_id); ?>"
             class="widefat"
+            data-li-product-id
         >
     </p>
 
@@ -80,17 +96,63 @@ function li_render_document_settings_metabox(WP_Post $post): void
         <label for="li_access_level">
             <strong><?php esc_html_e('Access Level', 'lloyds-industrial'); ?></strong>
         </label>
-        <select id="li_access_level" name="li_access_level" class="widefat">
-            <option value="public" <?php selected($access_level, 'public'); ?>>
-                <?php esc_html_e('Public', 'lloyds-industrial'); ?>
-            </option>
-            <option value="internal" <?php selected($access_level, 'internal'); ?>>
-                <?php esc_html_e('Internal', 'lloyds-industrial'); ?>
-            </option>
-        </select>
+        <?php if ($is_sds): ?>
+            <input type="hidden" name="li_access_level" value="sds_purchase">
+            <strong><?php esc_html_e('SDS - Purchase Required', 'lloyds-industrial'); ?></strong>
+            <span class="description">
+                <?php esc_html_e('SDS files are never public. Customers must be logged in and have purchased the related product.', 'lloyds-industrial'); ?>
+            </span>
+        <?php else: ?>
+            <select id="li_access_level" name="li_access_level" class="widefat">
+                <option value="public" <?php selected($access_level, 'public'); ?>>
+                    <?php esc_html_e('Public', 'lloyds-industrial'); ?>
+                </option>
+                <option value="internal" <?php selected($access_level, 'internal'); ?>>
+                    <?php esc_html_e('Internal', 'lloyds-industrial'); ?>
+                </option>
+            </select>
+            <span class="description">
+                <?php esc_html_e('If this document is assigned the SDS type, this setting is overridden by purchase history.', 'lloyds-industrial'); ?>
+            </span>
+        <?php endif; ?>
     </p>
     <?php
 }
+
+add_action('wp_ajax_li_search_products', function (): void {
+    check_ajax_referer('li_admin_search_products');
+
+    if (!current_user_can('edit_products') && !current_user_can('edit_posts') && !current_user_can('manage_options')) {
+        wp_send_json_error([
+            'message' => __('You do not have permission to search products.', 'lloyds-industrial'),
+        ], 403);
+    }
+
+    $search = isset($_GET['search']) ? sanitize_text_field(wp_unslash($_GET['search'])) : '';
+
+    if (strlen($search) < 2) {
+        wp_send_json_success([]);
+    }
+
+    $query = new WP_Query([
+        'post_type'      => 'product',
+        'post_status'    => ['publish', 'draft', 'pending', 'private'],
+        'posts_per_page' => 10,
+        's'              => $search,
+        'fields'         => 'ids',
+    ]);
+
+    $products = [];
+
+    foreach ($query->posts as $product_id) {
+        $products[] = [
+            'id'    => (int) $product_id,
+            'title' => get_the_title((int) $product_id),
+        ];
+    }
+
+    wp_send_json_success($products);
+});
 
 add_action('save_post_li_document', function (int $post_id): void {
     if (!isset($_POST['li_document_settings_nonce'])) {
@@ -127,7 +189,13 @@ add_action('save_post_li_document', function (int $post_id): void {
         ? sanitize_key(wp_unslash($_POST['li_access_level']))
         : 'public';
 
-    if (!in_array($access_level, ['public', 'internal'], true)) {
+    if (!in_array($access_level, ['public', 'internal', 'sds_purchase'], true)) {
+        $access_level = 'public';
+    }
+
+    if (li_is_sds_document($post_id)) {
+        $access_level = 'sds_purchase';
+    } elseif ($access_level === 'sds_purchase') {
         $access_level = 'public';
     }
 
