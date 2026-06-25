@@ -1,0 +1,306 @@
+/**
+ * Lloyds Industrial - Mega Menu Admin Styles
+ * Styles for the form-based mega menu builder interface
+ */
+
+.li-mega-menu-admin-container {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.li-mega-menu-admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.li-mega-menu-admin-header h4 {
+    margin: 0;
+    color: #1d2327;
+}
+
+.li-mega-menu-admin-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.li-mega-menu-admin-help {
+    margin-bottom: 20px;
+    padding: 10px;
+    background: #f5f5f5;
+    border-radius: 4px;
+    border-left: 3px solid #2271b1;
+}
+
+.li-mega-menu-admin-help p {
+    margin: 0;
+    color: #646970;
+}
+
+.li-mega-menu-items {
+    margin-top: 15px;
+}
+
+.li-mega-menu-item-form {
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.li-mega-menu-item-form--child {
+    background: #f8f9f9;
+    border-color: #eee;
+    margin-bottom: 8px;
+}
+
+.li-mega-menu-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: #f0f0f1;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+}
+
+.li-mega-menu-item-handle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
+
+.li-mega-menu-item-handle .dashicons {
+    color: #82878c;
+    cursor: move;
+}
+
+.li-mega-menu-item-title {
+    font-weight: 600;
+    color: #1d2327;
+}
+
+.li-mega-menu-item-actions {
+    display: flex;
+    gap: 5px;
+    margin-left: 10px;
+}
+
+.li-mega-menu-item-actions .button {
+    padding: 4px 8px;
+}
+
+.li-mega-menu-item-actions .dashicons {
+    font-size: 16px;
+    height: 16px;
+    width: 16px;
+}
+
+.li-mega-menu-item-body {
+    padding: 15px;
+    border-top: 1px solid #eee;
+}
+
+.li-mega-menu-item-fields {
+    display: grid;
+    gap: 20px;
+}
+
+.li-mega-menu-field-group {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+.li-mega-menu-field-group h5 {
+    margin: 0 0 10px 0;
+    color: #1d2327;
+    font-size: 14px;
+}
+
+.li-mega-menu-field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.li-mega-menu-field {
+    margin: 0 0 10px 0;
+}
+
+.li-mega-menu-field--half {
+    margin-bottom: 0;
+}
+
+.li-mega-menu-field label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 600;
+    color: #444;
+}
+
+.li-mega-menu-field input[type="text"],
+.li-mega-menu-field input[type="url"],
+.li-mega-menu-field input[type="number"],
+.li-mega-menu-field input[type="password"],
+.li-mega-menu-field input[type="email"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 13px;
+}
+
+.li-mega-menu-field textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 13px;
+    resize: vertical;
+    min-height: 80px;
+}
+
+.li-mega-menu-field select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 13px;
+    background: #fff;
+}
+
+.li-mega-menu-field label input[type="checkbox"] {
+    margin-right: 8px;
+    margin-top: 2px;
+}
+
+.li-mega-menu-field label {
+    font-weight: normal;
+    cursor: pointer;
+}
+
+.li-mega-menu-field .description {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+    color: #646970;
+}
+
+/* Color picker styling */
+.li-color-picker {
+    width: 100px !important;
+    height: 30px !important;
+    padding: 0 !important;
+}
+
+/* Featured panel settings */
+.li-featured-panel-settings {
+    margin-top: 10px;
+    padding: 10px;
+    background: #fff;
+    border: 1px dashed #ddd;
+    border-radius: 3px;
+}
+
+/* Children container */
+.li-mega-menu-children {
+    margin-top: 10px;
+}
+
+/* Sortable placeholder */
+.li-mega-menu-item-placeholder {
+    background: #f1f1f1;
+    border: 2px dashed #a0a5aa;
+    border-radius: 4px;
+    height: 40px;
+    margin-bottom: 10px;
+}
+
+/* Media picker styling */
+[data-li-media-picker] {
+    margin-top: 5px;
+}
+
+[data-li-media-picker] [data-li-media-id] {
+    display: none;
+}
+
+[data-li-media-picker] [data-li-media-label] {
+    display: inline-block;
+    margin-right: 10px;
+    color: #646970;
+    font-style: italic;
+}
+
+[data-li-media-picker] .button {
+    margin-right: 5px;
+}
+
+/* Make the items list more compact */
+.li-mega-menu-item-form .li-mega-menu-item-form {
+    margin-bottom: 5px;
+}
+
+/* Child items styling */
+.li-mega-menu-children .li-mega-menu-item-header {
+    background: #eee;
+    border-bottom-color: #ddd;
+}
+
+.li-mega-menu-children .li-mega-menu-item-header .dashicons-menu {
+    display: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 782px) {
+    .li-mega-menu-field-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .li-mega-menu-field-row .li-mega-menu-field--half {
+        margin-bottom: 10px;
+    }
+    
+    .li-mega-menu-admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .li-mega-menu-admin-actions {
+        flex-wrap: wrap;
+    }
+}
+
+/* WordPress color picker integration */
+.wp-picker-container {
+    margin-bottom: 10px;
+}
+
+/* Hidden elements */
+.hidden {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Screen reader text */
+.screen-reader-text {
+    border: 0;
+    clip: rect(1px, 1px, 1px, 1px);
+    clip-path: inset(50%);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+    word-wrap: normal !important;
+}

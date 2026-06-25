@@ -449,7 +449,7 @@ function li_get_mega_menu_settings(): array
     if (!empty($settings['mega_menu_data'])) {
         $decoded = json_decode($settings['mega_menu_data'], true);
         if (is_array($decoded)) {
-            return $decoded;
+            return li_sanitize_mega_menu_items($decoded);
         }
     }
     
@@ -507,8 +507,9 @@ function li_sanitize_mega_menu_items(array $items): array
             'children' => li_sanitize_mega_menu_items($item['children'] ?? []),
         ];
         
+        // Only filter out null values, keep empty strings and arrays for required keys
         $sanitized[] = array_filter($sanitized_item, function($value) {
-            return $value !== '' && $value !== [] && $value !== null;
+            return $value !== null;
         });
     }
     
@@ -549,9 +550,9 @@ function li_render_mega_menu_item(array $item, bool $is_top_level = false): stri
         return '';
     }
     
-    $label = esc_html($item['label']);
-    $url = esc_url($item['url']);
-    $has_children = !empty($item['children']);
+    $label = esc_html($item['label'] ?? '');
+    $url = esc_url($item['url'] ?? '');
+    $has_children = !empty($item['children'] ?? []);
     $is_dropdown = $has_children || !empty($item['featured']['enabled']);
     
     $link_attrs = [
@@ -686,12 +687,14 @@ function li_render_mega_menu_dropdown(array $item): string
     
     // Group children by column
     $children_by_column = [];
-    foreach ($item['children'] as $child) {
+    if (!empty($item['children']) && is_array($item['children'])) {
+        foreach ($item['children'] as $child) {
         if (empty($child['enabled'])) {
             continue;
         }
         $col = (int) ($child['column'] ?? 1);
         $children_by_column[$col][] = $child;
+        }
     }
     
     // Render featured panel first (if enabled)

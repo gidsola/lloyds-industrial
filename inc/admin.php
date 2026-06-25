@@ -87,7 +87,7 @@ add_action('admin_init', function (): void {
 
     add_settings_field(
         'li_mega_menu_data',
-        __('Menu Data (JSON)', 'lloyds-industrial'),
+        __('Menu Configuration', 'lloyds-industrial'),
         'li_render_mega_menu_data_field',
         'lloyds-industrial-settings',
         'li_mega_menu_section'
@@ -465,64 +465,693 @@ function li_render_mega_menu_data_field(): void
 {
     $settings = get_option('li_theme_settings', []);
     $mega_menu_data = $settings['mega_menu_data'] ?? '';
+    $menu_items = [];
     
-    // If empty, use default data for display
-    if ($mega_menu_data === '') {
-        $default_data = li_get_default_mega_menu();
-        $mega_menu_data = json_encode($default_data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    // If we have stored JSON data, decode it
+    if ($mega_menu_data !== '') {
+        $decoded = json_decode($mega_menu_data, true);
+        if (is_array($decoded)) {
+            $menu_items = $decoded;
+        }
     }
     
-    // Format the JSON nicely for display
-    $decoded = json_decode($mega_menu_data, true);
-    if (is_array($decoded)) {
-        $mega_menu_data = json_encode($decoded, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    // If no data, use defaults
+    if (empty($menu_items)) {
+        $menu_items = li_get_default_mega_menu();
     }
     
-    $editor_id = 'li_mega_menu_data';
-    
-    // Enqueue code editor if available
-    if (function_exists('wp_enqueue_code_editor')) {
-        $settings = wp_enqueue_code_editor(['type' => 'application/json']);
-        wp_add_inline_script(
-            'code-editor',
-            sprintf(
-                'jQuery(function($) { try { wp.codeEditor.initialize(%s, %s); } catch (e) { console.log(e); } });',
-                wp_json_encode($editor_id),
-                wp_json_encode($settings)
-            )
-        );
+    // Get available pages for dropdown selection
+    $pages = get_pages();
+    $page_options = ['' => __('-- Select Page --', 'lloyds-industrial')];
+    foreach ($pages as $page) {
+        $page_options[$page->ID] = $page->post_title;
     }
+    
+    // Get available product categories for dropdown selection
+    $product_categories = get_terms([
+        'taxonomy' => 'product_cat',
+        'hide_empty' => false,
+    ]);
+    $category_options = ['' => __('-- Select Category --', 'lloyds-industrial')];
+    foreach ($product_categories as $category) {
+        if (!is_wp_error($category)) {
+            $term_id = is_array($category) ? $category['term_id'] : $category->term_id;
+            $term_name = is_array($category) ? $category['name'] : $category->name;
+            $category_options[$term_id] = $term_name;
+        }
+    }
+    
+    // Enqueue the admin script (for media picker functionality)
+    wp_enqueue_script(
+        'lloyds-admin',
+        get_template_directory_uri() . '/assets/js/admin.js',
+        [],
+        wp_get_theme()->get('Version'),
+        true
+    );
+    
+    // Enqueue the mega menu admin script
+    wp_enqueue_script(
+        'li-mega-menu-admin',
+        get_template_directory_uri() . '/assets/js/mega-menu-admin.js',
+        ['jquery', 'jquery-ui-sortable', 'wp-color-picker'],
+        wp_get_theme()->get('Version'),
+        true
+    );
+    
+    wp_localize_script('li-mega-menu-admin', 'liMegaMenu', [
+        'defaultMenu' => li_get_default_mega_menu(),
+        'defaultItem' => [
+            'label' => '',
+            'url' => '',
+            'icon' => '',
+            'image' => '',
+            'description' => '',
+            'bg_color' => '',
+            'text_color' => '',
+            'hover_color' => '',
+            'badge' => '',
+            'badge_color' => '#0066cc',
+            'badge_text_color' => '#ffffff',
+            'column' => 1,
+            'featured' => [
+                'enabled' => false,
+                'image' => '',
+                'title' => '',
+                'text' => '',
+                'url' => '',
+                'button_label' => '',
+            ],
+            'enabled' => true,
+            'new_tab' => false,
+            'mobile_order' => 0,
+            'mobile_visible' => true,
+            'children' => [],
+        ],
+        'confirmations' => [
+            'reset' => __('Are you sure you want to reset the mega menu to defaults? This cannot be undone.', 'lloyds-industrial'),
+            'removeItem' => __('Are you sure you want to remove this menu item?', 'lloyds-industrial'),
+            'removeChild' => __('Are you sure you want to remove this child item?', 'lloyds-industrial'),
+        ],
+        'mediaTitle' => __('Select Image', 'lloyds-industrial'),
+        'mediaButton' => __('Use This Image', 'lloyds-industrial'),
+    ]);
+    
+    // Enqueue styles for the admin interface
+    wp_enqueue_style(
+        'li-mega-menu-admin',
+        get_template_directory_uri() . '/assets/css/mega-menu-admin.css',
+        ['wp-color-picker'],
+        wp_get_theme()->get('Version')
+    );
+    
     ?>
-    <div class="li-mega-menu-data-container">
-        <textarea
-            class="large-text code"
-            id="<?php echo esc_attr($editor_id); ?>"
-            name="li_theme_settings[mega_menu_data]"
-            rows="20"
-            cols="80"
+    <div class="li-mega-menu-admin-container">
+        <div class="li-mega-menu-admin-header">
+            <h4><?php esc_html_e('Mega Menu Builder', 'lloyds-industrial'); ?></h4>
+            <div class="li-mega-menu-admin-actions">
+                <button type="button" class="button button-secondary li-mega-menu-add-item">
+                    <?php esc_html_e('+ Add Top Level Item', 'lloyds-industrial'); ?>
+                </button>
+                <button type="button" class="button button-secondary li-mega-menu-reset">
+                    <?php esc_html_e('Reset to Defaults', 'lloyds-industrial'); ?>
+                </button>
+            </div>
+        </div>
+        
+        <div class="li-mega-menu-admin-help">
+            <p><?php esc_html_e('Drag and drop menu items to reorder them. Use the settings panel to configure each item.', 'lloyds-industrial'); ?></p>
+        </div>
+        
+        <!-- Hidden textarea to store the JSON data (for form submission) -->
+        <textarea 
+            id="li_mega_menu_data_json" 
+            name="li_theme_settings[mega_menu_data]" 
+            class="hidden"
             data-lpignore="true"
-            autocomplete="off"
-            spellcheck="false"
-        ><?php echo esc_textarea($mega_menu_data); ?></textarea>
-        <p class="description">
-            <?php esc_html_e('Enter mega menu configuration as JSON. Use the default structure as a template. Each top-level array item is a menu section with children.', 'lloyds-industrial'); ?>
-        </p>
-        <p class="description">
-            <button type="button" class="button button-secondary li-mega-menu-reset" id="li_reset_mega_menu">
-                <?php esc_html_e('Reset to Defaults', 'lloyds-industrial'); ?>
-            </button>
-        </p>
-        <script type="text/javascript">
-        (function($) {
-            $('#li_reset_mega_menu').on('click', function(e) {
-                e.preventDefault();
-                if (confirm('<?php echo esc_js(__("Are you sure you want to reset the mega menu to defaults? This cannot be undone.", "lloyds-industrial")); ?>')) {
-                    var defaultData = <?php echo json_encode(li_get_default_mega_menu(), JSON_UNESCAPED_UNICODE); ?>;
-                    $('#li_mega_menu_data').val(JSON.stringify(defaultData, null, 2));
-                }
-            });
-        })(jQuery);
+        ><?php echo esc_textarea(json_encode($menu_items, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)); ?></textarea>
+        
+        <!-- Main menu items container -->
+        <div class="li-mega-menu-items" id="li_mega_menu_items">
+            <?php 
+            // Render existing menu items
+            $item_index = 0;
+            foreach ($menu_items as $item) {
+                li_render_mega_menu_item_form($item, $item_index, $page_options, $category_options);
+                $item_index++;
+            }
+            ?>
+        </div>
+        
+        <!-- Template for new items (hidden) -->
+        <script type="text/html" id="li-mega-menu-item-template">
+            <?php 
+            // Render a template item with placeholder values
+            $template_item = [
+                'label' => '',
+                'url' => '',
+                'icon' => '',
+                'image' => '',
+                'description' => '',
+                'bg_color' => '',
+                'text_color' => '',
+                'hover_color' => '',
+                'badge' => '',
+                'badge_color' => '#0066cc',
+                'badge_text_color' => '#ffffff',
+                'column' => 1,
+                'featured' => [
+                    'enabled' => false,
+                    'image' => '',
+                    'title' => '',
+                    'text' => '',
+                    'url' => '',
+                    'button_label' => '',
+                ],
+                'enabled' => true,
+                'new_tab' => false,
+                'mobile_order' => 0,
+                'mobile_visible' => true,
+                'children' => [],
+            ];
+            li_render_mega_menu_item_form($template_item, '__INDEX__', $page_options, $category_options, true);
+            ?>
         </script>
+        
+        <script type="text/html" id="li-mega-menu-child-template">
+            <?php 
+            // Template for child items
+            $child_template = [
+                'label' => '',
+                'url' => '',
+                'icon' => '',
+                'image' => '',
+                'description' => '',
+                'bg_color' => '',
+                'text_color' => '',
+                'hover_color' => '',
+                'badge' => '',
+                'badge_color' => '#0066cc',
+                'badge_text_color' => '#ffffff',
+                'column' => 1,
+                'featured' => [],
+                'enabled' => true,
+                'new_tab' => false,
+                'mobile_order' => 0,
+                'mobile_visible' => true,
+                'children' => [],
+            ];
+            li_render_mega_menu_item_form($child_template, '__PARENT_INDEX__', $page_options, $category_options, true, true);
+            ?>
+        </script>
+    </div>
+    <?php
+}
+
+/**
+ * Render a single menu item form for the admin interface
+ */
+function li_render_mega_menu_item_form(array $item, int $index, array $page_options, array $category_options, bool $is_template = false, bool $is_child = false): void
+{
+    // Ensure we have all required keys with defaults
+    $defaults = [
+        'label' => '',
+        'url' => '',
+        'icon' => '',
+        'image' => '',
+        'description' => '',
+        'bg_color' => '',
+        'text_color' => '',
+        'hover_color' => '',
+        'badge' => '',
+        'badge_color' => '#0066cc',
+        'badge_text_color' => '#ffffff',
+        'column' => 1,
+        'featured' => [
+            'enabled' => false,
+            'image' => '',
+            'title' => '',
+            'text' => '',
+            'url' => '',
+            'button_label' => '',
+        ],
+        'enabled' => true,
+        'new_tab' => false,
+        'mobile_order' => 0,
+        'mobile_visible' => true,
+        'children' => [],
+    ];
+    
+    $item = wp_parse_args($item, $defaults);
+    $item_class = 'li-mega-menu-item-form';
+    if ($is_child) {
+        $item_class .= ' li-mega-menu-item-form--child';
+    }
+    
+    // For template items, we'll use data attributes for JavaScript collection
+    $name_prefix = "";
+    
+    // Build the featured panel data
+    $featured = wp_parse_args($item['featured'], [
+        'enabled' => false,
+        'image' => '',
+        'title' => '',
+        'text' => '',
+        'url' => '',
+        'button_label' => '',
+    ]);
+    
+    ?>
+    <div class="<?php echo esc_attr($item_class); ?>" data-index="<?php echo esc_attr((string) $index); ?>">
+        <div class="li-mega-menu-item-header">
+            <div class="li-mega-menu-item-handle">
+                <span class="dashicons dashicons-menu"></span>
+                <span class="li-mega-menu-item-title">
+                    <?php echo esc_html($item['label'] ?: __('New Menu Item', 'lloyds-industrial')); ?>
+                </span>
+            </div>
+            <div class="li-mega-menu-item-actions">
+                <button type="button" class="button button-small li-mega-menu-item-toggle">
+                    <span class="dashicons dashicons-arrow-down"></span>
+                    <span class="screen-reader-text"><?php esc_html_e('Toggle settings', 'lloyds-industrial'); ?></span>
+                </button>
+                <?php if (!$is_child): ?>
+                    <button type="button" class="button button-small button-primary li-mega-menu-add-child">
+                        <span class="dashicons dashicons-plus"></span>
+                        <span class="screen-reader-text"><?php esc_html_e('Add child item', 'lloyds-industrial'); ?></span>
+                    </button>
+                <?php endif; ?>
+                <button type="button" class="button button-small button-link li-mega-menu-item-remove">
+                    <span class="dashicons dashicons-trash"></span>
+                    <span class="screen-reader-text"><?php esc_html_e('Remove', 'lloyds-industrial'); ?></span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="li-mega-menu-item-body" style="display: none;">
+            <div class="li-mega-menu-item-fields">
+                <!-- Basic Settings -->
+                <div class="li-mega-menu-field-group">
+                    <h5><?php esc_html_e('Basic Settings', 'lloyds-industrial'); ?></h5>
+                    
+                    <p class="li-mega-menu-field">
+                        <label for="li_mega_menu_label_<?php echo esc_attr((string) $index); ?>">
+                            <strong><?php esc_html_e('Label', 'lloyds-industrial'); ?></strong>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="li_mega_menu_label_<?php echo esc_attr((string) $index); ?>"
+                            data-field="label"
+                            value="<?php echo esc_attr($item['label']); ?>"
+                            class="widefat"
+                            placeholder="<?php esc_attr_e('Enter menu item label', 'lloyds-industrial'); ?>"
+                        >
+                    </p>
+                    
+                    <p class="li-mega-menu-field">
+                        <label for="li_mega_menu_url_<?php echo esc_attr((string) $index); ?>">
+                            <strong><?php esc_html_e('URL', 'lloyds-industrial'); ?></strong>
+                        </label>
+                        <input 
+                            type="url" 
+                            id="li_mega_menu_url_<?php echo esc_attr((string) $index); ?>"
+                            data-field="url"
+                            value="<?php echo esc_attr($item['url']); ?>"
+                            class="widefat"
+                            placeholder="<?php esc_attr_e('https://example.com or /page-slug', 'lloyds-industrial'); ?>"
+                        >
+                        <span class="description">
+                            <?php esc_html_e('Enter URL or select from page dropdown', 'lloyds-industrial'); ?>
+                        </span>
+                    </p>
+                    
+                    <p class="li-mega-menu-field">
+                        <label for="li_mega_menu_icon_<?php echo esc_attr((string) $index); ?>">
+                            <?php esc_html_e('Icon (Emoji)', 'lloyds-industrial'); ?>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="li_mega_menu_icon_<?php echo esc_attr((string) $index); ?>"
+                            data-field="icon"
+                            value="<?php echo esc_attr($item['icon']); ?>"
+                            class="regular-text"
+                            placeholder="<?php esc_attr_e('🛢️', 'lloyds-industrial'); ?>"
+                            maxlength="2"
+                        >
+                    </p>
+                    
+                    <p class="li-mega-menu-field">
+                        <label for="li_mega_menu_description_<?php echo esc_attr((string) $index); ?>">
+                            <?php esc_html_e('Description', 'lloyds-industrial'); ?>
+                        </label>
+                        <textarea 
+                            id="li_mega_menu_description_<?php echo esc_attr((string) $index); ?>"
+                            data-field="description"
+                            class="widefat"
+                            rows="2"
+                            placeholder="<?php esc_attr_e('Optional subtext for this menu item', 'lloyds-industrial'); ?>"
+                        ><?php echo esc_textarea($item['description']); ?></textarea>
+                    </p>
+                </div>
+                
+                <!-- Appearance Settings -->
+                <div class="li-mega-menu-field-group">
+                    <h5><?php esc_html_e('Appearance', 'lloyds-industrial'); ?></h5>
+                    
+                    <div class="li-mega-menu-field-row">
+                        <p class="li-mega-menu-field li-mega-menu-field--half">
+                            <label for="li_mega_menu_bg_color_<?php echo esc_attr((string) $index); ?>">
+                                <?php esc_html_e('Background Color', 'lloyds-industrial'); ?>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="li_mega_menu_bg_color_<?php echo esc_attr((string) $index); ?>"
+                                data-field="bg_color"
+                                value="<?php echo esc_attr($item['bg_color']); ?>"
+                                class="regular-text li-color-picker"
+                                placeholder="<?php esc_attr_e('#rrggbb or color name', 'lloyds-industrial'); ?>"
+                                data-default-color=""
+                            >
+                        </p>
+                        
+                        <p class="li-mega-menu-field li-mega-menu-field--half">
+                            <label for="li_mega_menu_text_color_<?php echo esc_attr((string) $index); ?>">
+                                <?php esc_html_e('Text Color', 'lloyds-industrial'); ?>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="li_mega_menu_text_color_<?php echo esc_attr((string) $index); ?>"
+                                data-field="text_color"
+                                value="<?php echo esc_attr($item['text_color']); ?>"
+                                class="regular-text li-color-picker"
+                                placeholder="<?php esc_attr_e('#rrggbb', 'lloyds-industrial'); ?>"
+                                data-default-color=""
+                            >
+                        </p>
+                    </div>
+                    
+                    <p class="li-mega-menu-field">
+                        <label for="li_mega_menu_hover_color_<?php echo esc_attr((string) $index); ?>">
+                            <?php esc_html_e('Hover Color', 'lloyds-industrial'); ?>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="li_mega_menu_hover_color_<?php echo esc_attr((string) $index); ?>"
+                            data-field="hover_color"
+                            value="<?php echo esc_attr($item['hover_color']); ?>"
+                            class="regular-text li-color-picker"
+                            placeholder="<?php esc_attr_e('#rrggbb', 'lloyds-industrial'); ?>"
+                            data-default-color=""
+                        >
+                    </p>
+                </div>
+                
+                <!-- Badge Settings -->
+                <div class="li-mega-menu-field-group">
+                    <h5><?php esc_html_e('Badge', 'lloyds-industrial'); ?></h5>
+                    
+                    <div class="li-mega-menu-field-row">
+                        <p class="li-mega-menu-field li-mega-menu-field--half">
+                            <label for="li_mega_menu_badge_<?php echo esc_attr((string) $index); ?>">
+                                <?php esc_html_e('Badge Text', 'lloyds-industrial'); ?>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="li_mega_menu_badge_<?php echo esc_attr((string) $index); ?>"
+                                name="<?php echo esc_attr($name_prefix); ?>[badge]"
+                                value="<?php echo esc_attr($item['badge']); ?>"
+                                class="regular-text"
+                                placeholder="<?php esc_attr_e('New, Hot, etc.', 'lloyds-industrial'); ?>"
+                            >
+                        </p>
+                        
+                        <p class="li-mega-menu-field li-mega-menu-field--half">
+                            <label for="li_mega_menu_badge_color_<?php echo esc_attr((string) $index); ?>">
+                                <?php esc_html_e('Badge Background', 'lloyds-industrial'); ?>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="li_mega_menu_badge_color_<?php echo esc_attr((string) $index); ?>"
+                                name="<?php echo esc_attr($name_prefix); ?>[badge_color]"
+                                value="<?php echo esc_attr($item['badge_color']); ?>"
+                                class="regular-text li-color-picker"
+                                placeholder="<?php esc_attr_e('#rrggbb', 'lloyds-industrial'); ?>"
+                                data-default-color="#0066cc"
+                            >
+                        </p>
+                    </div>
+                    
+                    <p class="li-mega-menu-field">
+                        <label for="li_mega_menu_badge_text_color_<?php echo esc_attr((string) $index); ?>">
+                            <?php esc_html_e('Badge Text Color', 'lloyds-industrial'); ?>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="li_mega_menu_badge_text_color_<?php echo esc_attr((string) $index); ?>"
+                            name="<?php echo esc_attr($name_prefix); ?>[badge_text_color]"
+                            value="<?php echo esc_attr($item['badge_text_color']); ?>"
+                            class="regular-text li-color-picker"
+                            placeholder="<?php esc_attr_e('#ffffff', 'lloyds-industrial'); ?>"
+                            data-default-color="#ffffff"
+                        >
+                    </p>
+                </div>
+                
+                <!-- Layout & Behavior -->
+                <div class="li-mega-menu-field-group">
+                    <h5><?php esc_html_e('Layout & Behavior', 'lloyds-industrial'); ?></h5>
+                    
+                    <div class="li-mega-menu-field-row">
+                        <p class="li-mega-menu-field li-mega-menu-field--half">
+                            <label>
+                                <input 
+                                    type="checkbox" 
+                                    name="<?php echo esc_attr($name_prefix); ?>[enabled]"
+                                    value="1"
+                                    <?php checked($item['enabled']); ?>
+                                >
+                                <?php esc_html_e('Enabled', 'lloyds-industrial'); ?>
+                            </label>
+                        </p>
+                        
+                        <p class="li-mega-menu-field li-mega-menu-field--half">
+                            <label>
+                                <input 
+                                    type="checkbox" 
+                                    name="<?php echo esc_attr($name_prefix); ?>[new_tab]"
+                                    value="1"
+                                    <?php checked($item['new_tab']); ?>
+                                >
+                                <?php esc_html_e('Open in New Tab', 'lloyds-industrial'); ?>
+                            </label>
+                        </p>
+                    </div>
+                    
+                    <div class="li-mega-menu-field-row">
+                        <p class="li-mega-menu-field li-mega-menu-field--half">
+                            <label>
+                                <input 
+                                    type="checkbox" 
+                                    name="<?php echo esc_attr($name_prefix); ?>[mobile_visible]"
+                                    value="1"
+                                    <?php checked($item['mobile_visible']); ?>
+                                >
+                                <?php esc_html_e('Visible on Mobile', 'lloyds-industrial'); ?>
+                            </label>
+                        </p>
+                        
+                        <p class="li-mega-menu-field li-mega-menu-field--half">
+                            <label for="li_mega_menu_mobile_order_<?php echo esc_attr((string) $index); ?>">
+                                <?php esc_html_e('Mobile Order', 'lloyds-industrial'); ?>
+                            </label>
+                            <input 
+                                type="number" 
+                                id="li_mega_menu_mobile_order_<?php echo esc_attr((string) $index); ?>"
+                                name="<?php echo esc_attr($name_prefix); ?>[mobile_order]"
+                                value="<?php echo esc_attr((string) $item['mobile_order']); ?>"
+                                class="small-text"
+                                min="0"
+                            >
+                        </p>
+                    </div>
+                    
+                    <?php if (!$is_child): ?>
+                        <p class="li-mega-menu-field">
+                            <label for="li_mega_menu_column_<?php echo esc_attr((string) $index); ?>">
+                                <?php esc_html_e('Default Column for Children', 'lloyds-industrial'); ?>
+                            </label>
+                            <select 
+                                id="li_mega_menu_column_<?php echo esc_attr((string) $index); ?>"
+                                name="<?php echo esc_attr($name_prefix); ?>[column]"
+                                class="regular-text"
+                            >
+                                <?php for ($col = 1; $col <= 4; $col++): ?>
+                                    <option 
+                                        value="<?php echo esc_attr((string) $col); ?>" 
+                                        <?php selected($item['column'], $col); ?>
+                                    >
+                                        <?php echo esc_html(sprintf(__('Column %d', 'lloyds-industrial'), $col)); ?>
+                                    </option>
+                                <?php endfor; ?>
+                            </select>
+                        </p>
+                    <?php else: ?>
+                        <p class="li-mega-menu-field">
+                            <label for="li_mega_menu_column_<?php echo esc_attr((string) $index); ?>">
+                                <?php esc_html_e('Column Position', 'lloyds-industrial'); ?>
+                            </label>
+                            <select 
+                                id="li_mega_menu_column_<?php echo esc_attr((string) $index); ?>"
+                                name="<?php echo esc_attr($name_prefix); ?>[column]"
+                                class="regular-text"
+                            >
+                                <?php for ($col = 1; $col <= 4; $col++): ?>
+                                    <option 
+                                        value="<?php echo esc_attr((string) $col); ?>" 
+                                        <?php selected($item['column'], $col); ?>
+                                    >
+                                        <?php echo esc_html(sprintf(__('Column %d', 'lloyds-industrial'), $col)); ?>
+                                    </option>
+                                <?php endfor; ?>
+                            </select>
+                        </p>
+                    <?php endif; ?>
+                </div>
+                
+                <!-- Featured Panel Settings (for top-level items) -->
+                <?php if (!$is_child): ?>
+                    <div class="li-mega-menu-field-group">
+                        <h5><?php esc_html_e('Featured Panel', 'lloyds-industrial'); ?></h5>
+                        
+                        <p class="li-mega-menu-field">
+                            <label>
+                                <input 
+                                    type="checkbox" 
+                                    name="<?php echo esc_attr($name_prefix); ?>[featured][enabled]"
+                                    value="1"
+                                    class="li-featured-enabled-toggle"
+                                    <?php checked($featured['enabled']); ?>
+                                    data-target="li-featured-panel-<?php echo esc_attr((string) $index); ?>"
+                                >
+                                <?php esc_html_e('Enable Featured Panel', 'lloyds-industrial'); ?>
+                            </label>
+                        </p>
+                        
+                        <div class="li-featured-panel-settings" id="li-featured-panel-<?php echo esc_attr((string) $index); ?>" style="<?php echo $featured['enabled'] ? '' : 'display:none;'; ?>">
+                            <p class="li-mega-menu-field">
+                                <label for="li_mega_menu_featured_title_<?php echo esc_attr((string) $index); ?>">
+                                    <?php esc_html_e('Title', 'lloyds-industrial'); ?>
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="li_mega_menu_featured_title_<?php echo esc_attr((string) $index); ?>"
+                                    name="<?php echo esc_attr($name_prefix); ?>[featured][title]"
+                                    value="<?php echo esc_attr($featured['title']); ?>"
+                                    class="widefat"
+                                    placeholder="<?php esc_attr_e('Featured panel title', 'lloyds-industrial'); ?>"
+                                >
+                            </p>
+                            
+                            <p class="li-mega-menu-field">
+                                <label for="li_mega_menu_featured_text_<?php echo esc_attr((string) $index); ?>">
+                                    <?php esc_html_e('Text', 'lloyds-industrial'); ?>
+                                </label>
+                                <textarea 
+                                    id="li_mega_menu_featured_text_<?php echo esc_attr((string) $index); ?>"
+                                    name="<?php echo esc_attr($name_prefix); ?>[featured][text]"
+                                    class="widefat"
+                                    rows="3"
+                                    placeholder="<?php esc_attr_e('Featured panel description', 'lloyds-industrial'); ?>"
+                                ><?php echo esc_textarea($featured['text']); ?></textarea>
+                            </p>
+                            
+                            <p class="li-mega-menu-field">
+                                <label for="li_mega_menu_featured_url_<?php echo esc_attr((string) $index); ?>">
+                                    <?php esc_html_e('URL', 'lloyds-industrial'); ?>
+                                </label>
+                                <input 
+                                    type="url" 
+                                    id="li_mega_menu_featured_url_<?php echo esc_attr((string) $index); ?>"
+                                    name="<?php echo esc_attr($name_prefix); ?>[featured][url]"
+                                    value="<?php echo esc_attr($featured['url']); ?>"
+                                    class="widefat"
+                                    placeholder="<?php esc_attr_e('https://example.com', 'lloyds-industrial'); ?>"
+                                >
+                            </p>
+                            
+                            <p class="li-mega-menu-field">
+                                <label for="li_mega_menu_featured_button_<?php echo esc_attr((string) $index); ?>">
+                                    <?php esc_html_e('Button Label', 'lloyds-industrial'); ?>
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="li_mega_menu_featured_button_<?php echo esc_attr((string) $index); ?>"
+                                    name="<?php echo esc_attr($name_prefix); ?>[featured][button_label]"
+                                    value="<?php echo esc_attr($featured['button_label']); ?>"
+                                    class="regular-text"
+                                    placeholder="<?php esc_attr_e('Learn More', 'lloyds-industrial'); ?>"
+                                >
+                            </p>
+                            
+                            <p class="li-mega-menu-field">
+                                <label for="li_mega_menu_featured_image_<?php echo esc_attr((string) $index); ?>">
+                                    <?php esc_html_e('Image', 'lloyds-industrial'); ?>
+                                </label>
+                                <span data-li-media-picker>
+                                    <input
+                                        type="hidden"
+                                        id="li_mega_menu_featured_image_<?php echo esc_attr((string) $index); ?>"
+                                        name="<?php echo esc_attr($name_prefix); ?>[featured][image]"
+                                        value="<?php echo esc_attr((string) $featured['image']); ?>"
+                                        data-li-media-id
+                                    >
+                                    <span data-li-media-label>
+                                        <?php 
+                                        if ($featured['image'] && is_numeric($featured['image'])) {
+                                            $image_url = wp_get_attachment_url((int) $featured['image']);
+                                            echo $image_url ? esc_html(basename($image_url)) : esc_html__('No image selected', 'lloyds-industrial');
+                                        } else {
+                                            esc_html_e('No image selected', 'lloyds-industrial');
+                                        }
+                                        ?>
+                                    </span>
+                                    <br>
+                                    <button
+                                        type="button"
+                                        class="button"
+                                        data-li-media-select
+                                        data-li-media-title="<?php esc_attr_e('Select Featured Image', 'lloyds-industrial'); ?>"
+                                        data-li-media-button="<?php esc_attr_e('Use This Image', 'lloyds-industrial'); ?>"
+                                        data-li-media-type="image"
+                                    >
+                                        <?php esc_html_e('Select Image', 'lloyds-industrial'); ?>
+                                    </button>
+                                    <button type="button" class="button" data-li-media-remove <?php echo $featured['image'] ? '' : 'hidden'; ?>>
+                                        <?php esc_html_e('Remove', 'lloyds-industrial'); ?>
+                                    </button>
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                <?php endif; ?>
+                
+                <!-- Child Items (for top-level items) -->
+                <?php if (!$is_child && !empty($item['children'])): ?>
+                    <div class="li-mega-menu-field-group">
+                        <h5><?php esc_html_e('Child Items', 'lloyds-industrial'); ?></h5>
+                        <div class="li-mega-menu-children" data-parent-index="<?php echo esc_attr((string) $index); ?>">
+                            <?php 
+                            $child_index = 0;
+                            foreach ($item['children'] as $child) {
+                                li_render_mega_menu_item_form($child, $child_index, $page_options, $category_options, false, true);
+                                $child_index++;
+                            }
+                            ?>
+                        </div>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
     </div>
     <?php
 }
