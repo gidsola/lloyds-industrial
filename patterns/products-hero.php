@@ -13,7 +13,7 @@
     <div class="wp-block-group alignwide">
 
         <!-- wp:paragraph {"className":"li-eyebrow","textColor":"accent"} -->
-        <p class="li-eyebrow has-accent-color has-body-text-color">Product Catalog</p>
+        <p class="li-eyebrow has-accent-color has-body-text-color">Product Catalogue</p>
         <!-- /wp:paragraph -->
 
         <!-- wp:heading {"level":1,"textColor":"white"} -->

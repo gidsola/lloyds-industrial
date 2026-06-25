@@ -38,3 +38,8 @@ require_once get_template_directory() . '/inc/site-bootstrap.php';
 require_once get_template_directory() . '/inc/activation.php';
 
 require_once get_template_directory() . '/inc/mega-menu.php';
+
+$lloyds_flipbook_plugin = get_template_directory() . '/plugins/lloyds-pdf-flipbook/lloyds-pdf-flipbook.php';
+if (file_exists($lloyds_flipbook_plugin) && !function_exists('lloyds_flipbook_register_post_type')) {
+    require_once $lloyds_flipbook_plugin;
+}

@@ -36,15 +36,15 @@
     --li-mega-menu-text: var(--li-text);
     --li-mega-menu-hover: var(--li-accent);
     --li-mega-menu-border: var(--li-border);
-    --li-mega-menu-shadow: var(--li-shadow-lg);
+    --li-mega-menu-shadow: 0 14px 32px rgba(23, 52, 73, 0.14);
 }
 
 /* Top-level menu items in header */
 .li-mega-menu__item--top-level > .li-mega-menu__link {
     color: var(--li-text);
-    font-size: 0.96rem;
-    font-weight: 800;
-    padding: 1rem 1.25rem;
+    font-size: 0.88rem;
+    font-weight: 750;
+    padding: 0.65rem 0.75rem;
 }
 
 .li-mega-menu__item--top-level > .li-mega-menu__link:hover,
@@ -83,7 +83,7 @@
 /* Mobile adjustments */
 @media (max-width: 960px) {
     .li-mega-menu__item--top-level > .li-mega-menu__link {
-        padding: 1rem;
+        padding: 0.65rem 0.75rem;
     }
     
     .li-mega-menu__dropdown {

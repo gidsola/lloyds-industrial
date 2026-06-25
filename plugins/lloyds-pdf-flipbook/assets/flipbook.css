@@ -1,0 +1,310 @@
+.lloyds-flipbook {
+    --lf-border: #dfe5ea;
+    --lf-surface: #f6f8fa;
+    --lf-ink: #162c3b;
+    --lf-accent: #d8a03f;
+    --lf-desk: #26313a;
+    margin: 36px auto;
+    max-width: 1180px;
+}
+
+.lloyds-flipbook__header {
+    margin-bottom: 18px;
+}
+
+.lloyds-flipbook__eyebrow {
+    color: var(--lf-accent);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    margin: 0 0 8px;
+    text-transform: uppercase;
+}
+
+.lloyds-flipbook__header h2 {
+    margin: 0 0 8px;
+}
+
+.lloyds-flipbook__toolbar {
+    align-items: center;
+    background: #fbfcfd;
+    border: 1px solid var(--lf-border);
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: space-between;
+    padding: 8px 10px;
+}
+
+.lloyds-flipbook__toolbar button,
+.lloyds-flipbook__toolbar a,
+.lloyds-flipbook-library__actions a {
+    background: var(--lf-ink);
+    border: 0;
+    border-radius: 6px;
+    color: #fff;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 0.84rem;
+    font-weight: 700;
+    line-height: 1;
+    padding: 9px 11px;
+    text-decoration: none;
+}
+
+.lloyds-flipbook__toolbar button:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+
+.lloyds-flipbook__stage {
+    background:
+        radial-gradient(circle at center, rgba(255, 255, 255, 0.18), transparent 58%),
+        linear-gradient(135deg, #34414b, var(--lf-desk));
+    border: 1px solid var(--lf-border);
+    border-top: 0;
+    min-height: 500px;
+    overflow: hidden;
+    padding: 18px;
+}
+
+.lloyds-flipbook__spread {
+    display: grid;
+    gap: 0;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    margin: 0 auto;
+    max-width: 940px;
+    perspective: 1800px;
+    position: relative;
+}
+
+.lloyds-flipbook__spread::after {
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0), rgba(18, 28, 36, 0.28), rgba(0, 0, 0, 0));
+    bottom: 3%;
+    content: "";
+    left: 50%;
+    pointer-events: none;
+    position: absolute;
+    top: 3%;
+    transform: translateX(-50%);
+    width: 26px;
+    z-index: 2;
+}
+
+.lloyds-flipbook__page {
+    background: #fffdf8;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 22px 48px rgba(0, 0, 0, 0.32);
+    margin: 0;
+    min-height: 430px;
+    overflow: hidden;
+    position: relative;
+    transform-origin: center;
+    transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.lloyds-flipbook__page:first-child {
+    border-radius: 5px 0 0 5px;
+    transform-origin: right center;
+}
+
+.lloyds-flipbook__page:last-child {
+    border-radius: 0 5px 5px 0;
+    transform-origin: left center;
+}
+
+.lloyds-flipbook__page::before {
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.18), transparent 18%);
+    content: "";
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    z-index: 1;
+}
+
+.lloyds-flipbook__page:first-child::before {
+    background: linear-gradient(270deg, rgba(0, 0, 0, 0.16), transparent 18%);
+    opacity: 1;
+}
+
+.lloyds-flipbook__page:last-child::before {
+    opacity: 1;
+}
+
+.lloyds-flipbook__page:hover {
+    box-shadow: 0 26px 60px rgba(0, 0, 0, 0.38);
+}
+
+.lloyds-flipbook__page img {
+    display: block;
+    height: auto;
+    width: 100%;
+}
+
+.lloyds-flipbook__page figcaption {
+    background: rgba(255, 255, 255, 0.86);
+    border-radius: 4px;
+    bottom: 8px;
+    color: var(--lf-ink);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 7px;
+    position: absolute;
+    right: 8px;
+}
+
+.lloyds-flipbook__page.is-empty {
+    background: linear-gradient(135deg, #fffdf8, #f2eee4);
+    box-shadow: none;
+}
+
+.lloyds-flipbook__spread.is-turning-forward .lloyds-flipbook__page:last-child {
+    animation: lloydsPageTurnForward 420ms ease;
+}
+
+.lloyds-flipbook__spread.is-turning-back .lloyds-flipbook__page:first-child {
+    animation: lloydsPageTurnBack 420ms ease;
+}
+
+.lloyds-flipbook__thumbs {
+    background: #fbfcfd;
+    border: 1px solid var(--lf-border);
+    border-radius: 0 0 8px 8px;
+    border-top: 0;
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 8px 10px;
+}
+
+.lloyds-flipbook__thumbs button {
+    background-color: #fff;
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    flex: 0 0 46px;
+    height: 64px;
+}
+
+.lloyds-flipbook__thumbs button.is-active {
+    border-color: var(--lf-accent);
+}
+
+.lloyds-flipbook__fallback {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    min-height: 420px;
+}
+
+.lloyds-flipbook__fallback-book {
+    background: linear-gradient(90deg, #f5efe2 0 49%, #d7cbb9 50%, #fdf8ef 51% 100%);
+    border-radius: 7px;
+    box-shadow: 0 24px 58px rgba(0, 0, 0, 0.34);
+    max-width: 620px;
+    padding: 34px;
+    width: min(100%, 620px);
+}
+
+.lloyds-flipbook__fallback-page {
+    background: rgba(255, 255, 255, 0.74);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 4px;
+    color: var(--lf-ink);
+    padding: 24px;
+}
+
+.lloyds-flipbook__fallback-page h3 {
+    margin: 0 0 8px;
+}
+
+.lloyds-flipbook__fallback-page p {
+    margin: 0 0 16px;
+}
+
+.lloyds-flipbook__fallback-page a {
+    background: var(--lf-ink);
+    border-radius: 5px;
+    color: #fff;
+    display: inline-flex;
+    font-weight: 700;
+    line-height: 1;
+    padding: 10px 12px;
+    text-decoration: none;
+}
+
+.lloyds-flipbook-library {
+    display: grid;
+    gap: 18px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.lloyds-flipbook-library__item {
+    background: #fff;
+    border: 1px solid var(--lf-border);
+    border-radius: 8px;
+    padding: 18px;
+}
+
+.lloyds-flipbook-library__image,
+.lloyds-flipbook-library__placeholder {
+    aspect-ratio: 4 / 3;
+    background: var(--lf-surface);
+    border-radius: 6px;
+    display: block;
+    margin-bottom: 14px;
+    object-fit: cover;
+    width: 100%;
+}
+
+.lloyds-flipbook-library__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.lloyds-flipbook-notice {
+    background: #fff8e5;
+    border-left: 4px solid var(--lf-accent, #d8a03f);
+    padding: 14px 16px;
+}
+
+@media (max-width: 760px) {
+    .lloyds-flipbook__stage {
+        min-height: 360px;
+        padding: 12px;
+    }
+
+    .lloyds-flipbook__spread {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .lloyds-flipbook__page.is-empty {
+        display: none;
+    }
+}
+
+@keyframes lloydsPageTurnForward {
+    0% {
+        transform: rotateY(-10deg);
+    }
+
+    100% {
+        transform: rotateY(0);
+    }
+}
+
+@keyframes lloydsPageTurnBack {
+    0% {
+        transform: rotateY(10deg);
+    }
+
+    100% {
+        transform: rotateY(0);
+    }
+}

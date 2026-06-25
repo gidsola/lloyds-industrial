@@ -23,16 +23,8 @@
                 <!-- wp:paragraph -->
                 <p>Questions about applications, industries, product selection or documentation.</p>
                 <!-- /wp:paragraph -->
-            </div>
-            <!-- /wp:column -->
-
-            <!-- wp:column {"className":"li-card"} -->
-            <div class="wp-block-column li-card">
-                <!-- wp:heading {"level":3} -->
-                <h3 class="wp-block-heading">Customer Access</h3>
-                <!-- /wp:heading -->
-                <!-- wp:paragraph -->
-                <p>Get help matching SDS access to a customer account and product order history.</p>
+                <!-- wp:paragraph {"className":"li-card-link"} -->
+                <p class="li-card-link"><a href="mailto:Marketing@lloydslaboratories.com">Marketing@lloydslaboratories.com</a></p>
                 <!-- /wp:paragraph -->
             </div>
             <!-- /wp:column -->
@@ -40,10 +32,27 @@
             <!-- wp:column {"className":"li-card"} -->
             <div class="wp-block-column li-card">
                 <!-- wp:heading {"level":3} -->
-                <h3 class="wp-block-heading">Partner &amp; Distributor</h3>
+                <h3 class="wp-block-heading">Place Orders</h3>
                 <!-- /wp:heading -->
                 <!-- wp:paragraph -->
-                <p>Support for partner sites, distributor inquiries and business development.</p>
+                <p>Order desk support for product availability, purchase routing and customer account coordination.</p>
+                <!-- /wp:paragraph -->
+                <!-- wp:paragraph {"className":"li-card-link"} -->
+                <p class="li-card-link"><a href="mailto:Orderdesk@lloydslaboratories.com">Orderdesk@lloydslaboratories.com</a></p>
+                <!-- /wp:paragraph -->
+            </div>
+            <!-- /wp:column -->
+
+            <!-- wp:column {"className":"li-card"} -->
+            <div class="wp-block-column li-card">
+                <!-- wp:heading {"level":3} -->
+                <h3 class="wp-block-heading">Accounting</h3>
+                <!-- /wp:heading -->
+                <!-- wp:paragraph -->
+                <p>Payment, invoice and payable questions for existing commercial accounts.</p>
+                <!-- /wp:paragraph -->
+                <!-- wp:paragraph {"className":"li-card-link"} -->
+                <p class="li-card-link"><a href="mailto:Payables@lloydslaboratories.com">Payables@lloydslaboratories.com</a></p>
                 <!-- /wp:paragraph -->
             </div>
             <!-- /wp:column -->

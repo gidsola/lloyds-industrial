@@ -64,14 +64,14 @@ function li_get_default_mega_menu(): array
             'children' => [
                 [
                     'label' => __('Lubricants', 'lloyds-industrial'),
-                    'url' => '/product-category/lubricants',
+                    'url' => '/product-category/lubricants-corrosion-inhibitors',
                     'icon' => '🛢️',
                     'image' => '',
-                    'description' => __('High-performance lubricants for industrial applications', 'lloyds-industrial'),
+                    'description' => __('Lubricants, corrosion inhibitors, and equipment protection', 'lloyds-industrial'),
                     'bg_color' => '',
                     'text_color' => '',
                     'hover_color' => '',
-                    'badge' => __('New', 'lloyds-industrial'),
+                    'badge' => '',
                     'badge_color' => '#28a745',
                     'badge_text_color' => '#ffffff',
                     'column' => 1,
@@ -83,11 +83,11 @@ function li_get_default_mega_menu(): array
                     'children' => [],
                 ],
                 [
-                    'label' => __('Degreasers', 'lloyds-industrial'),
-                    'url' => '/product-category/degreasers',
+                    'label' => __('Cleaners & Degreasers', 'lloyds-industrial'),
+                    'url' => '/product-category/cleaner-degreasers',
                     'icon' => '🧼',
                     'image' => '',
-                    'description' => __('Industrial strength degreasing solutions', 'lloyds-industrial'),
+                    'description' => __('Professional maintenance cleaning for demanding environments', 'lloyds-industrial'),
                     'bg_color' => '',
                     'text_color' => '',
                     'hover_color' => '',
@@ -103,11 +103,11 @@ function li_get_default_mega_menu(): array
                     'children' => [],
                 ],
                 [
-                    'label' => __('Corrosion Protection', 'lloyds-industrial'),
-                    'url' => '/product-category/corrosion-protection',
+                    'label' => __('Automotive & Fleet', 'lloyds-industrial'),
+                    'url' => '/product-category/automotive-fleet-maintenance',
                     'icon' => '🛡️',
                     'image' => '',
-                    'description' => __('Protect your equipment from corrosion and rust', 'lloyds-industrial'),
+                    'description' => __('Fleet maintenance, wash, polish, and shop products', 'lloyds-industrial'),
                     'bg_color' => '',
                     'text_color' => '',
                     'hover_color' => '',
@@ -123,7 +123,47 @@ function li_get_default_mega_menu(): array
                     'children' => [],
                 ],
                 [
-                    'label' => __('Featured Product', 'lloyds-industrial'),
+                    'label' => __('Construction Specialty', 'lloyds-industrial'),
+                    'url' => '/product-category/construction-specialty',
+                    'icon' => '',
+                    'image' => '',
+                    'description' => __('Concrete, form release, coatings, and jobsite specialty products', 'lloyds-industrial'),
+                    'bg_color' => '',
+                    'text_color' => '',
+                    'hover_color' => '',
+                    'badge' => '',
+                    'badge_color' => '#0066cc',
+                    'badge_text_color' => '#ffffff',
+                    'column' => 2,
+                    'featured' => [],
+                    'enabled' => true,
+                    'new_tab' => false,
+                    'mobile_order' => 4,
+                    'mobile_visible' => true,
+                    'children' => [],
+                ],
+                [
+                    'label' => __('Electrical & Facility Care', 'lloyds-industrial'),
+                    'url' => '/product-category/facility-property-maintenance',
+                    'icon' => '',
+                    'image' => '',
+                    'description' => __('Electrical specialty, sanitation, and facility maintenance', 'lloyds-industrial'),
+                    'bg_color' => '',
+                    'text_color' => '',
+                    'hover_color' => '',
+                    'badge' => '',
+                    'badge_color' => '#0066cc',
+                    'badge_text_color' => '#ffffff',
+                    'column' => 2,
+                    'featured' => [],
+                    'enabled' => true,
+                    'new_tab' => false,
+                    'mobile_order' => 5,
+                    'mobile_visible' => true,
+                    'children' => [],
+                ],
+                [
+                    'label' => __('Product Catalogue', 'lloyds-industrial'),
                     'url' => '',
                     'icon' => '',
                     'image' => '',
@@ -138,14 +178,14 @@ function li_get_default_mega_menu(): array
                     'featured' => [
                         'enabled' => true,
                         'image' => '',
-                        'title' => __('Premium Industrial Lubricant', 'lloyds-industrial'),
-                        'text' => __('Our best-selling lubricant for heavy-duty applications. Long-lasting protection.', 'lloyds-industrial'),
-                        'url' => '/products/premium-lubricant',
-                        'button_label' => __('View Product', 'lloyds-industrial'),
+                        'title' => __('Browse The Lloyds Catalogue', 'lloyds-industrial'),
+                        'text' => __('Explore product lines by category, application, industry, and document availability.', 'lloyds-industrial'),
+                        'url' => '/catalogue',
+                        'button_label' => __('Open Catalogue', 'lloyds-industrial'),
                     ],
                     'enabled' => true,
                     'new_tab' => false,
-                    'mobile_order' => 4,
+                    'mobile_order' => 6,
                     'mobile_visible' => true,
                     'children' => [],
                 ],
@@ -266,6 +306,26 @@ function li_get_default_mega_menu(): array
             'mobile_visible' => true,
             'children' => [
                 [
+                    'label' => __('Catalogue', 'lloyds-industrial'),
+                    'url' => '/catalogue',
+                    'icon' => '',
+                    'image' => '',
+                    'description' => __('Current product catalogue and product-line overview', 'lloyds-industrial'),
+                    'bg_color' => '',
+                    'text_color' => '',
+                    'hover_color' => '',
+                    'badge' => '',
+                    'badge_color' => '#0066cc',
+                    'badge_text_color' => '#ffffff',
+                    'column' => 1,
+                    'featured' => [],
+                    'enabled' => true,
+                    'new_tab' => false,
+                    'mobile_order' => 1,
+                    'mobile_visible' => true,
+                    'children' => [],
+                ],
+                [
                     'label' => __('Technical Documents', 'lloyds-industrial'),
                     'url' => '/documentation/technical',
                     'icon' => '📄',
@@ -281,7 +341,7 @@ function li_get_default_mega_menu(): array
                     'featured' => [],
                     'enabled' => true,
                     'new_tab' => false,
-                    'mobile_order' => 1,
+                    'mobile_order' => 2,
                     'mobile_visible' => true,
                     'children' => [],
                 ],
@@ -301,7 +361,7 @@ function li_get_default_mega_menu(): array
                     'featured' => [],
                     'enabled' => true,
                     'new_tab' => false,
-                    'mobile_order' => 2,
+                    'mobile_order' => 3,
                     'mobile_visible' => true,
                     'children' => [],
                 ],
@@ -321,7 +381,7 @@ function li_get_default_mega_menu(): array
                     'featured' => [],
                     'enabled' => true,
                     'new_tab' => false,
-                    'mobile_order' => 3,
+                    'mobile_order' => 4,
                     'mobile_visible' => true,
                     'children' => [],
                 ],
@@ -341,7 +401,7 @@ function li_get_default_mega_menu(): array
                     'featured' => [],
                     'enabled' => true,
                     'new_tab' => false,
-                    'mobile_order' => 4,
+                    'mobile_order' => 5,
                     'mobile_visible' => true,
                     'children' => [],
                 ],
@@ -551,7 +611,8 @@ function li_render_mega_menu_item(array $item, bool $is_top_level = false): stri
     }
     
     $label = esc_html($item['label'] ?? '');
-    $url = esc_url($item['url'] ?? '');
+    $raw_url = (string) ($item['url'] ?? '');
+    $url = esc_url(function_exists('li_resolve_site_url') ? li_resolve_site_url($raw_url) : $raw_url);
     $has_children = !empty($item['children'] ?? []);
     $is_dropdown = $has_children || !empty($item['featured']['enabled']);
     
@@ -635,6 +696,9 @@ function li_render_mega_menu_item(array $item, bool $is_top_level = false): stri
     }
     if (!empty($item['featured']['enabled'])) {
         $item_class .= ' li-mega-menu__item--has-featured';
+    }
+    if ($is_dropdown) {
+        $item_class .= ' li-mega-menu__item--has-dropdown';
     }
     
     $item_style = '';
@@ -762,7 +826,8 @@ function li_render_featured_panel(array $featured): string
     
     $button_html = '';
     if (!empty($featured['url']) && !empty($featured['button_label'])) {
-        $button_html = '<a href="' . esc_url($featured['url']) . '" class="li-featured-panel__button li-button">' . esc_html($featured['button_label']) . '</a>';
+        $featured_url = (string) $featured['url'];
+        $button_html = '<a href="' . esc_url(function_exists('li_resolve_site_url') ? li_resolve_site_url($featured_url) : $featured_url) . '" class="li-featured-panel__button li-button">' . esc_html($featured['button_label']) . '</a>';
     }
     
     $html = '<div class="li-mega-menu__featured li-featured-panel">';

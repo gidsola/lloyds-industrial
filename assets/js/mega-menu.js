@@ -33,25 +33,14 @@
 
                 // Only add click handler if dropdown exists
                 if ($dropdown.length) {
-                    // Store original href
-                    var originalHref = $link.attr('href');
+                    $link.off('click.megaMenu keydown.megaMenu');
 
                     // Prevent default click on link if it has dropdown
                     $link.on('click.megaMenu', function(e) {
                         // On mobile/touch: prevent navigation if clicking the dropdown trigger
                         if (isMobile || isTouchDevice) {
-                            // Check if the click target is the arrow or the main link
-                            var $target = $(e.target);
-                            var isArrowClick = $target.hasClass('li-mega-menu__link--has-dropdown') ||
-                                              $target.parent().hasClass('li-mega-menu__link--has-dropdown');
-
-                            // If the item has children and we're on mobile, toggle instead of navigating
-                            if ($dropdown.length && $item.hasClass('li-mega-menu__item--has-children')) {
-                                // Only prevent default if clicking directly on the link text/area
-                                if (!$target.closest('.li-mega-menu__link').hasClass('li-mega-menu__link--has-dropdown') ||
-                                    $target.is('.li-mega-menu__label') || $target.is('.li-mega-menu__icon')) {
-                                    e.preventDefault();
-                                }
+                            if ($item.hasClass('li-mega-menu__item--has-dropdown')) {
+                                e.preventDefault();
                                 toggleDropdown($item, $dropdown);
                             }
                         }
@@ -70,6 +59,7 @@
             });
 
             // Close all dropdowns when clicking outside
+            $(document).off('click.megaMenuClose');
             $(document).on('click.megaMenuClose', function(e) {
                 var $target = $(e.target);
                 
@@ -80,6 +70,7 @@
             });
 
             // Close dropdowns when clicking on a link inside dropdown (for navigation)
+            $('.li-mega-menu__sublist .li-mega-menu__link').off('click.megaMenuNav');
             $('.li-mega-menu__sublist .li-mega-menu__link').on('click.megaMenuNav', function(e) {
                 // Don't close if this is a parent link with children
                 if ($(this).parent().hasClass('li-mega-menu__item--has-children')) {
@@ -111,7 +102,11 @@
         // Close all dropdowns
         function closeAllDropdowns() {
             $('.li-mega-menu__item--top-level.open').removeClass('open');
-            $('.li-mega-menu__dropdown').slideUp(200);
+            if (isMobile || isTouchDevice) {
+                $('.li-mega-menu__dropdown').slideUp(200);
+            } else {
+                $('.li-mega-menu__dropdown').css('display', '');
+            }
         }
 
         // Initialize based on screen size
@@ -120,13 +115,16 @@
             
             if (isMobile || isTouchDevice) {
                 // On mobile, dropdowns start hidden
+                $('.li-mega-menu__item--top-level.open').removeClass('open');
                 $('.li-mega-menu__dropdown').hide();
                 initMobileBehavior();
             } else {
                 // On desktop, dropdowns are controlled by CSS hover
+                $('.li-mega-menu__link').off('click.megaMenu keydown.megaMenu');
+                $('.li-mega-menu__sublist .li-mega-menu__link').off('click.megaMenuNav');
+                $(document).off('click.megaMenuClose');
+                $('.li-mega-menu__item--top-level.open').removeClass('open');
                 $('.li-mega-menu__dropdown').css('display', '');
-                closeAllDropdowns();
-                $('.li-mega-menu__item--top-level').off('click.megaMenu keydown.megaMenu');
             }
         }
 

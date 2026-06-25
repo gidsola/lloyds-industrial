@@ -25,13 +25,13 @@ function li_get_global_layout_settings(): array
         'footer_note_text'        => __('Built on the Lloyds Industrial multisite framework.', 'lloyds-industrial'),
         'footer_column_1_enabled' => true,
         'footer_column_1_heading' => __('Products', 'lloyds-industrial'),
-        'footer_column_1_links'   => "Product Catalog|/products\nLubricants|/product-category/lubricants\nDegreasers|/product-category/degreasers\nCorrosion Protection|/product-category/corrosion-protection",
+        'footer_column_1_links'   => "Products|/products\nCatalogue|/catalogue\nLubricants & Corrosion Inhibitors|/product-category/lubricants-corrosion-inhibitors\nCleaners & Degreasers|/product-category/cleaner-degreasers",
         'footer_column_2_enabled' => true,
         'footer_column_2_heading' => __('Resources', 'lloyds-industrial'),
-        'footer_column_2_links'   => "Knowledge Center|/documentation\nSDS Access|/documentation\nTechnical Support|/contact\nCustomer Login|/account",
+        'footer_column_2_links'   => "Knowledge Center|/documentation\nSDS Access|/documentation\nTechnical Data Sheets|/documentation\nTechnical Support|/contact\nCustomer Login|/account",
         'footer_column_3_enabled' => true,
         'footer_column_3_heading' => __('Company', 'lloyds-industrial'),
-        'footer_column_3_links'   => "About|/about\nIndustries|/industries\nPartner Brands|/partners\nContact|/contact",
+        'footer_column_3_links'   => "About|/about\nIndustries|/industries\nPlace Orders|/contact\nAccounting|/contact\nContact|/contact",
     ];
 
     return wp_parse_args(li_get_theme_settings(), $defaults);
@@ -58,6 +58,45 @@ function li_format_layout_text(string $text): string
         '{site}' => get_bloginfo('name'),
     ]);
 }
+
+function li_resolve_site_url(string $url): string
+{
+    $url = trim($url);
+
+    if ($url === '' || str_starts_with($url, '#')) {
+        return $url;
+    }
+
+    if (preg_match('#^(?:[a-z][a-z0-9+.-]*:)?//#i', $url) || preg_match('#^(?:mailto|tel):#i', $url)) {
+        return $url;
+    }
+
+    if (str_starts_with($url, '/')) {
+        return home_url($url);
+    }
+
+    return $url;
+}
+
+function li_rewrite_root_relative_content_links(string $content): string
+{
+    if ($content === '') {
+        return $content;
+    }
+
+    return (string) preg_replace_callback(
+        '/\s(href)=("|\')(\/(?!\/|wp-admin\/|wp-content\/|wp-includes\/)[^"\']*)\2/i',
+        static function (array $matches): string {
+            return ' ' . $matches[1] . '=' . $matches[2] . esc_url(li_resolve_site_url($matches[3])) . $matches[2];
+        },
+        $content
+    );
+}
+
+add_filter('the_content', 'li_rewrite_root_relative_content_links', 20);
+add_filter('render_block', static function (string $block_content): string {
+    return li_rewrite_root_relative_content_links($block_content);
+}, 20);
 
 function li_get_account_url(): string
 {
@@ -98,7 +137,7 @@ function li_render_action_link(string $label, string $url, string $class_name): 
     return sprintf(
         '<a class="%1$s" href="%2$s">%3$s</a>',
         esc_attr($class_name),
-        esc_url($url),
+        esc_url(li_resolve_site_url($url)),
         esc_html($label)
     );
 }
@@ -160,7 +199,7 @@ add_shortcode('li_announcement_bar', function (): string {
             <?php endif; ?>
 
             <?php if ($link_label !== '' && $link_url !== '') : ?>
-                <p><a href="<?php echo esc_url($link_url); ?>"><?php echo esc_html($link_label); ?></a></p>
+                <p><a href="<?php echo esc_url(li_resolve_site_url($link_url)); ?>"><?php echo esc_html($link_label); ?></a></p>
             <?php endif; ?>
         </div>
     </div>
@@ -247,7 +286,7 @@ add_shortcode('li_footer_columns', function (): string {
             <?php if ($links) : ?>
                 <ul class="li-footer-list">
                     <?php foreach ($links as $link) : ?>
-                        <li><a href="<?php echo esc_url($link['url']); ?>"><?php echo esc_html($link['label']); ?></a></li>
+                        <li><a href="<?php echo esc_url(li_resolve_site_url($link['url'])); ?>"><?php echo esc_html($link['label']); ?></a></li>
                     <?php endforeach; ?>
                 </ul>
             <?php endif; ?>

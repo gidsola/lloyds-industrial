@@ -493,11 +493,13 @@ function li_render_mega_menu_data_field(): void
         'hide_empty' => false,
     ]);
     $category_options = ['' => __('-- Select Category --', 'lloyds-industrial')];
-    foreach ($product_categories as $category) {
-        if (!is_wp_error($category)) {
-            $term_id = is_array($category) ? $category['term_id'] : $category->term_id;
-            $term_name = is_array($category) ? $category['name'] : $category->name;
-            $category_options[$term_id] = $term_name;
+    if (!is_wp_error($product_categories)) {
+        foreach ($product_categories as $category) {
+            if (!$category instanceof WP_Term) {
+                continue;
+            }
+
+            $category_options[$category->term_id] = $category->name;
         }
     }
     
@@ -671,7 +673,7 @@ function li_render_mega_menu_data_field(): void
 /**
  * Render a single menu item form for the admin interface
  */
-function li_render_mega_menu_item_form(array $item, int $index, array $page_options, array $category_options, bool $is_template = false, bool $is_child = false): void
+function li_render_mega_menu_item_form(array $item, int|string $index, array $page_options, array $category_options, bool $is_template = false, bool $is_child = false): void
 {
     // Ensure we have all required keys with defaults
     $defaults = [
@@ -1030,6 +1032,7 @@ function li_render_mega_menu_item_form(array $item, int $index, array $page_opti
                                     name="<?php echo esc_attr($name_prefix); ?>[featured][enabled]"
                                     value="1"
                                     class="li-featured-enabled-toggle"
+                                    data-field="featured_enabled"
                                     <?php checked($featured['enabled']); ?>
                                     data-target="li-featured-panel-<?php echo esc_attr((string) $index); ?>"
                                 >
@@ -1046,6 +1049,7 @@ function li_render_mega_menu_item_form(array $item, int $index, array $page_opti
                                     type="text" 
                                     id="li_mega_menu_featured_title_<?php echo esc_attr((string) $index); ?>"
                                     name="<?php echo esc_attr($name_prefix); ?>[featured][title]"
+                                    data-field="featured_title"
                                     value="<?php echo esc_attr($featured['title']); ?>"
                                     class="widefat"
                                     placeholder="<?php esc_attr_e('Featured panel title', 'lloyds-industrial'); ?>"
@@ -1059,6 +1063,7 @@ function li_render_mega_menu_item_form(array $item, int $index, array $page_opti
                                 <textarea 
                                     id="li_mega_menu_featured_text_<?php echo esc_attr((string) $index); ?>"
                                     name="<?php echo esc_attr($name_prefix); ?>[featured][text]"
+                                    data-field="featured_text"
                                     class="widefat"
                                     rows="3"
                                     placeholder="<?php esc_attr_e('Featured panel description', 'lloyds-industrial'); ?>"
@@ -1073,6 +1078,7 @@ function li_render_mega_menu_item_form(array $item, int $index, array $page_opti
                                     type="url" 
                                     id="li_mega_menu_featured_url_<?php echo esc_attr((string) $index); ?>"
                                     name="<?php echo esc_attr($name_prefix); ?>[featured][url]"
+                                    data-field="featured_url"
                                     value="<?php echo esc_attr($featured['url']); ?>"
                                     class="widefat"
                                     placeholder="<?php esc_attr_e('https://example.com', 'lloyds-industrial'); ?>"
@@ -1087,6 +1093,7 @@ function li_render_mega_menu_item_form(array $item, int $index, array $page_opti
                                     type="text" 
                                     id="li_mega_menu_featured_button_<?php echo esc_attr((string) $index); ?>"
                                     name="<?php echo esc_attr($name_prefix); ?>[featured][button_label]"
+                                    data-field="featured_button_label"
                                     value="<?php echo esc_attr($featured['button_label']); ?>"
                                     class="regular-text"
                                     placeholder="<?php esc_attr_e('Learn More', 'lloyds-industrial'); ?>"
@@ -1103,6 +1110,7 @@ function li_render_mega_menu_item_form(array $item, int $index, array $page_opti
                                         id="li_mega_menu_featured_image_<?php echo esc_attr((string) $index); ?>"
                                         name="<?php echo esc_attr($name_prefix); ?>[featured][image]"
                                         value="<?php echo esc_attr((string) $featured['image']); ?>"
+                                        data-field="featured_image"
                                         data-li-media-id
                                     >
                                     <span data-li-media-label>

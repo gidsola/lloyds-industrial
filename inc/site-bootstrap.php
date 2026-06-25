@@ -8,10 +8,18 @@ if (!defined('ABSPATH')) {
 
 add_action('after_switch_theme', 'li_bootstrap_default_site');
 
+add_action('init', function (): void {
+    if (get_option('li_site_bootstrapped')) {
+        li_bootstrap_create_product_terms();
+    }
+}, 20);
+
 add_action('admin_init', function (): void {
     if (!current_user_can('manage_options')) {
         return;
     }
+
+    li_bootstrap_run_content_migrations();
 
     if (!isset($_GET['li_reseed_site'])) {
         return;
@@ -37,13 +45,35 @@ function li_bootstrap_default_site(): void
     li_bootstrap_set_reading_options($pages);
     li_bootstrap_create_navigation($pages);
     li_bootstrap_create_woocommerce_pages($pages);
+    li_bootstrap_create_product_terms();
 
     update_option('li_site_bootstrapped', time());
+    update_option('li_site_content_version', 3);
 
     flush_rewrite_rules();
 }
 
-function li_bootstrap_create_pages(array $media = []): array
+function li_bootstrap_run_content_migrations(): void
+{
+    $target_version = 3;
+
+    if (!get_option('li_site_bootstrapped') || (int) get_option('li_site_content_version', 0) >= $target_version) {
+        return;
+    }
+
+    $pages = li_bootstrap_create_pages(li_get_starter_media(), false);
+
+    li_bootstrap_create_navigation($pages);
+    li_bootstrap_create_woocommerce_pages($pages);
+    li_bootstrap_create_product_terms();
+    li_bootstrap_ensure_catalogue_flipbook_content();
+
+    update_option('li_site_content_version', $target_version);
+
+    flush_rewrite_rules();
+}
+
+function li_bootstrap_create_pages(array $media = [], bool $update_existing = true): array
 {
     $page_definitions = [
         'home' => [
@@ -67,11 +97,90 @@ function li_bootstrap_create_pages(array $media = []): array
             'content'  => li_get_starter_content('industries'),
         ],
 
+        'utilities-energy' => [
+            'title'    => 'Utilities & Energy',
+            'slug'     => 'utilities-energy',
+            'path'     => 'industries/utilities-energy',
+            'parent'   => 'industries',
+            'template' => 'page-industries',
+            'content'  => li_get_starter_content('industry-utilities-energy'),
+        ],
+
+        'manufacturing' => [
+            'title'    => 'Manufacturing',
+            'slug'     => 'manufacturing',
+            'path'     => 'industries/manufacturing',
+            'parent'   => 'industries',
+            'template' => 'page-industries',
+            'content'  => li_get_starter_content('industry-manufacturing'),
+        ],
+
+        'transportation' => [
+            'title'    => 'Transportation',
+            'slug'     => 'transportation',
+            'path'     => 'industries/transportation',
+            'parent'   => 'industries',
+            'template' => 'page-industries',
+            'content'  => li_get_starter_content('industry-transportation'),
+        ],
+
+        'agriculture' => [
+            'title'    => 'Agriculture',
+            'slug'     => 'agriculture',
+            'path'     => 'industries/agriculture',
+            'parent'   => 'industries',
+            'template' => 'page-industries',
+            'content'  => li_get_starter_content('industry-agriculture'),
+        ],
+
         'documentation' => [
             'title'    => 'Documentation',
             'slug'     => 'documentation',
             'template' => 'page-documentation',
             'content'  => li_get_starter_content('documentation')
+        ],
+
+        'technical' => [
+            'title'    => 'Technical Documents',
+            'slug'     => 'technical',
+            'path'     => 'documentation/technical',
+            'parent'   => 'documentation',
+            'template' => 'page-documentation',
+            'content'  => li_get_starter_content('documentation-technical')
+        ],
+
+        'sds-library' => [
+            'title'    => 'SDS Access',
+            'slug'     => 'sds',
+            'path'     => 'documentation/sds',
+            'parent'   => 'documentation',
+            'template' => 'page-documentation',
+            'content'  => li_get_starter_content('documentation-sds')
+        ],
+
+        'technical-data-sheets' => [
+            'title'    => 'Technical Data Sheets',
+            'slug'     => 'technical-data-sheets',
+            'path'     => 'documentation/technical-data-sheets',
+            'parent'   => 'documentation',
+            'template' => 'page-documentation',
+            'content'  => li_get_starter_content('documentation-technical')
+        ],
+
+        'certifications' => [
+            'title'    => 'Certifications',
+            'slug'     => 'certifications',
+            'path'     => 'documentation/certifications',
+            'parent'   => 'documentation',
+            'template' => 'page-documentation',
+            'content'  => li_get_starter_content('documentation-certifications')
+        ],
+
+        'catalogue' => [
+            'title'    => 'Catalogue',
+            'slug'     => 'catalogue',
+            'template' => 'page',
+            'content'  => li_get_starter_content('catalogue')
         ],
 
         'partners' => [
@@ -113,22 +222,31 @@ function li_bootstrap_create_pages(array $media = []): array
     $created_pages = [];
 
     foreach ($page_definitions as $key => $page) {
-        $existing = get_page_by_path($page['slug'], OBJECT, 'page');
+        $existing = get_page_by_path($page['path'] ?? $page['slug'], OBJECT, 'page');
+        $parent_id = 0;
+
+        if (!empty($page['parent']) && !empty($created_pages[$page['parent']])) {
+            $parent_id = (int) $created_pages[$page['parent']];
+        }
 
         if ($existing instanceof WP_Post) {
             $page_id = $existing->ID;
 
-            wp_update_post([
-                'ID'           => $page_id,
-                'post_title'   => $page['title'],
-                'post_content' => $page['content'],
-            ]);
+            if ($update_existing) {
+                wp_update_post([
+                    'ID'           => $page_id,
+                    'post_title'   => $page['title'],
+                    'post_content' => $page['content'],
+                    'post_parent'  => $parent_id,
+                ]);
+            }
         } else {
             $page_id = wp_insert_post([
                 'post_title'   => $page['title'],
                 'post_name'    => $page['slug'],
                 'post_type'    => 'page',
                 'post_status'  => 'publish',
+                'post_parent'  => $parent_id,
                 'post_content' => $page['content'],
             ], true);
         }
@@ -147,6 +265,39 @@ function li_bootstrap_create_pages(array $media = []): array
     }
 
     return $created_pages;
+}
+
+function li_bootstrap_ensure_catalogue_flipbook_content(): void
+{
+    $catalogue = get_page_by_path('catalogue', OBJECT, 'page');
+
+    if (!$catalogue instanceof WP_Post || str_contains($catalogue->post_content, '[lloyds_pdf_flipbook')) {
+        return;
+    }
+
+    $flipbook_blocks = <<<HTML
+
+<!-- wp:group {"align":"wide","style":{"spacing":{"padding":{"top":"20px","bottom":"70px"}}}} -->
+<div class="wp-block-group alignwide" style="padding-top:20px;padding-bottom:70px">
+    <!-- wp:shortcode -->
+    [lloyds_pdf_flipbook]
+    <!-- /wp:shortcode -->
+</div>
+<!-- /wp:group -->
+
+<!-- wp:group {"align":"wide","style":{"spacing":{"padding":{"bottom":"70px"}}}} -->
+<div class="wp-block-group alignwide" style="padding-bottom:70px">
+    <!-- wp:shortcode -->
+    [lloyds_pdf_catalogue_library]
+    <!-- /wp:shortcode -->
+</div>
+<!-- /wp:group -->
+HTML;
+
+    wp_update_post([
+        'ID'           => $catalogue->ID,
+        'post_content' => $catalogue->post_content . $flipbook_blocks,
+    ]);
 }
 
 function li_bootstrap_set_reading_options(array $pages): void
@@ -211,6 +362,7 @@ function li_bootstrap_get_navigation_content(array $pages): string
     ]);
 
     $content .= li_navigation_link_block('Documentation', $pages['documentation'] ?? 0, [
+        li_navigation_link_block('Catalogue', $pages['catalogue'] ?? 0),
         li_navigation_link_block('SDS Library', $pages['sds-library'] ?? 0),
         li_navigation_link_block('Technical Data Sheets', $pages['technical-data-sheets'] ?? 0),
         li_navigation_link_block('Certifications', $pages['certifications'] ?? 0),
@@ -361,5 +513,43 @@ function li_bootstrap_create_woocommerce_pages(array $pages): void
 
     if (!empty($pages['account'])) {
         update_option('woocommerce_myaccount_page_id', $pages['account']);
+    }
+}
+
+function li_bootstrap_create_product_terms(): void
+{
+    li_bootstrap_create_terms('product_cat', [
+        'lubricants-corrosion-inhibitors' => 'Lubricants & Corrosion Inhibitors',
+        'cleaner-degreasers'              => 'Cleaners & Degreasers',
+        'automotive-fleet-maintenance'    => 'Automotive & Fleet Maintenance',
+        'construction-specialty'          => 'Construction Specialty',
+        'facility-property-maintenance'   => 'Facility & Property Maintenance',
+        'plastic-injection-moulding'      => 'Plastic Injection Moulding',
+    ]);
+
+    li_bootstrap_create_terms('li_industry', [
+        'utilities-energy' => 'Utilities & Energy',
+        'transportation'   => 'Transportation',
+        'manufacturing'    => 'Manufacturing',
+        'agriculture'      => 'Agriculture',
+        'food-processing'  => 'Food Processing',
+        'construction'     => 'Construction',
+    ]);
+}
+
+function li_bootstrap_create_terms(string $taxonomy, array $terms): void
+{
+    if (!taxonomy_exists($taxonomy)) {
+        return;
+    }
+
+    foreach ($terms as $slug => $name) {
+        if (get_term_by('slug', $slug, $taxonomy)) {
+            continue;
+        }
+
+        wp_insert_term($name, $taxonomy, [
+            'slug' => $slug,
+        ]);
     }
 }
