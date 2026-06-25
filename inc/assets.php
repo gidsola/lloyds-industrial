@@ -53,6 +53,24 @@ add_action('enqueue_block_editor_assets', function (): void {
     );
 });
 
+add_action('admin_enqueue_scripts', function (): void {
+    $screen = get_current_screen();
+
+    if (!$screen || !in_array($screen->post_type, ['product', 'li_document'], true)) {
+        return;
+    }
+
+    wp_enqueue_media();
+
+    wp_enqueue_script(
+        'lloyds-admin',
+        get_template_directory_uri() . '/assets/js/admin.js',
+        ['jquery'],
+        filemtime(get_template_directory() . '/assets/js/admin.js'),
+        true
+    );
+});
+
 function li_enqueue_google_fonts(string $handle = 'lloyds-fonts'): void
 {
     wp_enqueue_style(

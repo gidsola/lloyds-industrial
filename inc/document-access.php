@@ -177,6 +177,17 @@ function li_protect_document_file(int $document_id): bool
     return true;
 }
 
+function li_delete_protected_document_copy(int $document_id): void
+{
+    $file_path = li_get_protected_document_path($document_id);
+
+    if ($file_path && is_writable($file_path)) {
+        @unlink($file_path);
+    }
+
+    delete_post_meta($document_id, '_li_protected_document_path');
+}
+
 function li_migrate_sds_documents_to_protected_storage(): array
 {
     $query = new WP_Query([

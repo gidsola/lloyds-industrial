@@ -24,6 +24,7 @@ function li_render_document_settings_metabox(WP_Post $post): void
     $file_id = (int) get_post_meta($post->ID, '_li_document_file_id', true);
     $related_product_id = (int) get_post_meta($post->ID, '_li_related_product_id', true);
     $access_level = (string) get_post_meta($post->ID, '_li_access_level', true);
+    $file_label = $file_id ? get_the_title($file_id) : __('No file selected', 'lloyds-industrial');
 
     if (!$access_level || !in_array($access_level, ['public', 'internal'], true)) {
         $access_level = 'public';
@@ -32,15 +33,34 @@ function li_render_document_settings_metabox(WP_Post $post): void
     ?>
     <p>
         <label for="li_document_file_id">
-            <strong><?php esc_html_e('Attachment ID', 'lloyds-industrial'); ?></strong>
+            <strong><?php esc_html_e('Document File', 'lloyds-industrial'); ?></strong>
         </label>
-        <input
-            type="number"
-            id="li_document_file_id"
-            name="li_document_file_id"
-            value="<?php echo esc_attr((string) $file_id); ?>"
-            class="widefat"
-        >
+        <span data-li-media-picker>
+            <input
+                type="hidden"
+                id="li_document_file_id"
+                name="li_document_file_id"
+                value="<?php echo esc_attr((string) $file_id); ?>"
+                data-li-media-id
+            >
+            <span data-li-media-label><?php echo esc_html($file_label); ?></span>
+            <br>
+            <button
+                type="button"
+                class="button"
+                data-li-media-select
+                data-li-media-title="<?php esc_attr_e('Select Document File', 'lloyds-industrial'); ?>"
+                data-li-media-button="<?php esc_attr_e('Use This File', 'lloyds-industrial'); ?>"
+            >
+                <?php esc_html_e('Select / Upload File', 'lloyds-industrial'); ?>
+            </button>
+            <button type="button" class="button" data-li-media-remove <?php echo $file_id ? '' : 'hidden'; ?>>
+                <?php esc_html_e('Remove', 'lloyds-industrial'); ?>
+            </button>
+        </span>
+        <span class="description">
+            <?php esc_html_e('SDS files are copied into protected storage when this document is saved.', 'lloyds-industrial'); ?>
+        </span>
     </p>
 
     <p>
@@ -88,11 +108,14 @@ add_action('save_post_li_document', function (int $post_id): void {
         return;
     }
 
-    update_post_meta(
-        $post_id,
-        '_li_document_file_id',
-        isset($_POST['li_document_file_id']) ? absint($_POST['li_document_file_id']) : 0
-    );
+    $old_file_id = li_get_document_file_id($post_id);
+    $new_file_id = isset($_POST['li_document_file_id']) ? absint($_POST['li_document_file_id']) : 0;
+
+    if ($old_file_id !== $new_file_id) {
+        li_delete_protected_document_copy($post_id);
+    }
+
+    update_post_meta($post_id, '_li_document_file_id', $new_file_id);
 
     update_post_meta(
         $post_id,
@@ -109,4 +132,8 @@ add_action('save_post_li_document', function (int $post_id): void {
     }
 
     update_post_meta($post_id, '_li_access_level', $access_level);
+
+    if (li_is_sds_document($post_id) && $new_file_id) {
+        li_protect_document_file($post_id);
+    }
 });
