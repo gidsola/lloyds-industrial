@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Lloyds PDF Flipbook
  * Description: Local PDF flipbook viewer for Lloyds catalogues and technical documents.
- * Version: 1.0.0
+ * Version: 1.0.3
  * Author: Lloyds Laboratories
  * Text Domain: lloyds-pdf-flipbook
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('LLOYDS_FLIPBOOK_VERSION', '1.0.0');
+define('LLOYDS_FLIPBOOK_VERSION', '1.0.3');
 define('LLOYDS_FLIPBOOK_PATH', plugin_dir_path(__FILE__));
 define('LLOYDS_FLIPBOOK_URL', lloyds_flipbook_asset_url());
 
@@ -325,26 +325,37 @@ function lloyds_flipbook_library_shortcode(array $atts = []): string
 
     wp_enqueue_style('lloyds-flipbook');
 
-    $output = '<div class="lloyds-flipbook-library">';
+    $output = '<div class="lloyds-flipbook-library" role="list">';
 
     foreach ($flipbooks as $flipbook) {
         $pdf_id = lloyds_flipbook_get_pdf_id((int) $flipbook->ID);
         $pdf_url = $pdf_id ? wp_get_attachment_url($pdf_id) : '';
-        $thumb = get_the_post_thumbnail((int) $flipbook->ID, 'medium', ['class' => 'lloyds-flipbook-library__image']);
+        $permalink = get_permalink($flipbook) ?: '';
+        $is_featured = (bool) get_post_meta((int) $flipbook->ID, '_lloyds_flipbook_featured', true);
 
-        $output .= '<article class="lloyds-flipbook-library__item">';
-        $output .= $thumb ?: '<div class="lloyds-flipbook-library__placeholder" aria-hidden="true"></div>';
+        $output .= '<article class="lloyds-flipbook-library__item" role="listitem">';
+        $output .= '<div class="lloyds-flipbook-library__meta">';
+        $output .= '<span>' . esc_html__('Catalogue', 'lloyds-pdf-flipbook') . '</span>';
+
+        if ($is_featured) {
+            $output .= '<span>' . esc_html__('Featured', 'lloyds-pdf-flipbook') . '</span>';
+        }
+
+        $output .= '</div>';
         $output .= '<h3>' . esc_html(get_the_title($flipbook)) . '</h3>';
 
         if (has_excerpt($flipbook)) {
-            $output .= '<p>' . esc_html(get_the_excerpt($flipbook)) . '</p>';
+            $output .= '<p class="lloyds-flipbook-library__excerpt">' . esc_html(get_the_excerpt($flipbook)) . '</p>';
         }
 
         $output .= '<div class="lloyds-flipbook-library__actions">';
-        $output .= '<a href="' . esc_url(get_permalink($flipbook)) . '">' . esc_html__('View Flipbook', 'lloyds-pdf-flipbook') . '</a>';
+
+        if ($permalink) {
+            $output .= '<a class="lloyds-flipbook-library__button lloyds-flipbook-library__button--primary" href="' . esc_url($permalink) . '">' . esc_html__('View Catalogue', 'lloyds-pdf-flipbook') . '</a>';
+        }
 
         if ($pdf_url) {
-            $output .= '<a href="' . esc_url($pdf_url) . '" target="_blank" rel="noopener">' . esc_html__('Open PDF', 'lloyds-pdf-flipbook') . '</a>';
+            $output .= '<a class="lloyds-flipbook-library__button lloyds-flipbook-library__button--secondary" href="' . esc_url($pdf_url) . '" target="_blank" rel="noopener">' . esc_html__('Open PDF', 'lloyds-pdf-flipbook') . '</a>';
         }
 
         $output .= '</div></article>';
@@ -673,3 +684,23 @@ add_filter('the_content', static function (string $content): string {
 
     return do_shortcode('[lloyds_pdf_flipbook id="' . get_the_ID() . '"]') . $content;
 }, 8);
+
+add_filter('render_block_core/post-content', static function (string $block_content, array $block): string {
+    if (!is_singular('lloyds_flipbook') || !is_main_query()) {
+        return $block_content;
+    }
+
+    $post_id = get_the_ID();
+
+    if (!$post_id) {
+        return $block_content;
+    }
+
+    $viewer = do_shortcode('[lloyds_pdf_flipbook id="' . $post_id . '"]');
+
+    if (str_contains($block_content, 'class="lloyds-flipbook"')) {
+        return $block_content;
+    }
+
+    return $viewer . $block_content;
+}, 8, 2);

@@ -76,6 +76,10 @@ function li_rest_get_product_documents(WP_REST_Request $request): WP_REST_Respon
     $documents = [];
 
     foreach ($query->posts as $document) {
+        if (!li_user_can_view_document_listing((int) $document->ID)) {
+            continue;
+        }
+
         $access_level = (string) get_post_meta($document->ID, '_li_access_level', true);
 
         if (!$access_level) {
@@ -96,8 +100,6 @@ function li_rest_get_product_documents(WP_REST_Request $request): WP_REST_Respon
             'is_sds'         => $is_sds,
             'available'      => $has_access,
             'download_url'   => $download_url,
-            'login_required' => !$has_access && $is_sds && !is_user_logged_in(),
-            'purchase_required' => !$has_access && $is_sds && is_user_logged_in(),
         ];
     }
 

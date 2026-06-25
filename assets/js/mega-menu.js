@@ -99,14 +99,115 @@
             }
         }
 
+        function openDropdown($item) {
+            var $dropdown = $item.children('.li-mega-menu__dropdown');
+
+            if (!$dropdown.length) {
+                return;
+            }
+
+            closeAllDropdowns();
+            $item.addClass('open');
+
+            if (isMobile || isTouchDevice) {
+                $dropdown.stop(true, true).slideDown(200);
+            } else {
+                $dropdown.css('display', '');
+            }
+
+            updateAriaAttributes();
+        }
+
         // Close all dropdowns
         function closeAllDropdowns() {
             $('.li-mega-menu__item--top-level.open').removeClass('open');
             if (isMobile || isTouchDevice) {
-                $('.li-mega-menu__dropdown').slideUp(200);
+                $('.li-mega-menu__dropdown').stop(true, true).slideUp(200);
             } else {
                 $('.li-mega-menu__dropdown').css('display', '');
             }
+
+            updateAriaAttributes();
+        }
+
+        function focusTopLevel($current, direction) {
+            var $links = $('.li-mega-menu__item--top-level > .li-mega-menu__link');
+            var currentIndex = $links.index($current);
+
+            if (currentIndex === -1) {
+                return;
+            }
+
+            var nextIndex = (currentIndex + direction + $links.length) % $links.length;
+            $links.eq(nextIndex).trigger('focus');
+        }
+
+        function focusFirstDropdownLink($item) {
+            var $firstLink = $item.find('.li-mega-menu__dropdown a').first();
+
+            if ($firstLink.length) {
+                $firstLink.trigger('focus');
+            }
+        }
+
+        function initKeyboardBehavior() {
+            $('.li-mega-menu__item--top-level > .li-mega-menu__link').off('keydown.megaMenuKeys');
+            $('.li-mega-menu__dropdown a').off('keydown.megaMenuKeys');
+
+            $('.li-mega-menu__item--top-level > .li-mega-menu__link').on('keydown.megaMenuKeys', function(e) {
+                var $link = $(this);
+                var $item = $link.parent();
+
+                if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    focusTopLevel($link, 1);
+                    return;
+                }
+
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    focusTopLevel($link, -1);
+                    return;
+                }
+
+                if (e.key === 'ArrowDown' && $item.children('.li-mega-menu__dropdown').length) {
+                    e.preventDefault();
+                    openDropdown($item);
+                    focusFirstDropdownLink($item);
+                    return;
+                }
+
+                if (e.key === 'Escape') {
+                    e.preventDefault();
+                    closeAllDropdowns();
+                    $link.trigger('focus');
+                }
+            });
+
+            $('.li-mega-menu__dropdown a').on('keydown.megaMenuKeys', function(e) {
+                var $link = $(this);
+                var $dropdownLinks = $link.closest('.li-mega-menu__dropdown').find('a');
+                var currentIndex = $dropdownLinks.index($link);
+
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    $dropdownLinks.eq(Math.min(currentIndex + 1, $dropdownLinks.length - 1)).trigger('focus');
+                    return;
+                }
+
+                if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    $dropdownLinks.eq(Math.max(currentIndex - 1, 0)).trigger('focus');
+                    return;
+                }
+
+                if (e.key === 'Escape') {
+                    e.preventDefault();
+                    var $topItem = $link.closest('.li-mega-menu__item--top-level');
+                    closeAllDropdowns();
+                    $topItem.children('.li-mega-menu__link').trigger('focus');
+                }
+            });
         }
 
         // Initialize based on screen size
@@ -118,6 +219,7 @@
                 $('.li-mega-menu__item--top-level.open').removeClass('open');
                 $('.li-mega-menu__dropdown').hide();
                 initMobileBehavior();
+                initKeyboardBehavior();
             } else {
                 // On desktop, dropdowns are controlled by CSS hover
                 $('.li-mega-menu__link').off('click.megaMenu keydown.megaMenu');
@@ -125,6 +227,7 @@
                 $(document).off('click.megaMenuClose');
                 $('.li-mega-menu__item--top-level.open').removeClass('open');
                 $('.li-mega-menu__dropdown').css('display', '');
+                initKeyboardBehavior();
             }
         }
 
@@ -143,7 +246,12 @@
         // Handle escape key to close dropdowns
         $(document).on('keydown.megaMenuEscape', function(e) {
             if (e.key === 'Escape') {
+                var $focusedTopItem = $(document.activeElement).closest('.li-mega-menu__item--top-level');
                 closeAllDropdowns();
+
+                if ($focusedTopItem.length) {
+                    $focusedTopItem.children('.li-mega-menu__link').trigger('focus');
+                }
             }
         });
 

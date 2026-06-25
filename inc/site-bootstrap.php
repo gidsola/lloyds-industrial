@@ -25,6 +25,12 @@ add_action('admin_init', function (): void {
         return;
     }
 
+    if (!check_admin_referer('li_reseed_site', '_wpnonce', false)) {
+        set_transient('li_reseed_site_notice', 'missing_nonce', MINUTE_IN_SECONDS);
+        wp_safe_redirect(admin_url('themes.php?page=lloyds-industrial-settings'));
+        exit;
+    }
+
     delete_option('li_site_bootstrapped');
 
     li_bootstrap_default_site();
@@ -48,14 +54,14 @@ function li_bootstrap_default_site(): void
     li_bootstrap_create_product_terms();
 
     update_option('li_site_bootstrapped', time());
-    update_option('li_site_content_version', 3);
+    update_option('li_site_content_version', 4);
 
     flush_rewrite_rules();
 }
 
 function li_bootstrap_run_content_migrations(): void
 {
-    $target_version = 3;
+    $target_version = 4;
 
     if (!get_option('li_site_bootstrapped') || (int) get_option('li_site_content_version', 0) >= $target_version) {
         return;
@@ -66,6 +72,7 @@ function li_bootstrap_run_content_migrations(): void
     li_bootstrap_create_navigation($pages);
     li_bootstrap_create_woocommerce_pages($pages);
     li_bootstrap_create_product_terms();
+    li_bootstrap_refresh_catalogue_page_content();
     li_bootstrap_ensure_catalogue_flipbook_content();
 
     update_option('li_site_content_version', $target_version);
@@ -179,7 +186,7 @@ function li_bootstrap_create_pages(array $media = [], bool $update_existing = tr
         'catalogue' => [
             'title'    => 'Catalogue',
             'slug'     => 'catalogue',
-            'template' => 'page',
+            'template' => 'page-catalogue',
             'content'  => li_get_starter_content('catalogue')
         ],
 
@@ -298,6 +305,22 @@ HTML;
         'ID'           => $catalogue->ID,
         'post_content' => $catalogue->post_content . $flipbook_blocks,
     ]);
+}
+
+function li_bootstrap_refresh_catalogue_page_content(): void
+{
+    $catalogue = get_page_by_path('catalogue', OBJECT, 'page');
+
+    if (!$catalogue instanceof WP_Post) {
+        return;
+    }
+
+    wp_update_post([
+        'ID'           => $catalogue->ID,
+        'post_content' => li_get_starter_content('catalogue'),
+    ]);
+
+    update_post_meta($catalogue->ID, '_wp_page_template', 'page-catalogue');
 }
 
 function li_bootstrap_set_reading_options(array $pages): void

@@ -22,7 +22,10 @@ function li_get_product_documents(int $product_id): array
         ],
     ]);
 
-    return $query->posts;
+    return array_values(array_filter(
+        $query->posts,
+        static fn (WP_Post $document): bool => li_user_can_view_document_listing((int) $document->ID)
+    ));
 }
 
 function li_ensure_sds_document_type_term(): int

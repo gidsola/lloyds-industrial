@@ -110,6 +110,17 @@ add_action('admin_init', function (): void {
 });
 
 add_action('admin_notices', function (): void {
+    $reseed_notice = get_transient('li_reseed_site_notice');
+
+    if ($reseed_notice === 'missing_nonce') {
+        delete_transient('li_reseed_site_notice');
+
+        printf(
+            '<div class="notice notice-error is-dismissible"><p>%s</p></div>',
+            esc_html__('Use the reseed button from this settings page. Direct reseed links require a security nonce.', 'lloyds-industrial')
+        );
+    }
+
     $result = get_transient('li_sds_migration_result');
 
     if (!is_array($result)) {
@@ -503,11 +514,13 @@ function li_render_mega_menu_data_field(): void
         }
     }
     
+    wp_enqueue_media();
+
     // Enqueue the admin script (for media picker functionality)
     wp_enqueue_script(
         'lloyds-admin',
         get_template_directory_uri() . '/assets/js/admin.js',
-        [],
+        ['media-editor', 'media-views'],
         wp_get_theme()->get('Version'),
         true
     );
@@ -1180,9 +1193,21 @@ function li_render_settings_page(): void
 
         <hr>
 
+        <h2><?php esc_html_e('Site Content Refresh', 'lloyds-industrial'); ?></h2>
+        <p>
+            <?php esc_html_e('Recreate the starter pages, navigation, WooCommerce page assignments, product terms, and current catalogue page content.', 'lloyds-industrial'); ?>
+        </p>
+        <p>
+            <a class="button button-secondary" href="<?php echo esc_url(wp_nonce_url(admin_url('index.php?li_reseed_site=1'), 'li_reseed_site')); ?>">
+                <?php esc_html_e('Reseed Site Content', 'lloyds-industrial'); ?>
+            </a>
+        </p>
+
+        <hr>
+
         <h2><?php esc_html_e('Protected SDS Storage', 'lloyds-industrial'); ?></h2>
         <p>
-            <?php esc_html_e('Copy existing SDS attachment files into protected storage. Original media files are left untouched.', 'lloyds-industrial'); ?>
+            <?php esc_html_e('Move existing SDS attachment files into protected storage so they are served only after purchase-history access checks.', 'lloyds-industrial'); ?>
         </p>
         <p>
             <a class="button button-secondary" href="<?php echo esc_url(wp_nonce_url(admin_url('themes.php?page=lloyds-industrial-settings&li_migrate_sds_documents=1'), 'li_migrate_sds_documents')); ?>">

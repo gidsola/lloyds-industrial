@@ -90,6 +90,30 @@ function li_user_has_document_access_for_document(int $document_id, ?int $user_i
     return li_user_bought_document_product($document_id, $user_id);
 }
 
+function li_user_can_view_document_listing(int $document_id, ?int $user_id = null): bool
+{
+    $user_id = $user_id ?: get_current_user_id();
+    $access_level = (string) get_post_meta($document_id, '_li_access_level', true);
+
+    if (!$access_level) {
+        $access_level = 'public';
+    }
+
+    if ($user_id && (user_can($user_id, 'manage_options') || user_can($user_id, 'manage_li_documents'))) {
+        return true;
+    }
+
+    if ($access_level === 'internal') {
+        return false;
+    }
+
+    if (li_is_sds_document($document_id)) {
+        return $user_id ? li_user_bought_document_product($document_id, $user_id) : false;
+    }
+
+    return true;
+}
+
 function li_get_protected_documents_dir(): array
 {
     $upload_dir = wp_upload_dir(null, false);
@@ -163,12 +187,18 @@ function li_protect_document_file(int $document_id): bool
         return false;
     }
 
-    if (li_get_protected_document_path($document_id)) {
-        return true;
-    }
-
     $file_id = li_get_document_file_id($document_id);
     $source_path = $file_id ? get_attached_file($file_id) : '';
+    $protected_path = li_get_protected_document_path($document_id);
+
+    if ($protected_path) {
+        if ($file_id && is_string($source_path) && is_readable($source_path) && !li_document_path_is_in_protected_storage($source_path)) {
+            update_attached_file($file_id, $protected_path);
+            @unlink($source_path);
+        }
+
+        return true;
+    }
 
     if (!$source_path || !is_string($source_path) || !is_readable($source_path)) {
         return false;
@@ -183,13 +213,38 @@ function li_protect_document_file(int $document_id): bool
     $filename = wp_unique_filename($dir['path'], $document_id . '-' . sanitize_file_name(basename($source_path)));
     $target_path = trailingslashit($dir['path']) . $filename;
 
-    if (!@copy($source_path, $target_path)) {
+    if (!@rename($source_path, $target_path)) {
+        if (!@copy($source_path, $target_path)) {
+            return false;
+        }
+
+        @unlink($source_path);
+    }
+
+    if (!is_readable($target_path)) {
         return false;
     }
 
+    update_attached_file($file_id, $target_path);
     update_post_meta($document_id, '_li_protected_document_path', $target_path);
 
     return true;
+}
+
+function li_document_path_is_in_protected_storage(string $file_path): bool
+{
+    $dir = li_get_protected_documents_dir();
+    $base_path = realpath($dir['path']);
+    $real_file_path = realpath($file_path);
+
+    if (!$base_path || !$real_file_path) {
+        return false;
+    }
+
+    $normalized_base = trailingslashit(wp_normalize_path($base_path));
+    $normalized_file = wp_normalize_path($real_file_path);
+
+    return strpos($normalized_file, $normalized_base) === 0;
 }
 
 function li_delete_protected_document_copy(int $document_id): void
@@ -224,7 +279,14 @@ function li_migrate_sds_documents_to_protected_storage(): array
             continue;
         }
 
-        if (li_get_protected_document_path($document_id)) {
+        $file_id = li_get_document_file_id($document_id);
+        $file_path = $file_id ? get_attached_file($file_id) : '';
+        $protected_path = li_get_protected_document_path($document_id);
+
+        if (
+            $protected_path
+            && (!$file_id || !is_string($file_path) || li_document_path_is_in_protected_storage($file_path))
+        ) {
             $skipped++;
             continue;
         }
@@ -251,6 +313,10 @@ function li_get_document_file_id(int $document_id): int
 
 function li_get_document_public_file_url(int $document_id): ?string
 {
+    if (li_is_sds_document($document_id)) {
+        return null;
+    }
+
     $file_id = li_get_document_file_id($document_id);
 
     return $file_id ? wp_get_attachment_url($file_id) ?: null : null;

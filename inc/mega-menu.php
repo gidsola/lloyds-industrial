@@ -50,12 +50,12 @@ function li_get_default_mega_menu(): array
             'badge_text_color' => '#ffffff',
             'column' => 0,
             'featured' => [
-                'enabled' => false,
+                'enabled' => true,
                 'image' => '',
-                'title' => '',
-                'text' => '',
-                'url' => '',
-                'button_label' => '',
+                'title' => __('Browse The Lloyds Catalogue', 'lloyds-industrial'),
+                'text' => __('Explore product lines by category, application, industry, and document availability.', 'lloyds-industrial'),
+                'url' => '/catalogue',
+                'button_label' => __('Open Catalogue', 'lloyds-industrial'),
             ],
             'enabled' => true,
             'new_tab' => false,
@@ -65,7 +65,7 @@ function li_get_default_mega_menu(): array
                 [
                     'label' => __('Lubricants', 'lloyds-industrial'),
                     'url' => '/product-category/lubricants-corrosion-inhibitors',
-                    'icon' => '🛢️',
+                    'icon' => '',
                     'image' => '',
                     'description' => __('Lubricants, corrosion inhibitors, and equipment protection', 'lloyds-industrial'),
                     'bg_color' => '',
@@ -85,7 +85,7 @@ function li_get_default_mega_menu(): array
                 [
                     'label' => __('Cleaners & Degreasers', 'lloyds-industrial'),
                     'url' => '/product-category/cleaner-degreasers',
-                    'icon' => '🧼',
+                    'icon' => '',
                     'image' => '',
                     'description' => __('Professional maintenance cleaning for demanding environments', 'lloyds-industrial'),
                     'bg_color' => '',
@@ -105,7 +105,7 @@ function li_get_default_mega_menu(): array
                 [
                     'label' => __('Automotive & Fleet', 'lloyds-industrial'),
                     'url' => '/product-category/automotive-fleet-maintenance',
-                    'icon' => '🛡️',
+                    'icon' => '',
                     'image' => '',
                     'description' => __('Fleet maintenance, wash, polish, and shop products', 'lloyds-industrial'),
                     'bg_color' => '',
@@ -163,11 +163,11 @@ function li_get_default_mega_menu(): array
                     'children' => [],
                 ],
                 [
-                    'label' => __('Product Catalogue', 'lloyds-industrial'),
-                    'url' => '',
+                    'label' => __('Catalogue', 'lloyds-industrial'),
+                    'url' => '/catalogue',
                     'icon' => '',
                     'image' => '',
-                    'description' => '',
+                    'description' => __('Current product catalogue and product-line overview.', 'lloyds-industrial'),
                     'bg_color' => '',
                     'text_color' => '',
                     'hover_color' => '',
@@ -176,12 +176,12 @@ function li_get_default_mega_menu(): array
                     'badge_text_color' => '#ffffff',
                     'column' => 2,
                     'featured' => [
-                        'enabled' => true,
+                        'enabled' => false,
                         'image' => '',
-                        'title' => __('Browse The Lloyds Catalogue', 'lloyds-industrial'),
-                        'text' => __('Explore product lines by category, application, industry, and document availability.', 'lloyds-industrial'),
-                        'url' => '/catalogue',
-                        'button_label' => __('Open Catalogue', 'lloyds-industrial'),
+                        'title' => '',
+                        'text' => '',
+                        'url' => '',
+                        'button_label' => '',
                     ],
                     'enabled' => true,
                     'new_tab' => false,
@@ -205,12 +205,12 @@ function li_get_default_mega_menu(): array
             'badge_text_color' => '#ffffff',
             'column' => 0,
             'featured' => [
-                'enabled' => false,
+                'enabled' => true,
                 'image' => '',
-                'title' => '',
-                'text' => '',
-                'url' => '',
-                'button_label' => '',
+                'title' => __('Need Document Help?', 'lloyds-industrial'),
+                'text' => __('Get help with SDS access, technical resources, and product documentation.', 'lloyds-industrial'),
+                'url' => '/contact',
+                'button_label' => __('Contact Support', 'lloyds-industrial'),
             ],
             'enabled' => true,
             'new_tab' => false,
@@ -220,9 +220,9 @@ function li_get_default_mega_menu(): array
                 [
                     'label' => __('Utilities & Energy', 'lloyds-industrial'),
                     'url' => '/industries/utilities-energy',
-                    'icon' => '⚡',
+                    'icon' => '',
                     'image' => '',
-                    'description' => '',
+                    'description' => __('Available to customers with related purchase history.', 'lloyds-industrial'),
                     'bg_color' => '',
                     'text_color' => '',
                     'hover_color' => '',
@@ -240,9 +240,9 @@ function li_get_default_mega_menu(): array
                 [
                     'label' => __('Manufacturing', 'lloyds-industrial'),
                     'url' => '/industries/manufacturing',
-                    'icon' => '🏭',
+                    'icon' => '',
                     'image' => '',
-                    'description' => '',
+                    'description' => __('Sign in for account details, orders, and eligible document access.', 'lloyds-industrial'),
                     'bg_color' => '',
                     'text_color' => '',
                     'hover_color' => '',
@@ -260,7 +260,7 @@ function li_get_default_mega_menu(): array
                 [
                     'label' => __('Transportation', 'lloyds-industrial'),
                     'url' => '/industries/transportation',
-                    'icon' => '🚛',
+                    'icon' => '',
                     'image' => '',
                     'description' => '',
                     'bg_color' => '',
@@ -328,7 +328,7 @@ function li_get_default_mega_menu(): array
                 [
                     'label' => __('Technical Documents', 'lloyds-industrial'),
                     'url' => '/documentation/technical',
-                    'icon' => '📄',
+                    'icon' => '',
                     'image' => '',
                     'description' => '',
                     'bg_color' => '',
@@ -348,7 +348,7 @@ function li_get_default_mega_menu(): array
                 [
                     'label' => __('SDS Access', 'lloyds-industrial'),
                     'url' => '/documentation/sds',
-                    'icon' => '🔬',
+                    'icon' => '',
                     'image' => '',
                     'description' => '',
                     'bg_color' => '',
@@ -368,7 +368,7 @@ function li_get_default_mega_menu(): array
                 [
                     'label' => __('Account Login', 'lloyds-industrial'),
                     'url' => '/account',
-                    'icon' => '🔑',
+                    'icon' => '',
                     'image' => '',
                     'description' => '',
                     'bg_color' => '',
@@ -386,14 +386,14 @@ function li_get_default_mega_menu(): array
                     'children' => [],
                 ],
                 [
-                    'label' => __('Support CTA', 'lloyds-industrial'),
+                    'label' => __('Contact Support', 'lloyds-industrial'),
                     'url' => '/contact',
                     'icon' => '',
                     'image' => '',
-                    'description' => '',
-                    'bg_color' => '#0066cc',
-                    'text_color' => '#ffffff',
-                    'hover_color' => '#0055aa',
+                    'description' => __('Get help with documents, SDS access, and product questions.', 'lloyds-industrial'),
+                    'bg_color' => '',
+                    'text_color' => '',
+                    'hover_color' => '',
                     'badge' => '',
                     'badge_color' => '#0066cc',
                     'badge_text_color' => '#ffffff',
@@ -496,6 +496,101 @@ function li_get_default_mega_menu(): array
             ],
         ],
     ];
+}
+
+add_action('admin_init', 'li_migrate_mega_menu_defaults');
+
+function li_migrate_mega_menu_defaults(): void
+{
+    if ((int) get_option('li_mega_menu_schema_version', 0) >= 3) {
+        return;
+    }
+
+    $settings = get_option('li_theme_settings', []);
+
+    if (!is_array($settings) || empty($settings['mega_menu_data'])) {
+        update_option('li_mega_menu_schema_version', 3);
+        return;
+    }
+
+    $menu = json_decode((string) $settings['mega_menu_data'], true);
+
+    if (!is_array($menu)) {
+        update_option('li_mega_menu_schema_version', 3);
+        return;
+    }
+
+    $settings['mega_menu_data'] = wp_json_encode(li_migrate_mega_menu_items($menu));
+    update_option('li_theme_settings', $settings);
+    update_option('li_mega_menu_schema_version', 3);
+}
+
+function li_migrate_mega_menu_items(array $items): array
+{
+    foreach ($items as &$item) {
+        if (!is_array($item)) {
+            continue;
+        }
+
+        $label = (string) ($item['label'] ?? '');
+        $url = (string) ($item['url'] ?? '');
+
+        if ($label === 'Products') {
+            $item['featured'] = [
+                'enabled' => true,
+                'image' => $item['featured']['image'] ?? '',
+                'title' => __('Browse The Lloyds Catalogue', 'lloyds-industrial'),
+                'text' => __('Explore product lines by category, application, industry, and document availability.', 'lloyds-industrial'),
+                'url' => '/catalogue',
+                'button_label' => __('Open Catalogue', 'lloyds-industrial'),
+            ];
+        }
+
+        if ($label === 'Documentation') {
+            $item['featured'] = [
+                'enabled' => true,
+                'image' => $item['featured']['image'] ?? '',
+                'title' => __('Need Document Help?', 'lloyds-industrial'),
+                'text' => __('Get help with SDS access, technical resources, and product documentation.', 'lloyds-industrial'),
+                'url' => '/contact',
+                'button_label' => __('Contact Support', 'lloyds-industrial'),
+            ];
+        }
+
+        if ($label === 'Product Catalogue') {
+            $item['label'] = __('Catalogue', 'lloyds-industrial');
+            $item['url'] = '/catalogue';
+            $item['description'] = __('Current product catalogue and product-line overview.', 'lloyds-industrial');
+            $item['featured'] = ['enabled' => false];
+        }
+
+        if ($label === 'Support CTA' || ($url === '/contact' && !empty($item['bg_color']))) {
+            $item['label'] = __('Contact Support', 'lloyds-industrial');
+            $item['description'] = $item['description'] ?: __('Get help with documents, SDS access, and product questions.', 'lloyds-industrial');
+            $item['bg_color'] = '';
+            $item['text_color'] = '';
+            $item['hover_color'] = '';
+        }
+
+        if ($label === 'Technical Documents' || $url === '/documentation/technical') {
+            $item['description'] = $item['description'] ?: __('Public technical resources and product documentation.', 'lloyds-industrial');
+        }
+
+        if ($label === 'SDS Access' || $url === '/documentation/sds') {
+            $item['description'] = $item['description'] ?: __('Available to customers with related purchase history.', 'lloyds-industrial');
+        }
+
+        if ($label === 'Account Login' || $url === '/account') {
+            $item['description'] = $item['description'] ?: __('Sign in for account details, orders, and eligible document access.', 'lloyds-industrial');
+        }
+
+        if (!empty($item['children']) && is_array($item['children'])) {
+            $item['children'] = li_migrate_mega_menu_items($item['children']);
+        }
+    }
+    unset($item);
+
+    return $items;
 }
 
 /**
@@ -684,7 +779,7 @@ function li_render_mega_menu_item(array $item, bool $is_top_level = false): stri
     }
     
     // Build the link content
-    $link_content = $icon_html . $image_html . $badge_html . '<span class="li-mega-menu__label">' . $label . '</span>' . $description_html;
+    $link_content = '<span class="li-mega-menu__main">' . $icon_html . $image_html . '<span class="li-mega-menu__label">' . $label . '</span>' . $badge_html . '</span>' . $description_html;
     
     // For top-level items, we need a wrapper
     $item_class = 'li-mega-menu__item';
