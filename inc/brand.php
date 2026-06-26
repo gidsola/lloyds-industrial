@@ -16,14 +16,14 @@ function li_get_theme_settings(): array
 function li_get_brand_defaults(): array
 {
     return [
-        'primary_color'   => '#c62d2d',
-        'secondary_color' => '#2E5F73',
-        'accent_color'    => '#D9A441',
-        'surface_color'   => '#F5F7F6',
-        'text_color'      => '#182126',
-        'header_bg'       => '#FFFFFF',
-        'footer_bg'       => '#12332E',
-        'hero_overlay'    => '#081A18',
+        'primary_color'   => '#3f3f3f',
+        'secondary_color' => '#dd3333',
+        'accent_color'    => '#dd9933',
+        'surface_color'   => '#3f3f3f',
+        'text_color'      => '#141414',
+        'header_bg'       => '#c1c1c1',
+        'footer_bg'       => '#3f3f3f',
+        'hero_overlay'    => '#3f3f3f',
     ];
 }
 

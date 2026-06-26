@@ -71,6 +71,7 @@ add_action('admin_enqueue_scripts', function (string $hook_suffix): void {
         $hook_suffix === 'appearance_page_lloyds-industrial-settings'
         || $hook_suffix === 'toplevel_page_lloyds-contact-forms'
         || $hook_suffix === 'toplevel_page_lloyds-product-carousel'
+        || $hook_suffix === 'toplevel_page_lloyds-analytics'
     ) {
         li_enqueue_google_fonts('lloyds-settings-admin-fonts');
 

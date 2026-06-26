@@ -388,6 +388,10 @@ function li_handle_contact_form_submission(): void
         foreach ($meta as $key => $value) {
             update_post_meta((int) $submission_id, '_li_contact_' . $key, $value);
         }
+
+        if (function_exists('li_analytics_track_contact_submission')) {
+            li_analytics_track_contact_submission((int) $submission_id, $type, $meta);
+        }
     }
 
     li_send_contact_form_notifications($type, [

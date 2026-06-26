@@ -331,6 +331,132 @@
     }
 }
 
+.li-analytics-filter {
+    align-items: end;
+    background: #fff;
+    border: 1px solid #dde5e2;
+    border-radius: 8px;
+    box-shadow: 0 10px 28px rgba(24, 33, 38, 0.04);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 0 0 18px;
+    padding: 16px;
+}
+
+.li-analytics-filter label {
+    display: grid;
+    gap: 6px;
+}
+
+.li-analytics-filter span {
+    color: #17443b;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.li-analytics-filter input,
+.li-analytics-filter select {
+    border-color: #cfd9d5;
+    border-radius: 6px;
+    min-height: 34px;
+}
+
+.li-analytics-kpi-grid {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-bottom: 18px;
+}
+
+.li-analytics-kpi,
+.li-analytics-panel {
+    background: #fff;
+    border: 1px solid #dde5e2;
+    border-radius: 8px;
+    box-shadow: 0 10px 28px rgba(24, 33, 38, 0.04);
+}
+
+.li-analytics-kpi {
+    min-height: 118px;
+    padding: 18px;
+}
+
+.li-analytics-kpi span {
+    color: #66736f;
+    display: block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.li-analytics-kpi strong {
+    color: #17443b;
+    display: block;
+    font-size: 28px;
+    line-height: 1.1;
+}
+
+.li-analytics-kpi p {
+    color: #66736f;
+    line-height: 1.45;
+    margin: 10px 0 0;
+}
+
+.li-analytics-grid {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.li-analytics-panel {
+    margin-bottom: 14px;
+    overflow: hidden;
+}
+
+.li-analytics-panel h2 {
+    color: #17443b;
+    font-size: 18px;
+    line-height: 1.25;
+    margin: 0;
+    padding: 18px;
+}
+
+.li-analytics-panel--wide .li-settings-section-heading {
+    border: 0;
+    border-bottom: 1px solid #dde5e2;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.li-analytics-table {
+    border: 0;
+}
+
+.li-analytics-table th {
+    color: #17443b;
+    font-weight: 800;
+}
+
+.li-analytics-table td,
+.li-analytics-table th {
+    padding: 11px 14px;
+}
+
+@media (max-width: 1180px) {
+    .li-analytics-kpi-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .li-analytics-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 @media (max-width: 782px) {
     .li-settings-page {
         margin-right: 10px;
@@ -347,5 +473,9 @@
     .li-settings-form .form-table tr {
         grid-template-columns: 1fr;
         padding: 18px;
+    }
+
+    .li-analytics-kpi-grid {
+        grid-template-columns: 1fr;
     }
 }

@@ -42,6 +42,10 @@ add_action('template_redirect', function (): void {
     }
 
     if (li_is_sds_document($document_id)) {
+        if (function_exists('li_analytics_track_document_download')) {
+            li_analytics_track_document_download($document_id);
+        }
+
         li_stream_protected_document($document_id);
         exit;
     }
@@ -55,6 +59,10 @@ add_action('template_redirect', function (): void {
             ['response' => 404]
         );
         exit;
+    }
+
+    if (function_exists('li_analytics_track_document_download')) {
+        li_analytics_track_document_download($document_id);
     }
 
     wp_safe_redirect($download_url);
