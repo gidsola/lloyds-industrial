@@ -33,16 +33,8 @@
         <!-- wp:column {"verticalAlignment":"center","className":"li-card"} -->
         <div class="wp-block-column is-vertically-aligned-center li-card">
 
-            <!-- wp:heading {"level":3} -->
-            <h3 class="wp-block-heading">Quote Request</h3>
-            <!-- /wp:heading -->
-
-            <!-- wp:paragraph -->
-            <p>Share the product, quantity, application, and account details so the sales team can route the request accurately.</p>
-            <!-- /wp:paragraph -->
-
             <!-- wp:shortcode -->
-            [quote_request_form]
+            [li_contact_form type="quote" title="Quote Request"]
             <!-- /wp:shortcode -->
 
         </div>

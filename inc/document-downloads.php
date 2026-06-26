@@ -29,7 +29,7 @@ add_action('template_redirect', function (): void {
 
     if (!li_user_has_document_access_for_document($document_id)) {
         if (!is_user_logged_in()) {
-            auth_redirect();
+            wp_safe_redirect(li_get_account_login_url(li_get_secure_document_url($document_id)));
             exit;
         }
 

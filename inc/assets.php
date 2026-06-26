@@ -56,7 +56,10 @@ add_action('enqueue_block_editor_assets', function (): void {
 add_action('admin_enqueue_scripts', function (string $hook_suffix): void {
     $screen = get_current_screen();
 
-    if ($hook_suffix === 'appearance_page_lloyds-industrial-settings') {
+    if (
+        $hook_suffix === 'appearance_page_lloyds-industrial-settings'
+        || $hook_suffix === 'toplevel_page_lloyds-contact-forms'
+    ) {
         li_enqueue_google_fonts('lloyds-settings-admin-fonts');
 
         wp_enqueue_style(

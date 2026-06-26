@@ -54,14 +54,14 @@ function li_bootstrap_default_site(): void
     li_bootstrap_create_product_terms();
 
     update_option('li_site_bootstrapped', time());
-    update_option('li_site_content_version', 4);
+    update_option('li_site_content_version', 7);
 
     flush_rewrite_rules();
 }
 
 function li_bootstrap_run_content_migrations(): void
 {
-    $target_version = 4;
+    $target_version = 7;
 
     if (!get_option('li_site_bootstrapped') || (int) get_option('li_site_content_version', 0) >= $target_version) {
         return;
@@ -74,6 +74,7 @@ function li_bootstrap_run_content_migrations(): void
     li_bootstrap_create_product_terms();
     li_bootstrap_refresh_catalogue_page_content();
     li_bootstrap_ensure_catalogue_flipbook_content();
+    li_bootstrap_refresh_login_flow_pages();
 
     update_option('li_site_content_version', $target_version);
 
@@ -321,6 +322,31 @@ function li_bootstrap_refresh_catalogue_page_content(): void
     ]);
 
     update_post_meta($catalogue->ID, '_wp_page_template', 'page-catalogue');
+}
+
+function li_bootstrap_refresh_login_flow_pages(): void
+{
+    $pages = [
+        'account'           => ['path' => 'account', 'content' => 'account', 'template' => 'page-account'],
+        'contact'           => ['path' => 'contact', 'content' => 'contact', 'template' => 'page-contact'],
+        'documentation'     => ['path' => 'documentation', 'content' => 'documentation', 'template' => 'page-documentation'],
+        'documentation-sds' => ['path' => 'documentation/sds', 'content' => 'documentation-sds', 'template' => 'page-documentation'],
+    ];
+
+    foreach ($pages as $page) {
+        $post = get_page_by_path($page['path'], OBJECT, 'page');
+
+        if (!$post instanceof WP_Post) {
+            continue;
+        }
+
+        wp_update_post([
+            'ID'           => $post->ID,
+            'post_content' => li_get_starter_content($page['content']),
+        ]);
+
+        update_post_meta($post->ID, '_wp_page_template', $page['template']);
+    }
 }
 
 function li_bootstrap_set_reading_options(array $pages): void

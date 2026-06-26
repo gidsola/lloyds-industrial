@@ -20,11 +20,11 @@
             <!-- /wp:paragraph -->
 
             <!-- wp:heading -->
-            <h2 class="wp-block-heading">Request Access To Controlled Documents</h2>
+            <h2 class="wp-block-heading">Need Help With Account Access?</h2>
             <!-- /wp:heading -->
 
             <!-- wp:paragraph -->
-            <p>Customers can get help matching SDS access to the account and order history for purchased products.</p>
+            <p>Customers can get help matching an account to company records, prior orders, and eligible product SDS access.</p>
             <!-- /wp:paragraph -->
 
         </div>
@@ -34,18 +34,18 @@
         <div class="wp-block-column is-vertically-aligned-center li-card">
 
             <!-- wp:heading {"level":3} -->
-            <h3 class="wp-block-heading">Access Request</h3>
+            <h3 class="wp-block-heading">Support Can Help</h3>
             <!-- /wp:heading -->
 
             <!-- wp:paragraph -->
-            <p>Use your preferred WordPress form plugin here. Recommended fields: name, company, email, phone, customer type, requested products and reason for access.</p>
+            <p>Send your company name, email, product name, and any order details available. Lloyds support can help confirm the right account path.</p>
             <!-- /wp:paragraph -->
 
             <!-- wp:buttons -->
             <div class="wp-block-buttons">
                 <!-- wp:button {"backgroundColor":"accent","textColor":"white"} -->
                 <div class="wp-block-button">
-                    <a class="wp-block-button__link has-white-color has-accent-background-color has-body-text-color has-background wp-element-button">Request Access</a>
+                    <a class="wp-block-button__link has-white-color has-accent-background-color has-body-text-color has-background wp-element-button" href="/contact">Contact Support</a>
                 </div>
                 <!-- /wp:button -->
             </div>

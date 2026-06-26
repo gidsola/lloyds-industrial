@@ -33,16 +33,8 @@
         <!-- wp:column {"verticalAlignment":"center","className":"li-card"} -->
         <div class="wp-block-column is-vertically-aligned-center li-card">
 
-            <!-- wp:heading {"level":3} -->
-            <h3 class="wp-block-heading">Contact Form Placeholder</h3>
-            <!-- /wp:heading -->
-
-            <!-- wp:paragraph -->
-            <p>Replace this card with the selected form block during implementation.</p>
-            <!-- /wp:paragraph -->
-
             <!-- wp:shortcode -->
-            [contact_form]
+            [li_contact_form title="Contact Lloyds"]
             <!-- /wp:shortcode -->
 
         </div>

@@ -205,8 +205,8 @@ function li_render_product_documents_block(): string
                                     <?php esc_html_e('Purchase Required', 'lloyds-industrial'); ?>
                                 </span>
                             <?php else: ?>
-                                <a class="li-button-primary" href="<?php echo esc_url(wp_login_url(get_permalink($product_id))); ?>">
-                                    <?php esc_html_e('Login Required', 'lloyds-industrial'); ?>
+                                <a class="li-button-primary" href="<?php echo esc_url(li_get_account_login_url(get_permalink($product_id))); ?>">
+                                    <?php esc_html_e('Sign In', 'lloyds-industrial'); ?>
                                 </a>
                             <?php endif; ?>
                         </div>

@@ -5,17 +5,15 @@
     <div class="wp-block-group alignwide">
 
         <!-- wp:paragraph {"className":"li-eyebrow"} -->
-        <p class="li-eyebrow">Customer Portal</p>
+        <p class="li-eyebrow">Customer Account</p>
         <!-- /wp:paragraph -->
 
         <!-- wp:heading {"level":1} -->
-        <h1 class="wp-block-heading">Customer Account Access</h1>
+        <h1 class="wp-block-heading">Sign In For Account And Document Access</h1>
         <!-- /wp:heading -->
 
         <!-- wp:paragraph {"fontSize":"medium"} -->
-        <p class="has-medium-font-size">
-            Customers can review account details, order history, and eligible product SDS access.
-        </p>
+        <p class="has-medium-font-size">Use one customer account for order history, account resources, and eligible product SDS downloads.</p>
         <!-- /wp:paragraph -->
 
     </div>
@@ -24,61 +22,53 @@
 </div>
 <!-- /wp:group -->
 
-
 <!-- wp:group {"align":"full","backgroundColor":"surface","style":{"spacing":{"padding":{"top":"90px","bottom":"110px"}}}} -->
 <div class="wp-block-group alignfull has-surface-background-color has-background" style="padding-top:90px;padding-bottom:110px">
 
-    <!-- wp:columns {"align":"wide","verticalAlignment":"top"} -->
-    <div class="wp-block-columns alignwide are-vertically-aligned-top">
+    <!-- wp:group {"align":"wide","layout":{"type":"constrained"}} -->
+    <div class="wp-block-group alignwide">
+
+        <!-- wp:shortcode -->
+        [li_customer_account]
+        <!-- /wp:shortcode -->
+
+    </div>
+    <!-- /wp:group -->
+
+</div>
+<!-- /wp:group -->
+
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"80px","bottom":"100px"}}}} -->
+<div class="wp-block-group alignfull" style="padding-top:80px;padding-bottom:100px">
+
+    <!-- wp:columns {"align":"wide","className":"li-card-grid"} -->
+    <div class="wp-block-columns alignwide li-card-grid">
 
         <!-- wp:column {"className":"li-card"} -->
         <div class="wp-block-column li-card">
-
-            <!-- wp:heading {"level":2} -->
-            <h2 class="wp-block-heading">Existing Customers</h2>
+            <!-- wp:heading {"level":3} -->
+            <h3 class="wp-block-heading">Need An Account?</h3>
             <!-- /wp:heading -->
-
             <!-- wp:paragraph -->
-            <p>
-                Log in to access approved customer documentation and account resources.
-            </p>
+            <p>Contact Lloyds support if you need help creating or matching a customer account to prior product orders.</p>
             <!-- /wp:paragraph -->
-
-            <!-- wp:shortcode -->
-            [woocommerce_my_account]
-            <!-- /wp:shortcode -->
-
+            <!-- wp:paragraph {"className":"li-card-link"} -->
+            <p class="li-card-link"><a href="/contact">Contact Support</a></p>
+            <!-- /wp:paragraph -->
         </div>
         <!-- /wp:column -->
 
-
         <!-- wp:column {"className":"li-card"} -->
         <div class="wp-block-column li-card">
-
-            <!-- wp:heading {"level":2} -->
-            <h2 class="wp-block-heading">Request Access</h2>
+            <!-- wp:heading {"level":3} -->
+            <h3 class="wp-block-heading">Looking For SDS?</h3>
             <!-- /wp:heading -->
-
             <!-- wp:paragraph -->
-            <p>
-                Need help with SDS access? Use the same account tied to your product order, or contact Lloyds support for help matching purchase history.
-            </p>
+            <p>SDS files are private and tied to purchased products. Sign in here, then open the related product page.</p>
             <!-- /wp:paragraph -->
-
-            <!-- wp:buttons -->
-            <div class="wp-block-buttons">
-
-                <!-- wp:button {"url":"/contact","backgroundColor":"accent","textColor":"body-text"} -->
-                <div class="wp-block-button">
-                    <a class="wp-block-button__link has-body-text-color has-accent-background-color has-text-color has-background wp-element-button" href="/contact">
-                        Request Access
-                    </a>
-                </div>
-                <!-- /wp:button -->
-
-            </div>
-            <!-- /wp:buttons -->
-
+            <!-- wp:paragraph {"className":"li-card-link"} -->
+            <p class="li-card-link"><a href="/documentation/sds">Review SDS Access</a></p>
+            <!-- /wp:paragraph -->
         </div>
         <!-- /wp:column -->
 

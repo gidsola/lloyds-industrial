@@ -1208,8 +1208,9 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                         <label for="li_mega_menu_url_<?php echo esc_attr((string) $index); ?>">
                             <strong><?php esc_html_e('URL', 'lloyds-industrial'); ?></strong>
                         </label>
-                        <input 
-                            type="url" 
+                        <input
+                            type="text"
+                            inputmode="url"
                             id="li_mega_menu_url_<?php echo esc_attr((string) $index); ?>"
                             data-field="url"
                             value="<?php echo esc_attr($item['url']); ?>"
@@ -1508,14 +1509,15 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                                 <label for="li_mega_menu_featured_url_<?php echo esc_attr((string) $index); ?>">
                                     <?php esc_html_e('URL', 'lloyds-industrial'); ?>
                                 </label>
-                                <input 
-                                    type="url" 
+                                <input
+                                    type="text"
+                                    inputmode="url"
                                     id="li_mega_menu_featured_url_<?php echo esc_attr((string) $index); ?>"
                                     name="<?php echo esc_attr($name_prefix); ?>[featured][url]"
                                     data-field="featured_url"
                                     value="<?php echo esc_attr($featured['url']); ?>"
                                     class="widefat"
-                                    placeholder="<?php esc_attr_e('https://example.com', 'lloyds-industrial'); ?>"
+                                    placeholder="<?php esc_attr_e('https://example.com or /page-slug', 'lloyds-industrial'); ?>"
                                 >
                             </p>
                             

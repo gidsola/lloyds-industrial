@@ -13,11 +13,11 @@
     <div class="wp-block-group alignwide">
 
         <!-- wp:paragraph {"align":"center","className":"li-eyebrow","textColor":"accent"} -->
-        <p class="has-text-align-center li-eyebrow has-accent-color has-body-text-color">Documentation Strategy</p>
+        <p class="has-text-align-center li-eyebrow has-accent-color has-body-text-color">Document Access</p>
         <!-- /wp:paragraph -->
 
         <!-- wp:heading {"textAlign":"center"} -->
-        <h2 class="wp-block-heading has-text-align-center">The Right Information For The Right Audience</h2>
+        <h2 class="wp-block-heading has-text-align-center">Clear Access Rules For Each Document Type</h2>
         <!-- /wp:heading -->
 
         <!-- wp:columns {"align":"wide","className":"li-card-grid"} -->
@@ -29,7 +29,7 @@
                 <h3 class="wp-block-heading">Public Product Information</h3>
                 <!-- /wp:heading -->
                 <!-- wp:paragraph -->
-                <p>Applications, benefits, industries, certifications and general product guidance.</p>
+                <p>Applications, benefits, industries, certifications, and general product guidance can remain publicly available.</p>
                 <!-- /wp:paragraph -->
             </div>
             <!-- /wp:column -->
@@ -40,7 +40,7 @@
                 <h3 class="wp-block-heading">SDS By Purchase History</h3>
                 <!-- /wp:heading -->
                 <!-- wp:paragraph -->
-                <p>Registered customers can download SDS files for products they have purchased.</p>
+                <p>Safety Data Sheets are private. Signed-in customers can download SDS files only for products connected to their purchase history.</p>
                 <!-- /wp:paragraph -->
             </div>
             <!-- /wp:column -->
@@ -51,7 +51,7 @@
                 <h3 class="wp-block-heading">Internal Knowledge</h3>
                 <!-- /wp:heading -->
                 <!-- wp:paragraph -->
-                <p>Formulations, SOPs, batch processes and proprietary data remain internal only.</p>
+                <p>Formulations, SOPs, batch processes, and proprietary data remain internal only.</p>
                 <!-- /wp:paragraph -->
             </div>
             <!-- /wp:column -->

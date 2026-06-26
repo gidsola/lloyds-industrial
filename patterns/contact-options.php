@@ -12,16 +12,16 @@
     <!-- wp:group {"align":"wide","layout":{"type":"constrained"}} -->
     <div class="wp-block-group alignwide">
 
-        <!-- wp:columns {"align":"wide","className":"li-card-grid"} -->
-        <div class="wp-block-columns alignwide li-card-grid">
+        <!-- wp:columns {"align":"wide","className":"li-contact-routing-grid"} -->
+        <div class="wp-block-columns alignwide li-contact-routing-grid">
 
-            <!-- wp:column {"className":"li-card"} -->
-            <div class="wp-block-column li-card">
+            <!-- wp:column {"className":"li-contact-route-card"} -->
+            <div class="wp-block-column li-contact-route-card">
                 <!-- wp:heading {"level":3} -->
                 <h3 class="wp-block-heading">Product Support</h3>
                 <!-- /wp:heading -->
                 <!-- wp:paragraph -->
-                <p>Questions about applications, industries, product selection or documentation.</p>
+                <p>Questions about applications, industries, product selection, technical documents, or SDS access help.</p>
                 <!-- /wp:paragraph -->
                 <!-- wp:paragraph {"className":"li-card-link"} -->
                 <p class="li-card-link"><a href="mailto:Marketing@lloydslaboratories.com">Marketing@lloydslaboratories.com</a></p>
@@ -29,13 +29,13 @@
             </div>
             <!-- /wp:column -->
 
-            <!-- wp:column {"className":"li-card"} -->
-            <div class="wp-block-column li-card">
+            <!-- wp:column {"className":"li-contact-route-card"} -->
+            <div class="wp-block-column li-contact-route-card">
                 <!-- wp:heading {"level":3} -->
-                <h3 class="wp-block-heading">Place Orders</h3>
+                <h3 class="wp-block-heading">Order Desk</h3>
                 <!-- /wp:heading -->
                 <!-- wp:paragraph -->
-                <p>Order desk support for product availability, purchase routing and customer account coordination.</p>
+                <p>Product availability, quote routing, order coordination, and account purchasing support.</p>
                 <!-- /wp:paragraph -->
                 <!-- wp:paragraph {"className":"li-card-link"} -->
                 <p class="li-card-link"><a href="mailto:Orderdesk@lloydslaboratories.com">Orderdesk@lloydslaboratories.com</a></p>
@@ -43,13 +43,13 @@
             </div>
             <!-- /wp:column -->
 
-            <!-- wp:column {"className":"li-card"} -->
-            <div class="wp-block-column li-card">
+            <!-- wp:column {"className":"li-contact-route-card"} -->
+            <div class="wp-block-column li-contact-route-card">
                 <!-- wp:heading {"level":3} -->
                 <h3 class="wp-block-heading">Accounting</h3>
                 <!-- /wp:heading -->
                 <!-- wp:paragraph -->
-                <p>Payment, invoice and payable questions for existing commercial accounts.</p>
+                <p>Invoices, payments, payables, and commercial account billing questions.</p>
                 <!-- /wp:paragraph -->
                 <!-- wp:paragraph {"className":"li-card-link"} -->
                 <p class="li-card-link"><a href="mailto:Payables@lloydslaboratories.com">Payables@lloydslaboratories.com</a></p>
