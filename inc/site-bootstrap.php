@@ -20,6 +20,7 @@ add_action('admin_init', function (): void {
     }
 
     li_bootstrap_run_content_migrations();
+    li_bootstrap_ensure_woocommerce_page_assignments();
 
     if (!isset($_GET['li_reseed_site'])) {
         return;
@@ -54,14 +55,14 @@ function li_bootstrap_default_site(): void
     li_bootstrap_create_product_terms();
 
     update_option('li_site_bootstrapped', time());
-    update_option('li_site_content_version', 7);
+    update_option('li_site_content_version', 9);
 
     flush_rewrite_rules();
 }
 
 function li_bootstrap_run_content_migrations(): void
 {
-    $target_version = 7;
+    $target_version = 9;
 
     if (!get_option('li_site_bootstrapped') || (int) get_option('li_site_content_version', 0) >= $target_version) {
         return;
@@ -75,6 +76,7 @@ function li_bootstrap_run_content_migrations(): void
     li_bootstrap_refresh_catalogue_page_content();
     li_bootstrap_ensure_catalogue_flipbook_content();
     li_bootstrap_refresh_login_flow_pages();
+    li_bootstrap_refresh_woocommerce_flow_pages();
 
     update_option('li_site_content_version', $target_version);
 
@@ -219,6 +221,20 @@ function li_bootstrap_create_pages(array $media = [], bool $update_existing = tr
             'content'  => li_get_starter_content('account')
         ],
 
+        'cart' => [
+            'title'    => 'Cart',
+            'slug'     => 'cart',
+            'template' => 'page-cart',
+            'content'  => li_get_starter_content('cart')
+        ],
+
+        'checkout' => [
+            'title'    => 'Checkout',
+            'slug'     => 'checkout',
+            'template' => 'page-checkout',
+            'content'  => li_get_starter_content('checkout')
+        ],
+
         'blog' => [
             'title'    => 'Blog',
             'slug'     => 'blog',
@@ -349,6 +365,29 @@ function li_bootstrap_refresh_login_flow_pages(): void
     }
 }
 
+function li_bootstrap_refresh_woocommerce_flow_pages(): void
+{
+    $pages = [
+        'cart'     => ['path' => 'cart', 'content' => 'cart', 'template' => 'page-cart'],
+        'checkout' => ['path' => 'checkout', 'content' => 'checkout', 'template' => 'page-checkout'],
+    ];
+
+    foreach ($pages as $page) {
+        $post = get_page_by_path($page['path'], OBJECT, 'page');
+
+        if (!$post instanceof WP_Post) {
+            continue;
+        }
+
+        wp_update_post([
+            'ID'           => $post->ID,
+            'post_content' => li_get_starter_content($page['content']),
+        ]);
+
+        update_post_meta($post->ID, '_wp_page_template', $page['template']);
+    }
+}
+
 function li_bootstrap_set_reading_options(array $pages): void
 {
     if (!empty($pages['home'])) {
@@ -412,7 +451,7 @@ function li_bootstrap_get_navigation_content(array $pages): string
 
     $content .= li_navigation_link_block('Documentation', $pages['documentation'] ?? 0, [
         li_navigation_link_block('Catalogue', $pages['catalogue'] ?? 0),
-        li_navigation_link_block('SDS Library', $pages['sds-library'] ?? 0),
+        li_navigation_link_block('SDS Access', $pages['sds-library'] ?? 0),
         li_navigation_link_block('Technical Data Sheets', $pages['technical-data-sheets'] ?? 0),
         li_navigation_link_block('Certifications', $pages['certifications'] ?? 0),
         li_navigation_link_block('Customer Account', $pages['account'] ?? 0),
@@ -563,6 +602,59 @@ function li_bootstrap_create_woocommerce_pages(array $pages): void
     if (!empty($pages['account'])) {
         update_option('woocommerce_myaccount_page_id', $pages['account']);
     }
+
+    if (!empty($pages['cart'])) {
+        update_option('woocommerce_cart_page_id', $pages['cart']);
+    }
+
+    if (!empty($pages['checkout'])) {
+        update_option('woocommerce_checkout_page_id', $pages['checkout']);
+    }
+}
+
+function li_bootstrap_ensure_woocommerce_page_assignments(): void
+{
+    if (!class_exists('WooCommerce') || !get_option('li_site_bootstrapped')) {
+        return;
+    }
+
+    $pages = [];
+
+    if (!(int) get_option('woocommerce_shop_page_id')) {
+        $products_page = get_page_by_path('products', OBJECT, 'page');
+
+        if ($products_page instanceof WP_Post) {
+            $pages['products'] = (int) $products_page->ID;
+        }
+    }
+
+    if (!(int) get_option('woocommerce_myaccount_page_id')) {
+        $account_page = get_page_by_path('account', OBJECT, 'page');
+
+        if ($account_page instanceof WP_Post) {
+            $pages['account'] = (int) $account_page->ID;
+        }
+    }
+
+    if (!(int) get_option('woocommerce_cart_page_id')) {
+        $cart_page = get_page_by_path('cart', OBJECT, 'page');
+
+        if ($cart_page instanceof WP_Post) {
+            $pages['cart'] = (int) $cart_page->ID;
+        }
+    }
+
+    if (!(int) get_option('woocommerce_checkout_page_id')) {
+        $checkout_page = get_page_by_path('checkout', OBJECT, 'page');
+
+        if ($checkout_page instanceof WP_Post) {
+            $pages['checkout'] = (int) $checkout_page->ID;
+        }
+    }
+
+    if ($pages) {
+        li_bootstrap_create_woocommerce_pages($pages);
+    }
 }
 
 function li_bootstrap_create_product_terms(): void
@@ -571,19 +663,152 @@ function li_bootstrap_create_product_terms(): void
         'lubricants-corrosion-inhibitors' => 'Lubricants & Corrosion Inhibitors',
         'cleaner-degreasers'              => 'Cleaners & Degreasers',
         'automotive-fleet-maintenance'    => 'Automotive & Fleet Maintenance',
+        'coatings-and-sealants'           => 'Coatings & Sealants',
         'construction-specialty'          => 'Construction Specialty',
+        'electronic-specialty'            => 'Electronic Specialty',
         'facility-property-maintenance'   => 'Facility & Property Maintenance',
+        'insecticides'                    => 'Insecticides',
+        'janitorial-sanitation'           => 'Janitorial & Sanitation',
+        'metal-cleaners-polishes'         => 'Metal Cleaners & Polishes',
         'plastic-injection-moulding'      => 'Plastic Injection Moulding',
+        'popular-products'                => 'Popular Products',
     ]);
 
     li_bootstrap_create_terms('li_industry', [
-        'utilities-energy' => 'Utilities & Energy',
-        'transportation'   => 'Transportation',
-        'manufacturing'    => 'Manufacturing',
-        'agriculture'      => 'Agriculture',
-        'food-processing'  => 'Food Processing',
-        'construction'     => 'Construction',
+        'agriculture'                => 'Agriculture',
+        'automotive-fleet'           => 'Automotive & Fleet',
+        'construction'               => 'Construction',
+        'facility-property'          => 'Facility & Property',
+        'food-processing'            => 'Food Processing',
+        'janitorial-sanitation'      => 'Janitorial & Sanitation',
+        'manufacturing'              => 'Manufacturing',
+        'plastic-injection-moulding' => 'Plastic Injection Moulding',
+        'transportation'             => 'Transportation',
+        'utilities-energy'           => 'Utilities & Energy',
     ]);
+
+    li_bootstrap_create_terms('li_application', [
+        'cleaning-degreasing'    => 'Cleaning & Degreasing',
+        'coating-sealing'        => 'Coating & Sealing',
+        'corrosion-protection'   => 'Corrosion Protection',
+        'electrical-maintenance' => 'Electrical Maintenance',
+        'equipment-maintenance'  => 'Equipment Maintenance',
+        'fleet-maintenance'      => 'Fleet Maintenance',
+        'lubrication'            => 'Lubrication',
+        'metal-polishing'        => 'Metal Polishing',
+        'mould-release'          => 'Mould Release',
+        'pest-control'           => 'Pest Control',
+        'sanitation'             => 'Sanitation',
+        'surface-preparation'    => 'Surface Preparation',
+    ]);
+
+    li_bootstrap_create_terms('product_tag', [
+        'aerosol'         => 'Aerosol',
+        'biodegradable'   => 'Biodegradable',
+        'brake-cleaner'   => 'Brake Cleaner',
+        'cfia-accepted'   => 'CFIA Accepted',
+        'degreaser'       => 'Degreaser',
+        'food-grade'      => 'Food Grade',
+        'glass-cleaner'   => 'Glass Cleaner',
+        'heavy-duty'      => 'Heavy Duty',
+        'metal-polish'    => 'Metal Polish',
+        'non-flammable'   => 'Non-Flammable',
+        'penetrating-oil' => 'Penetrating Oil',
+        'rust-inhibitor'  => 'Rust Inhibitor',
+        'solvent-free'    => 'Solvent-Free',
+        'stainless-steel' => 'Stainless Steel',
+        'water-based'     => 'Water-Based',
+    ]);
+
+    li_bootstrap_create_terms('product_brand', [
+        'lloyds-laboratories' => 'Lloyds Laboratories',
+    ]);
+
+    li_bootstrap_normalize_product_terms();
+}
+
+function li_bootstrap_normalize_product_terms(): void
+{
+    li_bootstrap_merge_term_aliases('product_cat', [
+        'automotive-fleet-maintenance' => [
+            'Autmotive & Fleet Maintenance',
+            'Automotive Fleet Maintenance',
+        ],
+        'cleaner-degreasers' => [
+            'Cleaner / Degreasers',
+            'Cleaner Degreasers',
+            'Cleaners And Degreasers',
+            'Degreasers',
+        ],
+        'coatings-and-sealants' => [
+            'Coatings And Sealants',
+        ],
+        'electronic-specialty' => [
+            'Electronic Speciality',
+            'Electronic Specialty',
+        ],
+        'janitorial-sanitation' => [
+            'Janitorial And Sanitation',
+        ],
+        'metal-cleaners-polishes' => [
+            'Metal Cleaners And Polishes',
+        ],
+    ]);
+}
+
+function li_bootstrap_merge_term_aliases(string $taxonomy, array $aliases_by_target_slug): void
+{
+    if (!taxonomy_exists($taxonomy)) {
+        return;
+    }
+
+    foreach ($aliases_by_target_slug as $target_slug => $aliases) {
+        $target = get_term_by('slug', $target_slug, $taxonomy);
+
+        if (!$target instanceof WP_Term) {
+            continue;
+        }
+
+        foreach ($aliases as $alias) {
+            li_bootstrap_merge_term_alias($taxonomy, $target, (string) $alias);
+        }
+    }
+}
+
+function li_bootstrap_merge_term_alias(string $taxonomy, WP_Term $target, string $alias): void
+{
+    $candidate_terms = [];
+    $alias_slug = sanitize_title($alias);
+
+    foreach ([$alias_slug, $alias_slug . '-2'] as $slug) {
+        $term = get_term_by('slug', $slug, $taxonomy);
+
+        if ($term instanceof WP_Term) {
+            $candidate_terms[$term->term_id] = $term;
+        }
+    }
+
+    $term = get_term_by('name', $alias, $taxonomy);
+
+    if ($term instanceof WP_Term) {
+        $candidate_terms[$term->term_id] = $term;
+    }
+
+    foreach ($candidate_terms as $source) {
+        if ((int) $source->term_id === (int) $target->term_id) {
+            continue;
+        }
+
+        $object_ids = get_objects_in_term((int) $source->term_id, $taxonomy);
+
+        if (!is_wp_error($object_ids) && $object_ids) {
+            foreach (array_map('absint', $object_ids) as $object_id) {
+                wp_set_object_terms($object_id, [(int) $target->term_id], $taxonomy, true);
+            }
+        }
+
+        wp_delete_term((int) $source->term_id, $taxonomy);
+    }
 }
 
 function li_bootstrap_create_terms(string $taxonomy, array $terms): void
@@ -593,7 +818,15 @@ function li_bootstrap_create_terms(string $taxonomy, array $terms): void
     }
 
     foreach ($terms as $slug => $name) {
-        if (get_term_by('slug', $slug, $taxonomy)) {
+        $term = get_term_by('slug', $slug, $taxonomy);
+
+        if ($term instanceof WP_Term) {
+            if ($term->name !== $name) {
+                wp_update_term((int) $term->term_id, $taxonomy, [
+                    'name' => $name,
+                ]);
+            }
+
             continue;
         }
 

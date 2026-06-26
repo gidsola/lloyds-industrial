@@ -19,6 +19,7 @@ require_once get_template_directory() . '/inc/editor.php';
 
 require_once get_template_directory() . '/inc/woocommerce.php';
 require_once get_template_directory() . '/inc/products.php';
+require_once get_template_directory() . '/inc/product-carousel.php';
 require_once get_template_directory() . '/inc/product-fields.php';
 require_once get_template_directory() . '/inc/product-documents.php';
 

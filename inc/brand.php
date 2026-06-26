@@ -16,7 +16,7 @@ function li_get_theme_settings(): array
 function li_get_brand_defaults(): array
 {
     return [
-        'primary_color'   => '#17443B',
+        'primary_color'   => '#c62d2d',
         'secondary_color' => '#2E5F73',
         'accent_color'    => '#D9A441',
         'surface_color'   => '#F5F7F6',

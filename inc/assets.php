@@ -28,6 +28,17 @@ add_action('wp_enqueue_scripts', function (): void {
         filemtime(get_template_directory() . '/assets/js/theme.js'),
         true
     );
+
+    wp_localize_script('lloyds-theme', 'lloydsTheme', [
+        'ajaxUrl' => admin_url('admin-ajax.php'),
+        'productSearchNonce' => wp_create_nonce('li_frontend_product_search'),
+        'productSearchMinLength' => 2,
+        'i18n' => [
+            'searching' => __('Searching products...', 'lloyds-industrial'),
+            'noResults' => __('No matching products found.', 'lloyds-industrial'),
+            'error' => __('Product search is unavailable right now.', 'lloyds-industrial'),
+        ],
+    ]);
 });
 
 add_action('enqueue_block_editor_assets', function (): void {
@@ -59,6 +70,7 @@ add_action('admin_enqueue_scripts', function (string $hook_suffix): void {
     if (
         $hook_suffix === 'appearance_page_lloyds-industrial-settings'
         || $hook_suffix === 'toplevel_page_lloyds-contact-forms'
+        || $hook_suffix === 'toplevel_page_lloyds-product-carousel'
     ) {
         li_enqueue_google_fonts('lloyds-settings-admin-fonts');
 

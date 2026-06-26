@@ -1,19 +1,23 @@
 <!-- wp:template-part {"slug":"header","theme":"lloyds-industrial","tagName":"header"} /-->
 
-<!-- wp:group {"align":"full","backgroundColor":"surface","style":{"spacing":{"padding":{"top":"80px","bottom":"80px"}}}} -->
-<div class="wp-block-group alignfull has-surface-background-color has-background" style="padding-top:80px;padding-bottom:80px">
+<!-- wp:group {"align":"full","backgroundColor":"surface","className":"li-single-product-hero","style":{"spacing":{"padding":{"top":"72px","bottom":"76px"}}}} -->
+<div class="wp-block-group alignfull li-single-product-hero has-surface-background-color has-background" style="padding-top:72px;padding-bottom:76px">
 
-    <!-- wp:columns {"align":"wide","verticalAlignment":"center","style":{"spacing":{"blockGap":{"left":"64px"}}}} -->
-    <div class="wp-block-columns alignwide are-vertically-aligned-center">
+    <!-- wp:group {"align":"wide","className":"li-single-product-layout","layout":{"type":"constrained"}} -->
+    <div class="wp-block-group alignwide li-single-product-layout">
 
-        <!-- wp:column {"verticalAlignment":"center","width":"48%"} -->
-        <div class="wp-block-column is-vertically-aligned-center" style="flex-basis:48%">
+        <!-- wp:group {"className":"li-single-product-media","layout":{"type":"constrained"}} -->
+        <div class="wp-block-group li-single-product-media">
             <!-- wp:woocommerce/product-image-gallery /-->
         </div>
-        <!-- /wp:column -->
+        <!-- /wp:group -->
 
-        <!-- wp:column {"verticalAlignment":"center","width":"52%"} -->
-        <div class="wp-block-column is-vertically-aligned-center" style="flex-basis:52%">
+        <!-- wp:group {"className":"li-single-product-summary","layout":{"type":"constrained"}} -->
+        <div class="wp-block-group li-single-product-summary">
+
+            <!-- wp:shortcode -->
+            [li_woocommerce_notices]
+            <!-- /wp:shortcode -->
 
             <!-- wp:post-terms {"term":"product_cat","className":"li-product-category"} /-->
 
@@ -23,25 +27,73 @@
 
             <!-- wp:post-excerpt /-->
 
-            <!-- wp:group {"className":"li-product-quick-actions","layout":{"type":"flex","flexWrap":"wrap"},"style":{"spacing":{"margin":{"top":"32px"}}}} -->
-            <div class="wp-block-group li-product-quick-actions" style="margin-top:32px">
+            <!-- wp:shortcode -->
+            [li_product_card_meta]
+            <!-- /wp:shortcode -->
+
+            <!-- wp:woocommerce/product-price /-->
+
+            <!-- wp:group {"className":"li-product-quick-actions","layout":{"type":"constrained"},"style":{"spacing":{"margin":{"top":"28px"}}}} -->
+            <div class="wp-block-group li-product-quick-actions" style="margin-top:28px">
                 <!-- wp:woocommerce/add-to-cart-form /-->
             </div>
             <!-- /wp:group -->
 
+            <!-- wp:paragraph {"className":"li-single-product-note"} -->
+            <p class="li-single-product-note">SDS downloads are available only to signed-in customers who purchased the related product.</p>
+            <!-- /wp:paragraph -->
+
         </div>
-        <!-- /wp:column -->
+        <!-- /wp:group -->
 
     </div>
-    <!-- /wp:columns -->
+    <!-- /wp:group -->
 
 </div>
 <!-- /wp:group -->
 
-<!-- wp:group {"align":"wide","style":{"spacing":{"padding":{"top":"80px","bottom":"80px"}}}} -->
-<div class="wp-block-group alignwide" style="padding-top:80px;padding-bottom:80px">
+<!-- wp:group {"align":"full","className":"li-product-info-section","style":{"spacing":{"padding":{"top":"76px","bottom":"76px"}}}} -->
+<div class="wp-block-group alignfull li-product-info-section" style="padding-top:76px;padding-bottom:76px">
 
-    <!-- wp:woocommerce/product-details /-->
+    <!-- wp:group {"align":"wide","className":"li-product-info-grid","layout":{"type":"constrained"}} -->
+    <div class="wp-block-group alignwide li-product-info-grid">
+
+        <!-- wp:group {"className":"li-product-info-main","layout":{"type":"constrained"}} -->
+        <div class="wp-block-group li-product-info-main">
+            <!-- wp:paragraph {"className":"li-eyebrow"} -->
+            <p class="li-eyebrow">Product Information</p>
+            <!-- /wp:paragraph -->
+
+            <!-- wp:heading -->
+            <h2 class="wp-block-heading">Details And Application Notes</h2>
+            <!-- /wp:heading -->
+
+            <!-- wp:post-content /-->
+        </div>
+        <!-- /wp:group -->
+
+        <!-- wp:group {"className":"li-product-info-aside","layout":{"type":"constrained"}} -->
+        <div class="wp-block-group li-product-info-aside">
+            <!-- wp:heading {"level":3} -->
+            <h3 class="wp-block-heading">Documents And Support</h3>
+            <!-- /wp:heading -->
+
+            <!-- wp:paragraph -->
+            <p>Public technical resources appear below when available. SDS files are private and checked against customer purchase history.</p>
+            <!-- /wp:paragraph -->
+
+            <!-- wp:list {"className":"li-check-list"} -->
+            <ul class="li-check-list">
+                <li>Technical product information</li>
+                <li>Purchase-gated SDS downloads</li>
+                <li>Quote and volume support</li>
+            </ul>
+            <!-- /wp:list -->
+        </div>
+        <!-- /wp:group -->
+
+    </div>
+    <!-- /wp:group -->
 
 </div>
 <!-- /wp:group -->
@@ -52,7 +104,41 @@
 
 <!-- wp:pattern {"slug":"lloyds-industrial/product-docs-banner"} /-->
 
-<!-- wp:pattern {"slug":"lloyds-industrial/request-quote"} /-->
+<!-- wp:group {"align":"full","backgroundColor":"surface","className":"li-product-quote-section","style":{"spacing":{"padding":{"top":"82px","bottom":"90px"}}}} -->
+<div class="wp-block-group alignfull li-product-quote-section has-surface-background-color has-background" style="padding-top:82px;padding-bottom:90px">
+
+    <!-- wp:group {"align":"wide","className":"li-product-quote-grid","layout":{"type":"constrained"}} -->
+    <div class="wp-block-group alignwide li-product-quote-grid">
+
+        <!-- wp:group {"className":"li-product-quote-copy","layout":{"type":"constrained"}} -->
+        <div class="wp-block-group li-product-quote-copy">
+            <!-- wp:paragraph {"className":"li-eyebrow"} -->
+            <p class="li-eyebrow">B2B Ordering</p>
+            <!-- /wp:paragraph -->
+
+            <!-- wp:heading -->
+            <h2 class="wp-block-heading">Request Pricing Or Product Guidance</h2>
+            <!-- /wp:heading -->
+
+            <!-- wp:paragraph -->
+            <p>For industrial customers, distributors and partner organizations, Lloyds can support quote-based purchasing, volume requirements and application-specific recommendations.</p>
+            <!-- /wp:paragraph -->
+        </div>
+        <!-- /wp:group -->
+
+        <!-- wp:group {"className":"li-card li-product-quote-form","layout":{"type":"constrained"}} -->
+        <div class="wp-block-group li-card li-product-quote-form">
+            <!-- wp:shortcode -->
+            [li_contact_form type="quote" title="Quote Request"]
+            <!-- /wp:shortcode -->
+        </div>
+        <!-- /wp:group -->
+
+    </div>
+    <!-- /wp:group -->
+
+</div>
+<!-- /wp:group -->
 
 <!-- wp:pattern {"slug":"lloyds-industrial/contact-specialist"} /-->
 

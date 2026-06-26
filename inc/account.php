@@ -29,7 +29,7 @@ function li_get_account_redirect_url(): string
 function li_render_customer_account_shortcode(): string
 {
     if (class_exists('WooCommerce') && shortcode_exists('woocommerce_my_account')) {
-        return do_shortcode('[woocommerce_my_account]');
+        return '<div class="li-account-flow li-woo-account">' . do_shortcode('[woocommerce_my_account]') . '</div>';
     }
 
     return li_render_account_login_panel();

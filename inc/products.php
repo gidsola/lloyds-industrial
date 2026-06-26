@@ -7,6 +7,22 @@ if (!defined('ABSPATH')) {
 }
 
 add_action('init', function (): void {
+    if (!taxonomy_exists('product_brand')) {
+        register_taxonomy('product_brand', ['product'], [
+            'labels' => [
+                'name'          => __('Brands', 'lloyds-industrial'),
+                'singular_name' => __('Brand', 'lloyds-industrial'),
+            ],
+            'public'       => true,
+            'show_ui'      => true,
+            'show_in_rest' => true,
+            'hierarchical' => false,
+            'rewrite'      => [
+                'slug' => 'brand',
+            ],
+        ]);
+    }
+
     register_taxonomy('li_industry', ['product'], [
         'labels' => [
             'name'          => __('Industries', 'lloyds-industrial'),
@@ -143,9 +159,12 @@ function li_render_product_filters(): string
 function li_render_product_search_form(): string
 {
     $search = isset($_GET['s']) ? sanitize_text_field(wp_unslash($_GET['s'])) : '';
-    $output = '<form class="li-product-search-form" role="search" method="get" action="' . esc_url(home_url('/')) . '">';
-    $output .= '<label class="screen-reader-text" for="li-product-search">' . esc_html__('Search products', 'lloyds-industrial') . '</label>';
-    $output .= '<input id="li-product-search" type="search" name="s" placeholder="' . esc_attr__('Search products, applications, or industries...', 'lloyds-industrial') . '" value="' . esc_attr($search) . '">';
+    $instance_id = 'li-product-search-' . wp_unique_id();
+
+    $output = '<div class="li-product-search" data-li-product-search>';
+    $output .= '<form class="li-product-search-form" role="search" method="get" action="' . esc_url(home_url('/')) . '" data-li-product-search-form>';
+    $output .= '<label class="screen-reader-text" for="' . esc_attr($instance_id) . '">' . esc_html__('Search products', 'lloyds-industrial') . '</label>';
+    $output .= '<input id="' . esc_attr($instance_id) . '" type="search" name="s" placeholder="' . esc_attr__('Search products, applications, or industries...', 'lloyds-industrial') . '" value="' . esc_attr($search) . '" autocomplete="off" data-li-product-search-input>';
     $output .= '<input type="hidden" name="post_type" value="product">';
 
     foreach (['product_cat', 'li_industry', 'li_application'] as $taxonomy) {
@@ -158,9 +177,108 @@ function li_render_product_search_form(): string
 
     $output .= '<button type="submit">' . esc_html__('Search', 'lloyds-industrial') . '</button>';
     $output .= '</form>';
+    $output .= '<div class="li-product-search-results" data-li-product-search-results hidden aria-live="polite"></div>';
+    $output .= '</div>';
 
     return $output;
 }
+
+function li_get_product_search_term_ids(string $search): array
+{
+    $ids = [];
+
+    foreach (['product_cat', 'li_industry', 'li_application', 'product_brand', 'product_tag'] as $taxonomy) {
+        if (!taxonomy_exists($taxonomy)) {
+            continue;
+        }
+
+        $terms = get_terms([
+            'taxonomy'   => $taxonomy,
+            'hide_empty' => true,
+            'search'     => $search,
+            'fields'     => 'ids',
+            'number'     => 12,
+        ]);
+
+        if (is_wp_error($terms) || !$terms) {
+            continue;
+        }
+
+        $term_query = new WP_Query([
+            'post_type'      => 'product',
+            'post_status'    => 'publish',
+            'posts_per_page' => 12,
+            'fields'         => 'ids',
+            'tax_query'      => [
+                [
+                    'taxonomy' => $taxonomy,
+                    'field'    => 'term_id',
+                    'terms'    => array_map('absint', $terms),
+                ],
+            ],
+        ]);
+
+        $ids = array_merge($ids, array_map('absint', $term_query->posts));
+    }
+
+    return array_values(array_unique($ids));
+}
+
+function li_get_product_search_results(string $search, int $limit = 8): array
+{
+    $search = trim($search);
+
+    if (strlen($search) < 2 || !post_type_exists('product')) {
+        return [];
+    }
+
+    $query = new WP_Query([
+        'post_type'      => 'product',
+        'post_status'    => 'publish',
+        'posts_per_page' => $limit,
+        's'              => $search,
+        'fields'         => 'ids',
+    ]);
+
+    $ids = array_map('absint', $query->posts);
+    $ids = array_values(array_unique(array_merge($ids, li_get_product_search_term_ids($search))));
+    $ids = array_slice($ids, 0, $limit);
+    $results = [];
+
+    foreach ($ids as $product_id) {
+        $categories = wp_get_post_terms($product_id, 'product_cat', ['fields' => 'names']);
+        $industries = wp_get_post_terms($product_id, 'li_industry', ['fields' => 'names']);
+        $summary = (string) get_post_meta($product_id, '_li_public_summary', true);
+
+        if ($summary === '') {
+            $summary = get_the_excerpt($product_id);
+        }
+
+        $results[] = [
+            'id'         => $product_id,
+            'title'      => get_the_title($product_id),
+            'url'        => get_permalink($product_id),
+            'summary'    => wp_trim_words(wp_strip_all_tags($summary), 22),
+            'categories' => is_wp_error($categories) ? [] : array_values($categories),
+            'industries' => is_wp_error($industries) ? [] : array_values($industries),
+        ];
+    }
+
+    return $results;
+}
+
+function li_ajax_frontend_product_search(): void
+{
+    check_ajax_referer('li_frontend_product_search');
+
+    $search = isset($_GET['search']) ? sanitize_text_field(wp_unslash($_GET['search'])) : '';
+    $results = li_get_product_search_results($search);
+
+    wp_send_json_success($results);
+}
+
+add_action('wp_ajax_li_frontend_product_search', 'li_ajax_frontend_product_search');
+add_action('wp_ajax_nopriv_li_frontend_product_search', 'li_ajax_frontend_product_search');
 
 function li_render_product_card_meta(): string
 {
