@@ -11,15 +11,16 @@ add_filter('wp_theme_json_data_theme', 'li_filter_theme_json_brand_palette');
 function li_filter_theme_json_brand_palette(WP_Theme_JSON_Data $theme_json): WP_Theme_JSON_Data
 {
     $brand = li_get_brand_settings();
+    $defaults = li_get_brand_defaults();
 
-    $primary   = sanitize_hex_color($brand['primary_color'] ?? '') ?: '#173449';
-    $secondary = sanitize_hex_color($brand['secondary_color'] ?? '') ?: '#234A64';
-    $accent    = sanitize_hex_color($brand['accent_color'] ?? '') ?: '#D8A03F';
-    $surface   = sanitize_hex_color($brand['surface_color'] ?? '') ?: '#F7F9FB';
-    $text      = sanitize_hex_color($brand['text_color'] ?? '') ?: '#1C252D';
-    $header_bg = sanitize_hex_color($brand['header_bg'] ?? '') ?: '#FFFFFF';
-    $footer_bg = sanitize_hex_color($brand['footer_bg'] ?? '') ?: '#173449';
-    $overlay   = sanitize_hex_color($brand['hero_overlay'] ?? '') ?: '#08141E';
+    $primary   = sanitize_hex_color($brand['primary_color'] ?? '') ?: $defaults['primary_color'];
+    $secondary = sanitize_hex_color($brand['secondary_color'] ?? '') ?: $defaults['secondary_color'];
+    $accent    = sanitize_hex_color($brand['accent_color'] ?? '') ?: $defaults['accent_color'];
+    $surface   = sanitize_hex_color($brand['surface_color'] ?? '') ?: $defaults['surface_color'];
+    $text      = sanitize_hex_color($brand['text_color'] ?? '') ?: $defaults['text_color'];
+    $header_bg = sanitize_hex_color($brand['header_bg'] ?? '') ?: $defaults['header_bg'];
+    $footer_bg = sanitize_hex_color($brand['footer_bg'] ?? '') ?: $defaults['footer_bg'];
+    $overlay   = sanitize_hex_color($brand['hero_overlay'] ?? '') ?: $defaults['hero_overlay'];
 
     $theme_json->update_with([
         'version'  => 3,
@@ -57,6 +58,21 @@ function li_filter_theme_json_brand_palette(WP_Theme_JSON_Data $theme_json): WP_
                         'color' => $text,
                     ],
                     [
+                        'slug'  => 'muted',
+                        'name'  => __('Muted', 'lloyds-industrial'),
+                        'color' => '#66736F',
+                    ],
+                    [
+                        'slug'  => 'border',
+                        'name'  => __('Border', 'lloyds-industrial'),
+                        'color' => '#DDE5E2',
+                    ],
+                    [
+                        'slug'  => 'alert',
+                        'name'  => __('Alert', 'lloyds-industrial'),
+                        'color' => '#B83A34',
+                    ],
+                    [
                         'slug'  => 'header-bg',
                         'name'  => __('Header Background', 'lloyds-industrial'),
                         'color' => $header_bg,
@@ -70,6 +86,11 @@ function li_filter_theme_json_brand_palette(WP_Theme_JSON_Data $theme_json): WP_
                         'slug'  => 'hero-overlay',
                         'name'  => __('Hero Overlay', 'lloyds-industrial'),
                         'color' => $overlay,
+                    ],
+                    [
+                        'slug'  => 'black',
+                        'name'  => __('Black', 'lloyds-industrial'),
+                        'color' => '#000000',
                     ],
                 ],
             ],

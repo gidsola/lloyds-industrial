@@ -8,33 +8,45 @@ if (!defined('ABSPATH')) {
 
 function li_get_global_layout_settings(): array
 {
-    $defaults = [
-        'announcement_enabled'    => true,
-        'announcement_text'       => __('Industrial chemical solutions engineered for modern industry.', 'lloyds-industrial'),
-        'announcement_link_label' => __('Contact technical support', 'lloyds-industrial'),
-        'announcement_link_url'   => '/contact',
-        'header_primary_label'    => __('Products', 'lloyds-industrial'),
-        'header_primary_url'      => '/products',
-        'header_secondary_label'  => __('Request Quote', 'lloyds-industrial'),
-        'header_secondary_url'    => '/contact',
-        'show_account_link'       => true,
-        'show_cart_link'          => true,
-        'footer_tagline'          => __('Industrial chemical solutions, product knowledge, and SDS access for professional customers.', 'lloyds-industrial'),
-        'footer_legal_text'       => '&copy; {year} {site}. All rights reserved.',
-        'footer_note_enabled'     => true,
-        'footer_note_text'        => __('Built on the Lloyds Industrial multisite framework.', 'lloyds-industrial'),
-        'footer_column_1_enabled' => true,
-        'footer_column_1_heading' => __('Products', 'lloyds-industrial'),
-        'footer_column_1_links'   => "Products|/products\nCatalogue|/catalogue\nLubricants & Corrosion Inhibitors|/product-category/lubricants-corrosion-inhibitors\nCleaners & Degreasers|/product-category/cleaner-degreasers",
-        'footer_column_2_enabled' => true,
-        'footer_column_2_heading' => __('Resources', 'lloyds-industrial'),
-        'footer_column_2_links'   => "Knowledge Center|/documentation\nSDS Access|/documentation\nTechnical Data Sheets|/documentation\nTechnical Support|/contact\nCustomer Login|/account",
-        'footer_column_3_enabled' => true,
-        'footer_column_3_heading' => __('Company', 'lloyds-industrial'),
-        'footer_column_3_links'   => "About|/about\nIndustries|/industries\nPlace Orders|/contact\nAccounting|/contact\nContact|/contact",
-    ];
+    return wp_parse_args(li_get_theme_settings(), li_get_global_layout_defaults());
+}
 
-    return wp_parse_args(li_get_theme_settings(), $defaults);
+function li_get_global_layout_defaults(): array
+{
+    return [
+        'partner_mode'               => false,
+        'quote_mode'                 => false,
+        'documents_mode'             => 'controlled',
+        'sticky_header'              => true,
+        'compact_header'             => false,
+        'show_site_title'            => true,
+        'show_header_actions_mobile' => false,
+        'site_width'                 => 1400,
+        'footer_density'             => 'comfortable',
+        'announcement_enabled'       => true,
+        'announcement_text'          => __('Industrial chemical solutions engineered for modern industry.', 'lloyds-industrial'),
+        'announcement_link_label'    => __('Contact technical support', 'lloyds-industrial'),
+        'announcement_link_url'      => '/contact',
+        'header_primary_label'       => __('Products', 'lloyds-industrial'),
+        'header_primary_url'         => '/products',
+        'header_secondary_label'     => __('Request Quote', 'lloyds-industrial'),
+        'header_secondary_url'       => '/contact',
+        'show_account_link'          => true,
+        'show_cart_link'             => true,
+        'footer_tagline'             => __('Industrial chemical solutions, product knowledge, and SDS access for professional customers.', 'lloyds-industrial'),
+        'footer_legal_text'          => '&copy; {year} {site}. All rights reserved.',
+        'footer_note_enabled'        => true,
+        'footer_note_text'           => __('Built on the Lloyds Industrial multisite framework.', 'lloyds-industrial'),
+        'footer_column_1_enabled'    => true,
+        'footer_column_1_heading'    => __('Products', 'lloyds-industrial'),
+        'footer_column_1_links'      => "Products|/products\nCatalogue|/catalogue\nLubricants & Corrosion Inhibitors|/product-category/lubricants-corrosion-inhibitors\nCleaners & Degreasers|/product-category/cleaner-degreasers",
+        'footer_column_2_enabled'    => true,
+        'footer_column_2_heading'    => __('Resources', 'lloyds-industrial'),
+        'footer_column_2_links'      => "Knowledge Center|/documentation\nSDS Access|/documentation\nTechnical Data Sheets|/documentation\nTechnical Support|/contact\nCustomer Login|/account",
+        'footer_column_3_enabled'    => true,
+        'footer_column_3_heading'    => __('Company', 'lloyds-industrial'),
+        'footer_column_3_links'      => "About|/about\nIndustries|/industries\nPlace Orders|/contact\nAccounting|/contact\nContact|/contact",
+    ];
 }
 
 function li_get_footer_column_indexes(): array
@@ -97,6 +109,32 @@ add_filter('the_content', 'li_rewrite_root_relative_content_links', 20);
 add_filter('render_block', static function (string $block_content): string {
     return li_rewrite_root_relative_content_links($block_content);
 }, 20);
+
+add_filter('body_class', function (array $classes): array {
+    $settings = li_get_global_layout_settings();
+
+    if (!li_theme_setting_checkbox_value($settings, 'sticky_header')) {
+        $classes[] = 'li-header-static';
+    }
+
+    if (!empty($settings['compact_header'])) {
+        $classes[] = 'li-header-compact';
+    }
+
+    if (!li_theme_setting_checkbox_value($settings, 'show_site_title')) {
+        $classes[] = 'li-site-title-hidden';
+    }
+
+    if (!empty($settings['show_header_actions_mobile'])) {
+        $classes[] = 'li-mobile-header-actions';
+    }
+
+    if (($settings['footer_density'] ?? 'comfortable') === 'compact') {
+        $classes[] = 'li-footer-compact';
+    }
+
+    return $classes;
+});
 
 function li_get_account_url(): string
 {

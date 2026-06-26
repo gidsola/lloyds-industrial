@@ -53,8 +53,30 @@ add_action('enqueue_block_editor_assets', function (): void {
     );
 });
 
-add_action('admin_enqueue_scripts', function (): void {
+add_action('admin_enqueue_scripts', function (string $hook_suffix): void {
     $screen = get_current_screen();
+
+    if ($hook_suffix === 'appearance_page_lloyds-industrial-settings') {
+        li_enqueue_google_fonts('lloyds-settings-admin-fonts');
+
+        wp_enqueue_style(
+            'lloyds-settings-admin',
+            get_template_directory_uri() . '/assets/css/settings-admin.css',
+            [],
+            filemtime(get_template_directory() . '/assets/css/settings-admin.css')
+        );
+    }
+
+    if ($hook_suffix === 'toplevel_page_lloyds-mega-menu') {
+        li_enqueue_google_fonts('lloyds-mega-menu-admin-fonts');
+
+        wp_enqueue_style(
+            'li-mega-menu-admin',
+            get_template_directory_uri() . '/assets/css/mega-menu-admin.css',
+            ['wp-color-picker'],
+            filemtime(get_template_directory() . '/assets/css/mega-menu-admin.css')
+        );
+    }
 
     if (!$screen || !in_array($screen->post_type, ['product', 'li_document'], true)) {
         return;
@@ -96,15 +118,19 @@ function li_enqueue_google_fonts(string $handle = 'lloyds-fonts'): void
 function li_get_dynamic_brand_css(): string
 {
     $brand = li_get_brand_settings();
+    $defaults = li_get_brand_defaults();
 
-    $primary   = sanitize_hex_color($brand['primary_color'] ?? '') ?: '#173449';
-    $secondary = sanitize_hex_color($brand['secondary_color'] ?? '') ?: '#234A64';
-    $accent    = sanitize_hex_color($brand['accent_color'] ?? '') ?: '#D8A03F';
-    $surface   = sanitize_hex_color($brand['surface_color'] ?? '') ?: '#F7F9FB';
-    $text      = sanitize_hex_color($brand['text_color'] ?? '') ?: '#1C252D';
-    $header_bg = sanitize_hex_color($brand['header_bg'] ?? '') ?: '#FFFFFF';
-    $footer_bg = sanitize_hex_color($brand['footer_bg'] ?? '') ?: '#173449';
-    $overlay   = sanitize_hex_color($brand['hero_overlay'] ?? '') ?: '#08141E';
+    $primary   = sanitize_hex_color($brand['primary_color'] ?? '') ?: $defaults['primary_color'];
+    $secondary = sanitize_hex_color($brand['secondary_color'] ?? '') ?: $defaults['secondary_color'];
+    $accent    = sanitize_hex_color($brand['accent_color'] ?? '') ?: $defaults['accent_color'];
+    $surface   = sanitize_hex_color($brand['surface_color'] ?? '') ?: $defaults['surface_color'];
+    $text      = sanitize_hex_color($brand['text_color'] ?? '') ?: $defaults['text_color'];
+    $header_bg = sanitize_hex_color($brand['header_bg'] ?? '') ?: $defaults['header_bg'];
+    $footer_bg = sanitize_hex_color($brand['footer_bg'] ?? '') ?: $defaults['footer_bg'];
+    $overlay   = sanitize_hex_color($brand['hero_overlay'] ?? '') ?: $defaults['hero_overlay'];
+    $layout = li_get_global_layout_settings();
+    $site_width = absint($layout['site_width'] ?? 1400);
+    $site_width = min(1800, max(1080, $site_width ?: 1400));
 
     return sprintf(
         ':root,
@@ -123,6 +149,7 @@ function li_get_dynamic_brand_css(): string
             --li-header-bg:%6$s;
             --li-footer-bg:%7$s;
             --li-hero-overlay:%8$s;
+            --li-wide:%9$dpx;
         }
 
         .has-primary-background-color,
@@ -163,6 +190,7 @@ function li_get_dynamic_brand_css(): string
         esc_html($text),
         esc_html($header_bg),
         esc_html($footer_bg),
-        esc_html($overlay)
+        esc_html($overlay),
+        $site_width
     );
 }

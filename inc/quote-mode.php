@@ -19,7 +19,7 @@ add_action('admin_init', function (): void {
         __('Quote Mode', 'lloyds-industrial'),
         'li_render_quote_mode_field',
         'lloyds-industrial-settings',
-        'li_brand_section'
+        'li_site_behavior_section'
     );
 });
 

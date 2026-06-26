@@ -2,7 +2,7 @@
     --lf-border: #dfe5ea;
     --lf-surface: #f6f8fa;
     --lf-ink: #162c3b;
-    --lf-accent: #d8a03f;
+    --lf-accent: #d9a441;
     --lf-desk: #26313a;
     margin: 36px auto;
     max-width: 1180px;
@@ -312,7 +312,7 @@
 
 .lloyds-flipbook-notice {
     background: #fff8e5;
-    border-left: 4px solid var(--lf-accent, #d8a03f);
+    border-left: 4px solid var(--lf-accent, #d9a441);
     padding: 14px 16px;
 }
 

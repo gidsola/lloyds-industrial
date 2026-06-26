@@ -16,38 +16,39 @@
       "defaultGradients": false,
       "defaultPalette": false,
       "palette": [
-        { "slug": "primary", "name": "Primary", "color": "#173449" },
-        { "slug": "secondary", "name": "Secondary", "color": "#234A64" },
-        { "slug": "accent", "name": "Accent", "color": "#D8A03F" },
-        { "slug": "surface", "name": "Surface", "color": "#F7F9FB" },
+        { "slug": "primary", "name": "Primary", "color": "#17443B" },
+        { "slug": "secondary", "name": "Secondary", "color": "#2E5F73" },
+        { "slug": "accent", "name": "Accent", "color": "#D9A441" },
+        { "slug": "surface", "name": "Surface", "color": "#F5F7F6" },
         { "slug": "white", "name": "White", "color": "#FFFFFF" },
-        { "slug": "body-text", "name": "Text", "color": "#1C252D" },
-        { "slug": "muted", "name": "Muted", "color": "#6B7785" },
-        { "slug": "border", "name": "Border", "color": "#E4E8ED" },
+        { "slug": "body-text", "name": "Text", "color": "#182126" },
+        { "slug": "muted", "name": "Muted", "color": "#66736F" },
+        { "slug": "border", "name": "Border", "color": "#DDE5E2" },
+        { "slug": "alert", "name": "Alert", "color": "#B83A34" },
         { "slug": "black", "name": "Black", "color": "#000000" }
       ],
       "gradients": [
         {
           "slug": "primary-to-secondary",
           "name": "Primary to Secondary",
-          "gradient": "linear-gradient(135deg, #173449 0%, #234A64 100%)"
+          "gradient": "linear-gradient(135deg, #17443B 0%, #2E5F73 100%)"
         },
         {
           "slug": "accent-to-primary",
           "name": "Accent to Primary",
-          "gradient": "linear-gradient(135deg, #D8A03F 0%, #173449 100%)"
+          "gradient": "linear-gradient(135deg, #D9A441 0%, #17443B 100%)"
         }
       ],
       "duotone": [
         {
           "slug": "primary-dark",
           "name": "Primary Dark",
-          "colors": ["#173449", "#08141E"]
+          "colors": ["#17443B", "#081A18"]
         },
         {
           "slug": "accent-primary",
           "name": "Accent Primary",
-          "colors": ["#D8A03F", "#173449"]
+          "colors": ["#D9A441", "#17443B"]
         }
       ]
     },
@@ -267,7 +268,7 @@
     },
     "color": {
       "background": "#FFFFFF",
-      "text": "#1C252D"
+      "text": "#182126"
     },
     "typography": {
       "fontFamily": "var(--wp--preset--font-family--inter)",

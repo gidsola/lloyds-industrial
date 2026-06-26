@@ -35,16 +35,21 @@
 
         // Toggle item settings
         $container.on('click', '.li-mega-menu-item-toggle', function() {
+            var $button = $(this);
             var $item = $(this).closest('.li-mega-menu-item-form');
             var $body = $item.find('.li-mega-menu-item-body');
-            var $icon = $(this).find('.dashicons');
+            var $icon = $button.find('.dashicons');
+            var showLabel = liMegaMenu.labels?.showSettings || 'Show item settings';
+            var hideLabel = liMegaMenu.labels?.hideSettings || 'Hide item settings';
             
             if ($body.is(':visible')) {
                 $body.hide();
                 $icon.removeClass('dashicons-arrow-up').addClass('dashicons-arrow-down');
+                $button.attr('aria-label', showLabel).attr('title', showLabel);
             } else {
                 $body.show();
                 $icon.removeClass('dashicons-arrow-down').addClass('dashicons-arrow-up');
+                $button.attr('aria-label', hideLabel).attr('title', hideLabel);
             }
         });
 

@@ -75,6 +75,10 @@ function li_user_has_document_access_for_document(int $document_id, ?int $user_i
         return true;
     }
 
+    if (li_get_document_access_mode() === 'private') {
+        return false;
+    }
+
     if ($access_level === 'internal') {
         return false;
     }
@@ -101,6 +105,10 @@ function li_user_can_view_document_listing(int $document_id, ?int $user_id = nul
 
     if ($user_id && (user_can($user_id, 'manage_options') || user_can($user_id, 'manage_li_documents'))) {
         return true;
+    }
+
+    if (li_get_document_access_mode() === 'private') {
+        return false;
     }
 
     if ($access_level === 'internal') {
