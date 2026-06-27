@@ -533,152 +533,94 @@
     line-height: 1.2;
 }
 
-.li-seo-editor-panel-wrap {
-    box-sizing: border-box;
-    margin: 0 auto 22px;
-    max-width: 980px;
-    padding: 0 24px;
-    width: 100%;
-}
-
-.li-seo-editor-panel {
-    background: #fff;
-    border: 1px solid #dde5e2;
-    border-radius: 8px;
-    box-shadow: 0 10px 28px rgba(24, 33, 38, 0.04);
-    color: #182126;
-    display: grid;
-    gap: 18px;
-    padding: 18px;
-}
-
-.li-seo-editor-panel,
-.li-seo-editor-panel input,
-.li-seo-editor-panel textarea,
-.li-seo-editor-panel select,
-.li-seo-editor-panel button {
+.lloyds-seo-document-panel,
+.lloyds-seo-document-panel input,
+.lloyds-seo-document-panel textarea,
+.lloyds-seo-document-panel select,
+.lloyds-seo-document-panel button {
     font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-.li-seo-editor-panel__header {
-    align-items: center;
+.lloyds-seo-document-panel__intro {
     background: #17443b;
     border-radius: 8px;
     color: #fff;
     display: grid;
-    gap: 16px;
-    grid-template-columns: auto minmax(0, 1fr);
-    padding: 18px;
+    gap: 6px;
+    margin: 0 0 16px;
+    padding: 14px;
 }
 
-.li-seo-editor-panel__header > span {
-    align-items: center;
-    background: rgba(217, 164, 65, 0.14);
-    border: 1px solid rgba(217, 164, 65, 0.3);
-    border-radius: 999px;
+.lloyds-seo-document-panel__intro span {
     color: #d9a441;
-    display: inline-flex;
     font-size: 11px;
     font-weight: 900;
-    height: 42px;
-    justify-content: center;
     letter-spacing: 0.08em;
-    padding: 0 14px;
     text-transform: uppercase;
 }
 
-.li-seo-editor-panel__header h2 {
+.lloyds-seo-document-panel__intro h3 {
     color: #fff;
-    font-size: 20px;
+    font-size: 15px;
     line-height: 1.25;
-    margin: 0 0 5px;
-}
-
-.li-seo-editor-panel__header p {
-    color: rgba(255, 255, 255, 0.82);
-    line-height: 1.5;
     margin: 0;
 }
 
-.li-seo-editor-panel__grid {
-    display: grid;
-    gap: 14px;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+.lloyds-seo-document-panel__intro p {
+    color: rgba(255, 255, 255, 0.82);
+    line-height: 1.45;
+    margin: 0;
 }
 
-.li-seo-editor-panel__field {
-    display: grid;
-    gap: 7px;
-}
-
-.li-seo-editor-panel__field span,
-.li-seo-editor-panel__media strong {
+.lloyds-seo-document-panel .components-panel__body-title {
     color: #17443b;
-    font-size: 12px;
+}
+
+.lloyds-seo-document-panel .components-base-control {
+    margin-bottom: 16px;
+}
+
+.lloyds-seo-document-panel .components-base-control__label,
+.lloyds-seo-document-panel__media strong {
+    color: #17443b;
+    font-size: 11px;
     font-weight: 900;
     letter-spacing: 0.04em;
     text-transform: uppercase;
 }
 
-.li-seo-editor-panel__field input,
-.li-seo-editor-panel__field textarea,
-.li-seo-editor-panel__field select {
-    border: 1px solid #cfd9d5;
-    border-radius: 6px;
-    box-sizing: border-box;
-    color: #182126;
-    min-height: 38px;
-    padding: 7px 10px;
-    width: 100%;
+.lloyds-seo-document-panel__social {
+    border-top: 1px solid #dde5e2;
+    margin-top: 4px;
+    padding-top: 12px;
 }
 
-.li-seo-editor-panel__field input:focus,
-.li-seo-editor-panel__field textarea:focus,
-.li-seo-editor-panel__field select:focus {
-    border-color: #2e5f73;
-    box-shadow: 0 0 0 1px #2e5f73;
-    outline: none;
+.lloyds-seo-document-panel__social h4 {
+    color: #17443b;
+    font-size: 13px;
+    line-height: 1.3;
+    margin: 0 0 12px;
 }
 
-.li-seo-editor-panel__field em {
-    color: #66736f;
-    font-size: 12px;
-    font-style: normal;
-    line-height: 1.4;
-}
-
-.li-seo-editor-panel__social {
+.lloyds-seo-document-panel__media {
     background: #f8faf9;
     border: 1px solid #dde5e2;
     border-radius: 8px;
     display: grid;
-    gap: 14px;
-    padding: 16px;
-}
-
-.li-seo-editor-panel__social h3 {
-    color: #17443b;
-    font-size: 16px;
-    margin: 0;
-}
-
-.li-seo-editor-panel__media {
-    background: #fff;
-    border: 1px solid #dde5e2;
-    border-radius: 8px;
-    display: grid;
     gap: 8px;
+    margin-top: 4px;
     padding: 12px;
 }
 
-.li-seo-editor-panel__media > span {
+.lloyds-seo-document-panel__media > span {
     color: #66736f;
 }
 
-.li-seo-editor-panel__media .button {
-    border-radius: 6px;
-    font-weight: 800;
-    margin: 0 6px 0 0;
+.lloyds-seo-document-panel__actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .li-mail-campaign-list {
@@ -1423,8 +1365,6 @@
 
     .li-mail-campaign-card,
     .li-mail-builder,
-    .li-seo-editor-panel__grid,
-    .li-seo-editor-panel__header,
     .li-editor-panel__grid,
     .lloyds-flipbook-builder__grid,
     .li-reseller-builder__grid,

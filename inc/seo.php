@@ -262,7 +262,7 @@ function li_seo_enqueue_block_editor_panel(): void
     wp_enqueue_script(
         'lloyds-seo-editor',
         get_template_directory_uri() . '/assets/js/seo-editor.js',
-        ['wp-data', 'wp-dom-ready'],
+        ['wp-plugins', 'wp-edit-post', 'wp-element', 'wp-components', 'wp-data'],
         filemtime(get_template_directory() . '/assets/js/seo-editor.js'),
         true
     );
@@ -289,6 +289,7 @@ function li_seo_enqueue_block_editor_panel(): void
             'selectImageTitle'  => __('Select SEO Social Image', 'lloyds-industrial'),
             'useImage'          => __('Use This Image', 'lloyds-industrial'),
             'defaults'          => __('Use global defaults', 'lloyds-industrial'),
+            'sidebarNote'       => __('SEO fields save with this content item.', 'lloyds-industrial'),
         ],
     ]);
 }

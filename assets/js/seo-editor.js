@@ -1,211 +1,206 @@
-(function () {
-    function getLabels() {
-        return (window.lloydsSeoEditor && window.lloydsSeoEditor.labels) || {};
+(function (wp) {
+    if (!wp || !wp.plugins || !wp.editPost || !wp.element || !wp.components || !wp.data) {
+        return;
     }
 
-    function escapeHtml(value) {
-        return String(value || '')
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;');
+    var registerPlugin = wp.plugins.registerPlugin;
+    var PluginDocumentSettingPanel = wp.editPost.PluginDocumentSettingPanel;
+    var el = wp.element.createElement;
+    var useSelect = wp.data.useSelect;
+    var useDispatch = wp.data.useDispatch;
+    var TextControl = wp.components.TextControl;
+    var TextareaControl = wp.components.TextareaControl;
+    var SelectControl = wp.components.SelectControl;
+    var Button = wp.components.Button;
+    var Notice = wp.components.Notice;
+    var settings = window.lloydsSeoEditor || {};
+    var supportedPostTypes = settings.supportedPostTypes || [];
+    var labels = settings.labels || {};
+
+    if (!PluginDocumentSettingPanel) {
+        return;
     }
 
-    function getMeta() {
-        return wp.data.select('core/editor').getEditedPostAttribute('meta') || {};
+    function label(key, fallback) {
+        return labels[key] || fallback;
     }
 
-    function updateMeta(key, value) {
-        var meta = Object.assign({}, getMeta());
-        meta[key] = value;
-        wp.data.dispatch('core/editor').editPost({ meta: meta });
-    }
+    function SeoDocumentPanel() {
+        var editorState = useSelect(function (select) {
+            var editor = select('core/editor');
 
-    function renderPanel(container) {
-        var labels = getLabels();
-        var meta = getMeta();
-        var socialImageId = parseInt(meta._li_seo_social_image_id || 0, 10);
+            return {
+                meta: editor.getEditedPostAttribute('meta') || {},
+                postType: editor.getCurrentPostType(),
+            };
+        }, []);
+        var editPost = useDispatch('core/editor').editPost;
+        var meta = editorState.meta;
 
-        container.innerHTML = [
-            '<section class="li-seo-editor-panel">',
-                '<div class="li-seo-editor-panel__header">',
-                    '<span>' + escapeHtml(labels.eyebrow || 'Lloyds SEO') + '</span>',
-                    '<div>',
-                        '<h2>' + escapeHtml(labels.title || 'Search and Social Preview') + '</h2>',
-                        '<p>' + escapeHtml(labels.description || '') + '</p>',
-                    '</div>',
-                '</div>',
-                '<div class="li-seo-editor-panel__grid">',
-                    field('li_seo_editor_title', labels.seoTitle, '_li_seo_title', meta._li_seo_title || '', 'text', labels.seoTitleHelp, 70),
-                    textarea('li_seo_editor_description', labels.metaDescription, '_li_seo_description', meta._li_seo_description || '', labels.metaDescriptionHelp, 180),
-                    field('li_seo_editor_focus', labels.focusKeyword, '_li_seo_focus_keyword', meta._li_seo_focus_keyword || '', 'text', '', 0),
-                    field('li_seo_editor_canonical', labels.canonical, '_li_seo_canonical', meta._li_seo_canonical || '', 'url', '', 0),
-                    robotsSelect(labels.robots, labels.defaults, meta._li_seo_robots || ''),
-                '</div>',
-                '<div class="li-seo-editor-panel__social">',
-                    '<h3>' + escapeHtml(labels.socialTitle || 'Social') + '</h3>',
-                    '<div class="li-seo-editor-panel__grid">',
-                        field('li_seo_editor_social_title', labels.socialTitle, '_li_seo_social_title', meta._li_seo_social_title || '', 'text', '', 0),
-                        textarea('li_seo_editor_social_description', labels.socialDescription, '_li_seo_social_description', meta._li_seo_social_description || '', '', 0),
-                    '</div>',
-                    '<div class="li-seo-editor-panel__media">',
-                        '<strong>' + escapeHtml(labels.socialImage || 'Social Image') + '</strong>',
-                        '<span data-li-seo-editor-image-label>' + escapeHtml(socialImageId ? '#' + socialImageId : (labels.noImage || 'No image selected')) + '</span>',
-                        '<div>',
-                            '<button type="button" class="button button-secondary" data-li-seo-editor-select-image>' + escapeHtml(labels.selectImage || 'Select Image') + '</button>',
-                            '<button type="button" class="button button-link" data-li-seo-editor-remove-image ' + (socialImageId ? '' : 'hidden') + '>' + escapeHtml(labels.removeImage || 'Remove') + '</button>',
-                        '</div>',
-                    '</div>',
-                '</div>',
-            '</section>'
-        ].join('');
-
-        bindPanel(container);
-    }
-
-    function field(id, label, key, value, type, help, maxlength) {
-        return [
-            '<label class="li-seo-editor-panel__field" for="' + id + '">',
-                '<span>' + escapeHtml(label || '') + '</span>',
-                '<input id="' + id + '" type="' + type + '" value="' + escapeHtml(value) + '" data-li-seo-editor-field="' + key + '"' + (maxlength ? ' maxlength="' + maxlength + '"' : '') + '>',
-                help ? '<em>' + escapeHtml(help) + '</em>' : '',
-            '</label>'
-        ].join('');
-    }
-
-    function textarea(id, label, key, value, help, maxlength) {
-        return [
-            '<label class="li-seo-editor-panel__field" for="' + id + '">',
-                '<span>' + escapeHtml(label || '') + '</span>',
-                '<textarea id="' + id + '" rows="3" data-li-seo-editor-field="' + key + '"' + (maxlength ? ' maxlength="' + maxlength + '"' : '') + '>' + escapeHtml(value) + '</textarea>',
-                help ? '<em>' + escapeHtml(help) + '</em>' : '',
-            '</label>'
-        ].join('');
-    }
-
-    function robotsSelect(label, defaultLabel, value) {
-        var options = [
-            ['', defaultLabel || 'Use global defaults'],
-            ['index,follow', 'index, follow'],
-            ['noindex,follow', 'noindex, follow'],
-            ['noindex,nofollow', 'noindex, nofollow']
-        ];
-
-        return [
-            '<label class="li-seo-editor-panel__field" for="li_seo_editor_robots">',
-                '<span>' + escapeHtml(label || 'Robots') + '</span>',
-                '<select id="li_seo_editor_robots" data-li-seo-editor-field="_li_seo_robots">',
-                    options.map(function (option) {
-                        return '<option value="' + escapeHtml(option[0]) + '"' + (value === option[0] ? ' selected' : '') + '>' + escapeHtml(option[1]) + '</option>';
-                    }).join(''),
-                '</select>',
-            '</label>'
-        ].join('');
-    }
-
-    function bindPanel(container) {
-        Array.prototype.forEach.call(container.querySelectorAll('[data-li-seo-editor-field]'), function (input) {
-            input.addEventListener('input', function () {
-                updateMeta(input.getAttribute('data-li-seo-editor-field'), input.value);
-            });
-
-            input.addEventListener('change', function () {
-                updateMeta(input.getAttribute('data-li-seo-editor-field'), input.value);
-            });
-        });
-
-        bindMedia(container);
-    }
-
-    function bindMedia(container) {
-        var labels = getLabels();
-        var select = container.querySelector('[data-li-seo-editor-select-image]');
-        var remove = container.querySelector('[data-li-seo-editor-remove-image]');
-        var imageLabel = container.querySelector('[data-li-seo-editor-image-label]');
-
-        if (select) {
-            select.addEventListener('click', function (event) {
-                event.preventDefault();
-
-                if (!window.wp || !window.wp.media) {
-                    return;
-                }
-
-                var frame = window.wp.media({
-                    title: labels.selectImageTitle || 'Select SEO Social Image',
-                    button: {
-                        text: labels.useImage || 'Use This Image'
-                    },
-                    library: {
-                        type: 'image'
-                    },
-                    multiple: false
-                });
-
-                frame.on('select', function () {
-                    var attachment = frame.state().get('selection').first().toJSON();
-                    updateMeta('_li_seo_social_image_id', parseInt(attachment.id || 0, 10));
-
-                    if (imageLabel) {
-                        imageLabel.textContent = attachment.filename || attachment.title || '#' + attachment.id;
-                    }
-
-                    if (remove) {
-                        remove.hidden = false;
-                    }
-                });
-
-                frame.open();
-            });
+        if (supportedPostTypes.indexOf(editorState.postType) === -1) {
+            return null;
         }
 
-        if (remove) {
-            remove.addEventListener('click', function (event) {
-                event.preventDefault();
-                updateMeta('_li_seo_social_image_id', 0);
+        function updateMeta(key, value) {
+            var nextMeta = {};
 
-                if (imageLabel) {
-                    imageLabel.textContent = labels.noImage || 'No image selected';
-                }
-
-                remove.hidden = true;
+            Object.keys(meta).forEach(function (metaKey) {
+                nextMeta[metaKey] = meta[metaKey];
             });
-        }
-    }
 
-    function insertPanel() {
-        var postType = wp.data.select('core/editor').getCurrentPostType();
-        var supported = (window.lloydsSeoEditor && window.lloydsSeoEditor.supportedPostTypes) || [];
-
-        if (supported.indexOf(postType) === -1 || document.querySelector('[data-li-seo-editor-panel]')) {
-            return true;
+            nextMeta[key] = value;
+            editPost({ meta: nextMeta });
         }
 
-        var target = document.querySelector('.edit-post-visual-editor') ||
-            document.querySelector('.editor-styles-wrapper') ||
-            document.querySelector('.interface-interface-skeleton__content');
-
-        if (!target || !target.parentNode) {
-            return false;
-        }
-
-        var wrapper = document.createElement('div');
-        wrapper.className = 'li-seo-editor-panel-wrap';
-        wrapper.setAttribute('data-li-seo-editor-panel', 'true');
-        renderPanel(wrapper);
-        target.parentNode.insertBefore(wrapper, target);
-
-        return true;
-    }
-
-    wp.domReady(function () {
-        var attempts = 0;
-        var interval = window.setInterval(function () {
-            attempts++;
-
-            if (insertPanel() || attempts > 40) {
-                window.clearInterval(interval);
+        function selectSocialImage() {
+            if (!wp.media) {
+                return;
             }
-        }, 250);
+
+            var frame = wp.media({
+                title: label('selectImageTitle', 'Select SEO Social Image'),
+                button: {
+                    text: label('useImage', 'Use This Image'),
+                },
+                library: {
+                    type: 'image',
+                },
+                multiple: false,
+            });
+
+            frame.on('select', function () {
+                var attachment = frame.state().get('selection').first();
+                var image = attachment && attachment.toJSON ? attachment.toJSON() : attachment;
+
+                if (image) {
+                    updateMeta('_li_seo_social_image_id', image.id || 0);
+                }
+            });
+
+            frame.open();
+        }
+
+        return el(
+            PluginDocumentSettingPanel,
+            {
+                name: 'lloyds-seo-document-panel',
+                title: label('eyebrow', 'Lloyds SEO'),
+                className: 'lloyds-seo-document-panel',
+                initialOpen: false,
+            },
+            el(
+                'div',
+                { className: 'lloyds-seo-document-panel__intro' },
+                el('span', null, label('eyebrow', 'Lloyds SEO')),
+                el('h3', null, label('title', 'Search and Social Preview')),
+                el('p', null, label('description', 'Tune how this content appears in search results, social cards, and canonical discovery.'))
+            ),
+            el(TextControl, {
+                label: label('seoTitle', 'SEO Title'),
+                help: label('seoTitleHelp', 'Recommended: 50-60 characters. Leave blank to auto-generate.'),
+                value: meta._li_seo_title || '',
+                onChange: function (value) {
+                    updateMeta('_li_seo_title', value);
+                },
+            }),
+            el(TextareaControl, {
+                label: label('metaDescription', 'Meta Description'),
+                help: label('metaDescriptionHelp', 'Recommended: 140-160 characters. Product summaries and excerpts are used as fallback.'),
+                value: meta._li_seo_description || '',
+                onChange: function (value) {
+                    updateMeta('_li_seo_description', value);
+                },
+            }),
+            el(TextControl, {
+                label: label('focusKeyword', 'Focus Keyword'),
+                value: meta._li_seo_focus_keyword || '',
+                onChange: function (value) {
+                    updateMeta('_li_seo_focus_keyword', value);
+                },
+            }),
+            el(TextControl, {
+                label: label('canonical', 'Canonical URL'),
+                value: meta._li_seo_canonical || '',
+                onChange: function (value) {
+                    updateMeta('_li_seo_canonical', value);
+                },
+            }),
+            el(SelectControl, {
+                label: label('robots', 'Robots'),
+                value: meta._li_seo_robots || '',
+                options: [
+                    { label: label('defaults', 'Use global defaults'), value: '' },
+                    { label: 'index, follow', value: 'index,follow' },
+                    { label: 'noindex, follow', value: 'noindex,follow' },
+                    { label: 'noindex, nofollow', value: 'noindex,nofollow' },
+                ],
+                onChange: function (value) {
+                    updateMeta('_li_seo_robots', value);
+                },
+            }),
+            el(
+                'div',
+                { className: 'lloyds-seo-document-panel__social' },
+                el('h4', null, label('socialTitle', 'Social Title')),
+                el(TextControl, {
+                    label: label('socialTitle', 'Social Title'),
+                    value: meta._li_seo_social_title || '',
+                    onChange: function (value) {
+                        updateMeta('_li_seo_social_title', value);
+                    },
+                }),
+                el(TextareaControl, {
+                    label: label('socialDescription', 'Social Description'),
+                    value: meta._li_seo_social_description || '',
+                    onChange: function (value) {
+                        updateMeta('_li_seo_social_description', value);
+                    },
+                }),
+                el(
+                    'div',
+                    { className: 'lloyds-seo-document-panel__media' },
+                    el('strong', null, label('socialImage', 'Social Image')),
+                    el('span', null, meta._li_seo_social_image_id ? '#' + meta._li_seo_social_image_id : label('noImage', 'No image selected')),
+                    el(
+                        'div',
+                        { className: 'lloyds-seo-document-panel__actions' },
+                        el(
+                            Button,
+                            {
+                                isPrimary: true,
+                                onClick: selectSocialImage,
+                            },
+                            label('selectImage', 'Select Image')
+                        ),
+                        meta._li_seo_social_image_id
+                            ? el(
+                                Button,
+                                {
+                                    isSecondary: true,
+                                    isDestructive: true,
+                                    onClick: function () {
+                                        updateMeta('_li_seo_social_image_id', 0);
+                                    },
+                                },
+                                label('removeImage', 'Remove')
+                            )
+                            : null
+                    )
+                )
+            ),
+            el(
+                Notice,
+                {
+                    status: 'info',
+                    isDismissible: false,
+                },
+                label('sidebarNote', 'SEO fields save with this content item.')
+            )
+        );
+    }
+
+    registerPlugin('lloyds-seo-document-panel', {
+        render: SeoDocumentPanel,
+        icon: 'search',
     });
-})();
+})(window.wp);
