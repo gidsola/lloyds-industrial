@@ -18,6 +18,7 @@ define('LLOYDS_FLIPBOOK_PATH', plugin_dir_path(__FILE__));
 define('LLOYDS_FLIPBOOK_URL', lloyds_flipbook_asset_url());
 
 add_action('init', 'lloyds_flipbook_register_post_type');
+add_action('admin_menu', 'lloyds_flipbook_register_admin_menu', 20);
 add_action('add_meta_boxes', 'lloyds_flipbook_add_meta_boxes');
 add_action('save_post_lloyds_flipbook', 'lloyds_flipbook_save_meta');
 add_action('admin_enqueue_scripts', 'lloyds_flipbook_admin_assets');
@@ -59,7 +60,7 @@ function lloyds_flipbook_register_post_type(): void
             'not_found_in_trash' => __('No PDF flipbooks found in Trash.', 'lloyds-pdf-flipbook'),
         ],
         'public'       => true,
-        'show_in_menu' => 'lloyds',
+        'show_in_menu' => false,
         'show_in_rest' => false,
         'menu_icon'    => 'dashicons-book',
         'supports'     => ['title', 'excerpt', 'thumbnail'],
@@ -83,6 +84,17 @@ function lloyds_flipbook_register_post_type(): void
         'sanitize_callback' => static fn (mixed $value): bool => !empty($value),
         'auth_callback'     => static fn (): bool => current_user_can('edit_posts'),
     ]);
+}
+
+function lloyds_flipbook_register_admin_menu(): void
+{
+    add_submenu_page(
+        'lloyds',
+        __('PDF Flipbooks', 'lloyds-pdf-flipbook'),
+        __('PDF Flipbooks', 'lloyds-pdf-flipbook'),
+        'edit_posts',
+        'edit.php?post_type=lloyds_flipbook'
+    );
 }
 
 function lloyds_flipbook_asset_url(): string

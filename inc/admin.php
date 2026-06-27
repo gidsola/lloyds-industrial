@@ -34,7 +34,7 @@ add_action('admin_menu', function (): void {
         'lloyds-mega-menu',
         'li_render_mega_menu_page'
     );
-});
+}, 1);
 
 add_action('admin_init', function (): void {
     register_setting('li_theme_settings', 'li_theme_settings', [

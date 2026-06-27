@@ -16,7 +16,7 @@ add_action('init', function (): void {
         ],
         'public'              => false,
         'show_ui'             => true,
-        'show_in_menu'        => 'lloyds',
+        'show_in_menu'        => false,
         'show_in_rest'        => true,
         'menu_icon'           => 'dashicons-store',
         'supports'            => ['title'],
@@ -36,14 +36,7 @@ add_action('admin_menu', function (): void {
         'li_render_reseller_admin_overview'
     );
 
-    add_submenu_page(
-        'lloyds',
-        __('All Resellers', 'lloyds-industrial'),
-        __('All Resellers', 'lloyds-industrial'),
-        'edit_posts',
-        'edit.php?post_type=li_reseller'
-    );
-});
+}, 20);
 
 function li_render_reseller_admin_overview(): void
 {

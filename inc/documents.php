@@ -16,7 +16,7 @@ add_action('init', function (): void {
         ],
         'public'              => false,
         'show_ui'             => true,
-        'show_in_menu'        => 'lloyds',
+        'show_in_menu'        => false,
         'show_in_rest'        => true,
         'menu_icon'           => 'dashicons-media-document',
         'supports'            => ['title', 'editor', 'excerpt'],
@@ -70,6 +70,24 @@ add_action('init', function (): void {
         'auth_callback'     => fn (): bool => current_user_can('manage_li_documents') || current_user_can('manage_options'),
     ]);
 });
+
+add_action('admin_menu', function (): void {
+    add_submenu_page(
+        'lloyds',
+        __('Documents', 'lloyds-industrial'),
+        __('Documents', 'lloyds-industrial'),
+        'edit_posts',
+        'edit.php?post_type=li_document'
+    );
+
+    add_submenu_page(
+        'lloyds',
+        __('Document Types', 'lloyds-industrial'),
+        __('Document Types', 'lloyds-industrial'),
+        'manage_categories',
+        'edit-tags.php?taxonomy=li_document_type&post_type=li_document'
+    );
+}, 20);
 
 function li_ensure_default_document_types(): void
 {

@@ -12,7 +12,7 @@ const LI_MAIL_REWRITE_VERSION_OPTION = 'li_mail_rewrite_version';
 add_action('init', 'li_mail_register_content_types');
 add_action('init', 'li_mail_register_routes');
 add_action('after_switch_theme', 'li_mail_flush_rewrite_rules');
-add_action('admin_menu', 'li_mail_register_admin_menu');
+add_action('admin_menu', 'li_mail_register_admin_menu', 20);
 add_action('admin_init', 'li_mail_register_settings');
 add_action('admin_init', 'li_mail_maybe_flush_rewrite_rules');
 add_action('admin_init', 'li_mail_handle_admin_actions');
@@ -77,7 +77,7 @@ function li_mail_register_content_types(): void
         ],
         'public'              => false,
         'show_ui'             => true,
-        'show_in_menu'        => 'lloyds',
+        'show_in_menu'        => false,
         'show_in_rest'        => false,
         'supports'            => ['title'],
         'capability_type'     => 'post',
@@ -109,7 +109,7 @@ function li_mail_register_content_types(): void
         ],
         'public'       => false,
         'show_ui'      => true,
-        'show_in_menu' => 'lloyds',
+        'show_in_menu' => false,
         'show_in_rest' => false,
         'hierarchical' => false,
     ]);
@@ -140,6 +140,22 @@ function li_mail_maybe_flush_rewrite_rules(): void
 
 function li_mail_register_admin_menu(): void
 {
+    add_submenu_page(
+        'lloyds',
+        __('Mail Subscribers', 'lloyds-industrial'),
+        __('Mail Subscribers', 'lloyds-industrial'),
+        'edit_posts',
+        'edit.php?post_type=li_mail_subscriber'
+    );
+
+    add_submenu_page(
+        'lloyds',
+        __('Mailing Tags', 'lloyds-industrial'),
+        __('Mailing Tags', 'lloyds-industrial'),
+        'manage_categories',
+        'edit-tags.php?taxonomy=li_mail_tag&post_type=li_mail_subscriber'
+    );
+
     add_submenu_page(
         'lloyds',
         __('Lloyds Mailing List', 'lloyds-industrial'),
