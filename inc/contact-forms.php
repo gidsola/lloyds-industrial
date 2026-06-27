@@ -59,7 +59,7 @@ add_action('init', function (): void {
         ],
         'public'              => false,
         'show_ui'             => true,
-        'show_in_menu'        => 'lloyds-contact-forms',
+        'show_in_menu'        => 'lloyds',
         'show_in_rest'        => false,
         'menu_icon'           => 'dashicons-email-alt2',
         'supports'            => ['title', 'editor'],
@@ -70,20 +70,10 @@ add_action('init', function (): void {
 });
 
 add_action('admin_menu', function (): void {
-    add_menu_page(
+    add_submenu_page(
+        'lloyds',
         __('Lloyds Contact Forms', 'lloyds-industrial'),
         __('Contact Forms', 'lloyds-industrial'),
-        'manage_options',
-        'lloyds-contact-forms',
-        'li_render_contact_forms_settings_page',
-        'dashicons-email-alt2',
-        62
-    );
-
-    add_submenu_page(
-        'lloyds-contact-forms',
-        __('Contact Form Settings', 'lloyds-industrial'),
-        __('Settings', 'lloyds-industrial'),
         'manage_options',
         'lloyds-contact-forms',
         'li_render_contact_forms_settings_page'

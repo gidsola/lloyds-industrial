@@ -11,6 +11,7 @@ add_action('manage_media_custom_column', 'li_media_render_library_column', 10, 2
 add_action('restrict_manage_posts', 'li_media_render_library_context_filter');
 add_action('pre_get_posts', 'li_media_filter_library_query');
 add_filter('attachment_fields_to_edit', 'li_media_add_attachment_context_fields', 10, 2);
+add_filter('ajax_query_attachments_args', 'li_media_filter_ajax_library_query');
 
 function li_media_add_library_columns(array $columns): array
 {
@@ -39,12 +40,22 @@ function li_media_render_library_context_filter(string $post_type): void
     }
 
     $selected = isset($_GET['li_media_context']) ? sanitize_key((string) $_GET['li_media_context']) : '';
+    $selected_folder = isset($_GET['li_media_folder']) ? sanitize_text_field(wp_unslash((string) $_GET['li_media_folder'])) : '';
     ?>
     <label class="screen-reader-text" for="li_media_context"><?php esc_html_e('Filter by Lloyds media use', 'lloyds-industrial'); ?></label>
     <select name="li_media_context" id="li_media_context">
         <option value=""><?php esc_html_e('All Lloyds media uses', 'lloyds-industrial'); ?></option>
         <?php foreach (li_media_get_context_filter_options() as $value => $label): ?>
             <option value="<?php echo esc_attr($value); ?>" <?php selected($selected, $value); ?>>
+                <?php echo esc_html($label); ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+    <label class="screen-reader-text" for="li_media_folder"><?php esc_html_e('Filter by Lloyds folder', 'lloyds-industrial'); ?></label>
+    <select name="li_media_folder" id="li_media_folder">
+        <option value=""><?php esc_html_e('All Lloyds folders', 'lloyds-industrial'); ?></option>
+        <?php foreach (li_media_get_folder_filter_options() as $folder => $label): ?>
+            <option value="<?php echo esc_attr($folder); ?>" <?php selected($selected_folder, $folder); ?>>
                 <?php echo esc_html($label); ?>
             </option>
         <?php endforeach; ?>
@@ -60,11 +71,56 @@ function li_media_filter_library_query(WP_Query $query): void
 
     $context = isset($_GET['li_media_context']) ? sanitize_key((string) $_GET['li_media_context']) : '';
 
-    if (!isset(li_media_get_context_filter_options()[$context])) {
+    if (isset(li_media_get_context_filter_options()[$context])) {
+        $ids = li_media_get_attachment_ids_for_context($context);
+        $query->set('post__in', $ids ?: [0]);
+    }
+
+    li_media_apply_folder_query_filter($query);
+}
+
+function li_media_filter_ajax_library_query(array $args): array
+{
+    $context = isset($_REQUEST['query']['li_media_context'])
+        ? sanitize_key((string) $_REQUEST['query']['li_media_context'])
+        : '';
+    $folder = isset($_REQUEST['query']['li_media_folder'])
+        ? sanitize_text_field(wp_unslash((string) $_REQUEST['query']['li_media_folder']))
+        : '';
+
+    if ($context && isset(li_media_get_context_filter_options()[$context])) {
+        $ids = li_media_get_attachment_ids_for_context($context);
+        $args['post__in'] = $ids ?: [0];
+    }
+
+    if ($folder && isset(li_media_get_folder_filter_options()[$folder])) {
+        $ids = li_media_get_attachment_ids_for_folder($folder);
+
+        if (!empty($args['post__in'])) {
+            $ids = array_values(array_intersect(array_map('absint', (array) $args['post__in']), $ids));
+        }
+
+        $args['post__in'] = $ids ?: [0];
+    }
+
+    return $args;
+}
+
+function li_media_apply_folder_query_filter(WP_Query $query): void
+{
+    $folder = isset($_GET['li_media_folder']) ? sanitize_text_field(wp_unslash((string) $_GET['li_media_folder'])) : '';
+
+    if (!isset(li_media_get_folder_filter_options()[$folder])) {
         return;
     }
 
-    $ids = li_media_get_attachment_ids_for_context($context);
+    $ids = li_media_get_attachment_ids_for_folder($folder);
+    $existing_ids = $query->get('post__in');
+
+    if (is_array($existing_ids) && $existing_ids) {
+        $ids = array_values(array_intersect(array_map('absint', $existing_ids), $ids));
+    }
+
     $query->set('post__in', $ids ?: [0]);
 }
 
@@ -101,6 +157,22 @@ function li_media_get_context_filter_options(): array
         'pdf'       => __('General PDFs', 'lloyds-industrial'),
         'unassigned'=> __('Unassigned', 'lloyds-industrial'),
     ];
+}
+
+function li_media_get_folder_filter_options(): array
+{
+    $folders = [];
+
+    foreach (li_media_get_library_folder_counts() as $folder => $count) {
+        $folders[$folder] = sprintf(
+            /* translators: 1: folder path, 2: attachment count */
+            __('%1$s (%2$d)', 'lloyds-industrial'),
+            $folder,
+            $count
+        );
+    }
+
+    return $folders;
 }
 
 function li_media_get_attachment_context_markup(int $attachment_id): string
@@ -207,6 +279,90 @@ function li_media_get_attachment_storage_label(int $attachment_id): string
     }
 
     return __('Custom path', 'lloyds-industrial');
+}
+
+function li_media_get_attachment_storage_folder(int $attachment_id): string
+{
+    $file = get_attached_file($attachment_id);
+
+    if (!is_string($file) || $file === '') {
+        return '';
+    }
+
+    $uploads = wp_upload_dir(null, false);
+    $base_dir = isset($uploads['basedir']) ? wp_normalize_path((string) $uploads['basedir']) : '';
+    $normalized = wp_normalize_path($file);
+
+    if (function_exists('li_document_path_is_in_protected_storage') && li_document_path_is_in_protected_storage($file)) {
+        $protected = li_get_protected_documents_dir();
+        $protected_base = isset($protected['path']) ? wp_normalize_path((string) $protected['path']) : '';
+
+        if ($protected_base && str_starts_with($normalized, trailingslashit($protected_base))) {
+            return 'li-protected-documents/' . trim(dirname(ltrim(substr($normalized, strlen(trailingslashit($protected_base))), '/')), '.');
+        }
+
+        return 'li-protected-documents';
+    }
+
+    if ($base_dir && str_starts_with($normalized, trailingslashit($base_dir))) {
+        $relative = ltrim(substr($normalized, strlen(trailingslashit($base_dir))), '/');
+
+        return trim(dirname($relative), '.');
+    }
+
+    return '';
+}
+
+function li_media_get_library_folder_counts(): array
+{
+    $attachment_ids = get_posts([
+        'post_type'      => 'attachment',
+        'post_status'    => 'inherit',
+        'posts_per_page' => -1,
+        'fields'         => 'ids',
+    ]);
+    $folders = [];
+
+    foreach ($attachment_ids as $attachment_id) {
+        $folder = li_media_get_attachment_storage_folder((int) $attachment_id);
+
+        if ($folder === '') {
+            continue;
+        }
+
+        if (
+            !str_starts_with($folder, 'woocommerce/products/')
+            && !str_starts_with($folder, 'lloyds-pdf-flipbook/')
+            && !str_starts_with($folder, 'li-protected-documents/')
+        ) {
+            continue;
+        }
+
+        $folders[$folder] = ($folders[$folder] ?? 0) + 1;
+    }
+
+    ksort($folders, SORT_NATURAL | SORT_FLAG_CASE);
+
+    return $folders;
+}
+
+function li_media_get_attachment_ids_for_folder(string $folder): array
+{
+    $attachment_ids = get_posts([
+        'post_type'      => 'attachment',
+        'post_status'    => 'inherit',
+        'posts_per_page' => -1,
+        'fields'         => 'ids',
+    ]);
+    $matched = [];
+
+    foreach ($attachment_ids as $attachment_id) {
+        if (li_media_get_attachment_storage_folder((int) $attachment_id) === $folder) {
+            $matched[] = (int) $attachment_id;
+        }
+    }
+
+    return $matched;
 }
 
 function li_media_get_attachment_ids_for_context(string $context): array

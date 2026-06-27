@@ -226,11 +226,11 @@
     document.querySelectorAll('[data-li-product-finder]').forEach(bindProductFinder);
 
     if (window.lloydsAdmin?.mediaLibrary?.enabled) {
+        const settings = window.lloydsAdmin.mediaLibrary;
         const heading = document.querySelector('.wrap h1');
         const existing = document.querySelector('.li-media-library-banner');
 
         if (heading && !existing) {
-            const settings = window.lloydsAdmin.mediaLibrary;
             const banner = document.createElement('section');
             banner.className = 'li-media-library-banner';
             banner.innerHTML = `
@@ -245,6 +245,50 @@
             `;
 
             heading.insertAdjacentElement('afterend', banner);
+        }
+
+        const buildFilter = (name, label, options) => {
+            const select = document.createElement('select');
+            select.className = 'li-media-grid-filter';
+            select.dataset.liMediaGridFilter = name;
+            select.innerHTML = `<option value="">${escapeText(label)}</option>${Object.entries(options || {}).map(([value, optionLabel]) => (
+                `<option value="${escapeText(value)}">${escapeText(optionLabel)}</option>`
+            )).join('')}`;
+
+            return select;
+        };
+
+        const injectGridFilters = () => {
+            const toolbar = document.querySelector('.media-frame.mode-grid .media-toolbar-secondary');
+
+            if (!toolbar || toolbar.querySelector('[data-li-media-grid-filter]')) {
+                return;
+            }
+
+            const contextFilter = buildFilter('li_media_context', settings.contextLabel || 'All Lloyds media uses', settings.contexts);
+            const folderFilter = buildFilter('li_media_folder', settings.folderLabel || 'All Lloyds folders', settings.folders);
+
+            toolbar.append(contextFilter, folderFilter);
+
+            [contextFilter, folderFilter].forEach((filter) => {
+                filter.addEventListener('change', () => {
+                    const query = window.wp?.media?.frame?.content?.get()?.collection?.props;
+
+                    if (!query) {
+                        return;
+                    }
+
+                    query.set(filter.dataset.liMediaGridFilter, filter.value || null);
+                    query.set('paged', 1);
+                    window.wp.media.frame.content.get().collection.more({ reset: true });
+                });
+            });
+        };
+
+        if (window.wp?.media) {
+            const interval = window.setInterval(injectGridFilters, 300);
+            window.setTimeout(() => window.clearInterval(interval), 6000);
+            document.addEventListener('click', () => window.setTimeout(injectGridFilters, 100));
         }
     }
 })();

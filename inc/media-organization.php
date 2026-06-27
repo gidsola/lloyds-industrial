@@ -17,9 +17,10 @@ add_action('admin_menu', 'li_media_register_product_media_tools_page');
 
 function li_media_register_product_media_tools_page(): void
 {
-    add_management_page(
+    add_submenu_page(
+        'lloyds',
         __('Lloyds Media Organizer', 'lloyds-industrial'),
-        __('Lloyds Media Organizer', 'lloyds-industrial'),
+        __('Media Organizer', 'lloyds-industrial'),
         'manage_woocommerce',
         'lloyds-product-media-organizer',
         'li_media_render_product_media_tools_page'

@@ -14,14 +14,13 @@ add_action('after_switch_theme', 'li_analytics_install');
 add_action('admin_init', 'li_analytics_maybe_install');
 
 add_action('admin_menu', function (): void {
-    add_menu_page(
+    add_submenu_page(
+        'lloyds',
         __('Lloyds Analytics', 'lloyds-industrial'),
         __('Analytics', 'lloyds-industrial'),
         'manage_options',
         'lloyds-analytics',
-        'li_render_analytics_page',
-        'dashicons-chart-area',
-        60
+        'li_render_analytics_page'
     );
 });
 

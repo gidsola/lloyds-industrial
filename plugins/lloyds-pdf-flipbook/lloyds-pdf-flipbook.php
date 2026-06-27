@@ -59,6 +59,7 @@ function lloyds_flipbook_register_post_type(): void
             'not_found_in_trash' => __('No PDF flipbooks found in Trash.', 'lloyds-pdf-flipbook'),
         ],
         'public'       => true,
+        'show_in_menu' => 'lloyds',
         'show_in_rest' => false,
         'menu_icon'    => 'dashicons-book',
         'supports'     => ['title', 'excerpt', 'thumbnail'],

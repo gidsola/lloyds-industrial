@@ -77,7 +77,7 @@ function li_mail_register_content_types(): void
         ],
         'public'              => false,
         'show_ui'             => true,
-        'show_in_menu'        => 'lloyds-mailing-list',
+        'show_in_menu'        => 'lloyds',
         'show_in_rest'        => false,
         'supports'            => ['title'],
         'capability_type'     => 'post',
@@ -109,7 +109,7 @@ function li_mail_register_content_types(): void
         ],
         'public'       => false,
         'show_ui'      => true,
-        'show_in_menu' => 'lloyds-mailing-list',
+        'show_in_menu' => 'lloyds',
         'show_in_rest' => false,
         'hierarchical' => false,
     ]);
@@ -140,20 +140,19 @@ function li_mail_maybe_flush_rewrite_rules(): void
 
 function li_mail_register_admin_menu(): void
 {
-    add_menu_page(
+    add_submenu_page(
+        'lloyds',
         __('Lloyds Mailing List', 'lloyds-industrial'),
         __('Mailing List', 'lloyds-industrial'),
         'manage_options',
         'lloyds-mailing-list',
-        'li_mail_render_settings_page',
-        'dashicons-megaphone',
-        63
+        'li_mail_render_settings_page'
     );
 
     add_submenu_page(
-        'lloyds-mailing-list',
+        'lloyds',
         __('Campaign Studio', 'lloyds-industrial'),
-        __('Campaigns', 'lloyds-industrial'),
+        __('Mail Campaigns', 'lloyds-industrial'),
         'manage_options',
         'lloyds-mail-campaigns',
         'li_mail_render_campaigns_page'
@@ -168,14 +167,6 @@ function li_mail_register_admin_menu(): void
         'li_mail_render_campaign_builder_page'
     );
 
-    add_submenu_page(
-        'lloyds-mailing-list',
-        __('Mailing List Settings', 'lloyds-industrial'),
-        __('Settings', 'lloyds-industrial'),
-        'manage_options',
-        'lloyds-mailing-list',
-        'li_mail_render_settings_page'
-    );
 }
 
 function li_mail_register_settings(): void

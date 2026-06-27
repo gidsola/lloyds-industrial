@@ -1173,6 +1173,11 @@
     gap: 4px;
 }
 
+.li-media-grid-filter {
+    margin: 0 8px 8px 0;
+    max-width: 320px;
+}
+
 .li-media-picker-card {
     align-items: center;
     background: #f8faf9;

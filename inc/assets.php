@@ -78,18 +78,31 @@ add_action('admin_enqueue_scripts', function (string $hook_suffix): void {
     ];
 
     if (
-        $hook_suffix === 'appearance_page_lloyds-industrial-settings'
-        || $hook_suffix === 'toplevel_page_lloyds-contact-forms'
-        || $hook_suffix === 'toplevel_page_lloyds-product-carousel'
-        || $hook_suffix === 'toplevel_page_lloyds-analytics'
-        || $hook_suffix === 'toplevel_page_lloyds-seo'
-        || $hook_suffix === 'toplevel_page_lloyds-mailing-list'
-        || $hook_suffix === 'mailing-list_page_lloyds-mail-campaigns'
-        || $hook_suffix === 'mailing-list_page_lloyds-mail-campaign-builder'
-        || $hook_suffix === 'tools_page_lloyds-product-media-organizer'
+        $hook_suffix === 'toplevel_page_lloyds'
+        || $hook_suffix === 'lloyds_page_lloyds-contact-forms'
+        || $hook_suffix === 'lloyds_page_lloyds-product-carousel'
+        || $hook_suffix === 'lloyds_page_lloyds-analytics'
+        || $hook_suffix === 'lloyds_page_lloyds-seo'
+        || $hook_suffix === 'lloyds_page_lloyds-mailing-list'
+        || $hook_suffix === 'lloyds_page_lloyds-mail-campaigns'
+        || $hook_suffix === 'lloyds_page_lloyds-mail-campaign-builder'
+        || $hook_suffix === 'lloyds_page_lloyds-product-media-organizer'
+        || $hook_suffix === 'lloyds_page_lloyds-mega-menu'
         || $hook_suffix === 'upload.php'
         || $hook_suffix === 'media-new.php'
-        || in_array($admin_page, ['lloyds-mailing-list', 'lloyds-mail-campaigns', 'lloyds-mail-campaign-builder'], true)
+        || in_array($admin_page, [
+            'lloyds',
+            'lloyds-mega-menu',
+            'lloyds-contact-forms',
+            'lloyds-product-carousel',
+            'lloyds-analytics',
+            'lloyds-seo',
+            'lloyds-mailing-list',
+            'lloyds-mail-campaigns',
+            'lloyds-mail-campaign-builder',
+            'lloyds-product-media-organizer',
+            'lloyds-resellers',
+        ], true)
         || ($screen && in_array((string) $screen->post_type, $styled_post_types, true))
     ) {
         li_enqueue_google_fonts('lloyds-settings-admin-fonts');
@@ -123,11 +136,19 @@ add_action('admin_enqueue_scripts', function (string $hook_suffix): void {
                     __('Flipbook PDFs stay with their catalogue records.', 'lloyds-industrial'),
                     __('SDS files remain protected and purchase-gated.', 'lloyds-industrial'),
                 ],
+                'contextLabel' => __('All Lloyds media uses', 'lloyds-industrial'),
+                'folderLabel' => __('All Lloyds folders', 'lloyds-industrial'),
+                'contexts' => function_exists('li_media_get_context_filter_options')
+                    ? li_media_get_context_filter_options()
+                    : [],
+                'folders' => function_exists('li_media_get_folder_filter_options')
+                    ? li_media_get_folder_filter_options()
+                    : [],
             ],
         ]);
     }
 
-    if ($hook_suffix === 'toplevel_page_lloyds-mega-menu') {
+    if ($hook_suffix === 'lloyds_page_lloyds-mega-menu') {
         li_enqueue_google_fonts('lloyds-mega-menu-admin-fonts');
 
         wp_enqueue_style(
@@ -142,7 +163,7 @@ add_action('admin_enqueue_scripts', function (string $hook_suffix): void {
         ? li_seo_get_supported_public_post_types()
         : [];
 
-    if ($hook_suffix === 'toplevel_page_lloyds-seo') {
+    if ($hook_suffix === 'lloyds_page_lloyds-seo') {
         wp_enqueue_media();
 
         wp_enqueue_script(

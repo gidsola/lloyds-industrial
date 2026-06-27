@@ -16,7 +16,7 @@ add_action('init', function (): void {
         ],
         'public'              => false,
         'show_ui'             => true,
-        'show_in_menu'        => true,
+        'show_in_menu'        => 'lloyds',
         'show_in_rest'        => true,
         'menu_icon'           => 'dashicons-media-document',
         'supports'            => ['title', 'editor', 'excerpt'],

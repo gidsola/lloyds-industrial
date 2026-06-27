@@ -7,22 +7,32 @@ if (!defined('ABSPATH')) {
 }
 
 add_action('admin_menu', function (): void {
-    add_theme_page(
+    add_menu_page(
         __('Lloyds Industrial Settings', 'lloyds-industrial'),
-        __('Industrial Settings', 'lloyds-industrial'),
+        __('Lloyds', 'lloyds-industrial'),
         'manage_options',
-        'lloyds-industrial-settings',
+        'lloyds',
+        'li_render_settings_page',
+        'dashicons-shield-alt',
+        58
+    );
+
+    add_submenu_page(
+        'lloyds',
+        __('Lloyds Industrial Settings', 'lloyds-industrial'),
+        __('Settings', 'lloyds-industrial'),
+        'manage_options',
+        'lloyds',
         'li_render_settings_page'
     );
 
-    add_menu_page(
+    add_submenu_page(
+        'lloyds',
         __('Lloyds Mega Menu', 'lloyds-industrial'),
         __('Mega Menu', 'lloyds-industrial'),
         'manage_options',
         'lloyds-mega-menu',
-        'li_render_mega_menu_page',
-        'dashicons-menu-alt3',
-        61
+        'li_render_mega_menu_page'
     );
 });
 
@@ -37,21 +47,21 @@ add_action('admin_init', function (): void {
         'li_site_behavior_section',
         __('Site Behavior', 'lloyds-industrial'),
         'li_render_site_behavior_section',
-        'lloyds-industrial-settings'
+        'lloyds'
     );
 
     add_settings_section(
         'li_brand_section',
         __('Brand Configuration', 'lloyds-industrial'),
         '__return_null',
-        'lloyds-industrial-settings'
+        'lloyds'
     );
 
     add_settings_field(
         'li_partner_mode',
         __('Partner Site Mode', 'lloyds-industrial'),
         'li_render_partner_mode_field',
-        'lloyds-industrial-settings',
+        'lloyds',
         'li_site_behavior_section'
     );
 
@@ -59,7 +69,7 @@ add_action('admin_init', function (): void {
         'li_document_access_mode',
         __('Document Access', 'lloyds-industrial'),
         'li_render_document_access_mode_field',
-        'lloyds-industrial-settings',
+        'lloyds',
         'li_site_behavior_section'
     );
 
@@ -67,7 +77,7 @@ add_action('admin_init', function (): void {
         'li_brand_palette',
         __('Brand Colors', 'lloyds-industrial'),
         'li_render_brand_palette_field',
-        'lloyds-industrial-settings',
+        'lloyds',
         'li_brand_section'
     );
 
@@ -75,14 +85,14 @@ add_action('admin_init', function (): void {
         'li_layout_display_section',
         __('Layout and Display', 'lloyds-industrial'),
         'li_render_layout_display_section',
-        'lloyds-industrial-settings'
+        'lloyds'
     );
 
     add_settings_field(
         'li_header_display',
         __('Header Display', 'lloyds-industrial'),
         'li_render_header_display_field',
-        'lloyds-industrial-settings',
+        'lloyds',
         'li_layout_display_section'
     );
 
@@ -90,7 +100,7 @@ add_action('admin_init', function (): void {
         'li_site_width',
         __('Site Width', 'lloyds-industrial'),
         'li_render_site_width_field',
-        'lloyds-industrial-settings',
+        'lloyds',
         'li_layout_display_section'
     );
 
@@ -98,7 +108,7 @@ add_action('admin_init', function (): void {
         'li_footer_density',
         __('Footer Density', 'lloyds-industrial'),
         'li_render_footer_density_field',
-        'lloyds-industrial-settings',
+        'lloyds',
         'li_layout_display_section'
     );
 
@@ -106,14 +116,14 @@ add_action('admin_init', function (): void {
         'li_global_layout_section',
         __('Global Header and Footer', 'lloyds-industrial'),
         'li_render_global_layout_section',
-        'lloyds-industrial-settings'
+        'lloyds'
     );
 
     add_settings_field(
         'li_announcement',
         __('Announcement Bar', 'lloyds-industrial'),
         'li_render_announcement_field',
-        'lloyds-industrial-settings',
+        'lloyds',
         'li_global_layout_section'
     );
 
@@ -121,7 +131,7 @@ add_action('admin_init', function (): void {
         'li_header_actions',
         __('Header Actions', 'lloyds-industrial'),
         'li_render_header_actions_field',
-        'lloyds-industrial-settings',
+        'lloyds',
         'li_global_layout_section'
     );
 
@@ -129,7 +139,7 @@ add_action('admin_init', function (): void {
         'li_footer_content',
         __('Footer Content', 'lloyds-industrial'),
         'li_render_footer_content_field',
-        'lloyds-industrial-settings',
+        'lloyds',
         'li_global_layout_section'
     );
 
@@ -168,7 +178,7 @@ add_action('admin_init', function (): void {
     delete_option('li_brand_settings');
     set_transient('li_brand_reset_notice', 'reset', MINUTE_IN_SECONDS);
 
-    wp_safe_redirect(admin_url('themes.php?page=lloyds-industrial-settings'));
+    wp_safe_redirect(admin_url('admin.php?page=lloyds'));
     exit;
 });
 
@@ -189,7 +199,7 @@ add_action('admin_init', function (): void {
     update_option('li_theme_settings', $settings);
     set_transient('li_theme_settings_notice', 'layout_reset', MINUTE_IN_SECONDS);
 
-    wp_safe_redirect(admin_url('themes.php?page=lloyds-industrial-settings'));
+    wp_safe_redirect(admin_url('admin.php?page=lloyds'));
     exit;
 });
 
@@ -214,7 +224,7 @@ add_action('admin_init', function (): void {
         set_transient('li_theme_settings_notice', 'terms_ensured', MINUTE_IN_SECONDS);
     }
 
-    wp_safe_redirect(admin_url('themes.php?page=lloyds-industrial-settings'));
+    wp_safe_redirect(admin_url('admin.php?page=lloyds'));
     exit;
 });
 
@@ -229,7 +239,7 @@ add_action('admin_init', function (): void {
 
     set_transient('li_sds_migration_result', $result, MINUTE_IN_SECONDS);
 
-    wp_safe_redirect(admin_url('themes.php?page=lloyds-industrial-settings'));
+    wp_safe_redirect(admin_url('admin.php?page=lloyds'));
     exit;
 });
 
@@ -565,7 +575,7 @@ function li_render_brand_palette_field(): void
         admin_url('customize.php')
     );
     $reset_url = wp_nonce_url(
-        admin_url('themes.php?page=lloyds-industrial-settings&li_reset_brand_settings=1'),
+        admin_url('admin.php?page=lloyds&li_reset_brand_settings=1'),
         'li_reset_brand_settings'
     );
     ?>
@@ -1612,19 +1622,19 @@ function li_render_settings_page(): void
         ? __('Private', 'lloyds-industrial')
         : __('Controlled', 'lloyds-industrial');
     $reset_layout_url = wp_nonce_url(
-        admin_url('themes.php?page=lloyds-industrial-settings&li_reset_layout_settings=1'),
+        admin_url('admin.php?page=lloyds&li_reset_layout_settings=1'),
         'li_reset_layout_settings'
     );
     $refresh_catalogue_url = wp_nonce_url(
-        admin_url('themes.php?page=lloyds-industrial-settings&li_theme_maintenance_action=refresh_catalogue'),
+        admin_url('admin.php?page=lloyds&li_theme_maintenance_action=refresh_catalogue'),
         'li_theme_maintenance_refresh_catalogue'
     );
     $rebuild_navigation_url = wp_nonce_url(
-        admin_url('themes.php?page=lloyds-industrial-settings&li_theme_maintenance_action=rebuild_navigation'),
+        admin_url('admin.php?page=lloyds&li_theme_maintenance_action=rebuild_navigation'),
         'li_theme_maintenance_rebuild_navigation'
     );
     $ensure_terms_url = wp_nonce_url(
-        admin_url('themes.php?page=lloyds-industrial-settings&li_theme_maintenance_action=ensure_terms'),
+        admin_url('admin.php?page=lloyds&li_theme_maintenance_action=ensure_terms'),
         'li_theme_maintenance_ensure_terms'
     );
     ?>
@@ -1655,7 +1665,7 @@ function li_render_settings_page(): void
             <input type="hidden" name="li_theme_settings[_settings_context]" value="global">
             <?php
             settings_fields('li_theme_settings');
-            do_settings_sections('lloyds-industrial-settings');
+            do_settings_sections('lloyds');
             submit_button(__('Save Theme Settings', 'lloyds-industrial'));
             ?>
         </form>
@@ -1708,7 +1718,7 @@ function li_render_settings_page(): void
                     <span class="dashicons dashicons-lock" aria-hidden="true"></span>
                     <h3><?php esc_html_e('Protected SDS storage', 'lloyds-industrial'); ?></h3>
                     <p><?php esc_html_e('Move and organize existing SDS attachment files inside protected storage so they are served only after purchase-history access checks.', 'lloyds-industrial'); ?></p>
-                    <a class="button" href="<?php echo esc_url(wp_nonce_url(admin_url('themes.php?page=lloyds-industrial-settings&li_migrate_sds_documents=1'), 'li_migrate_sds_documents')); ?>">
+                    <a class="button" href="<?php echo esc_url(wp_nonce_url(admin_url('admin.php?page=lloyds&li_migrate_sds_documents=1'), 'li_migrate_sds_documents')); ?>">
                         <?php esc_html_e('Protect & Organize SDS Files', 'lloyds-industrial'); ?>
                     </a>
                 </div>

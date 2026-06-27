@@ -33,7 +33,7 @@ add_action('admin_init', function (): void {
         'li_quote_mode',
         __('Quote Mode', 'lloyds-industrial'),
         'li_render_quote_mode_field',
-        'lloyds-industrial-settings',
+        'lloyds',
         'li_site_behavior_section'
     );
 });

@@ -114,14 +114,13 @@ function li_seo_disable_default_canonical(): void
 
 function li_seo_register_admin_menu(): void
 {
-    add_menu_page(
+    add_submenu_page(
+        'lloyds',
         __('Lloyds SEO', 'lloyds-industrial'),
         __('SEO', 'lloyds-industrial'),
         'manage_options',
         'lloyds-seo',
-        'li_seo_render_admin_page',
-        'dashicons-search',
-        59
+        'li_seo_render_admin_page'
     );
 }
 

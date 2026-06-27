@@ -68,14 +68,13 @@ function li_sanitize_product_carousel_settings(array $input): array
 }
 
 add_action('admin_menu', function (): void {
-    add_menu_page(
+    add_submenu_page(
+        'lloyds',
         __('Lloyds Product Carousel', 'lloyds-industrial'),
         __('Product Carousel', 'lloyds-industrial'),
         'manage_options',
         'lloyds-product-carousel',
-        'li_render_product_carousel_admin_page',
-        'dashicons-images-alt2',
-        62
+        'li_render_product_carousel_admin_page'
     );
 });
 

@@ -28,7 +28,7 @@ add_action('admin_init', function (): void {
 
     if (!check_admin_referer('li_reseed_site', '_wpnonce', false)) {
         set_transient('li_reseed_site_notice', 'missing_nonce', MINUTE_IN_SECONDS);
-        wp_safe_redirect(admin_url('themes.php?page=lloyds-industrial-settings'));
+        wp_safe_redirect(admin_url('admin.php?page=lloyds'));
         exit;
     }
 
