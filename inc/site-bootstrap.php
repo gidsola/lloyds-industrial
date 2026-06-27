@@ -55,14 +55,14 @@ function li_bootstrap_default_site(): void
     li_bootstrap_create_product_terms();
 
     update_option('li_site_bootstrapped', time());
-    update_option('li_site_content_version', 9);
+    update_option('li_site_content_version', 11);
 
     flush_rewrite_rules();
 }
 
 function li_bootstrap_run_content_migrations(): void
 {
-    $target_version = 9;
+    $target_version = 11;
 
     if (!get_option('li_site_bootstrapped') || (int) get_option('li_site_content_version', 0) >= $target_version) {
         return;
@@ -198,6 +198,20 @@ function li_bootstrap_create_pages(array $media = [], bool $update_existing = tr
             'slug'     => 'partners',
             'template' => 'page-partners',
             'content'  => li_get_starter_content('partners')
+        ],
+
+        'find-a-reseller' => [
+            'title'    => 'Find a Reseller',
+            'slug'     => 'find-a-reseller',
+            'template' => 'page-contact',
+            'content'  => li_get_starter_content('find-a-reseller')
+        ],
+
+        'reseller-application' => [
+            'title'    => 'Reseller Application',
+            'slug'     => 'reseller-application',
+            'template' => 'page-contact',
+            'content'  => li_get_starter_content('reseller-application')
         ],
 
         'about' => [
@@ -460,6 +474,8 @@ function li_bootstrap_get_navigation_content(array $pages): string
     $content .= li_navigation_link_block('Partners', $pages['partners'] ?? 0);
     $content .= li_navigation_link_block('About', $pages['about'] ?? 0);
     $content .= li_navigation_link_block('Contact', $pages['contact'] ?? 0);
+    $content .= li_navigation_link_block('Find A Reseller', $pages['find-a-reseller'] ?? 0);
+    $content .= li_navigation_link_block('Become A Reseller', $pages['reseller-application'] ?? 0);
 
     return $content;
 }
@@ -618,43 +634,23 @@ function li_bootstrap_ensure_woocommerce_page_assignments(): void
         return;
     }
 
-    $pages = [];
+    $pages = li_bootstrap_create_pages(li_get_starter_media(), false);
 
-    if (!(int) get_option('woocommerce_shop_page_id')) {
-        $products_page = get_page_by_path('products', OBJECT, 'page');
-
-        if ($products_page instanceof WP_Post) {
-            $pages['products'] = (int) $products_page->ID;
+    foreach ([
+        'products' => 'page-products',
+        'account'  => 'page-account',
+        'cart'     => 'page-cart',
+        'checkout' => 'page-checkout',
+    ] as $key => $template) {
+        if (empty($pages[$key])) {
+            continue;
         }
+
+        update_post_meta((int) $pages[$key], '_wp_page_template', $template);
     }
 
-    if (!(int) get_option('woocommerce_myaccount_page_id')) {
-        $account_page = get_page_by_path('account', OBJECT, 'page');
-
-        if ($account_page instanceof WP_Post) {
-            $pages['account'] = (int) $account_page->ID;
-        }
-    }
-
-    if (!(int) get_option('woocommerce_cart_page_id')) {
-        $cart_page = get_page_by_path('cart', OBJECT, 'page');
-
-        if ($cart_page instanceof WP_Post) {
-            $pages['cart'] = (int) $cart_page->ID;
-        }
-    }
-
-    if (!(int) get_option('woocommerce_checkout_page_id')) {
-        $checkout_page = get_page_by_path('checkout', OBJECT, 'page');
-
-        if ($checkout_page instanceof WP_Post) {
-            $pages['checkout'] = (int) $checkout_page->ID;
-        }
-    }
-
-    if ($pages) {
-        li_bootstrap_create_woocommerce_pages($pages);
-    }
+    li_bootstrap_refresh_woocommerce_flow_pages();
+    li_bootstrap_create_woocommerce_pages($pages);
 }
 
 function li_bootstrap_create_product_terms(): void

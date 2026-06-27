@@ -28,11 +28,13 @@ function li_get_account_redirect_url(): string
 
 function li_render_customer_account_shortcode(): string
 {
+    $sds_section = li_render_account_sds_section();
+
     if (class_exists('WooCommerce') && shortcode_exists('woocommerce_my_account')) {
-        return '<div class="li-account-flow li-woo-account">' . do_shortcode('[woocommerce_my_account]') . '</div>';
+        return '<div class="li-account-flow li-woo-account">' . do_shortcode('[woocommerce_my_account]') . $sds_section . '</div>';
     }
 
-    return li_render_account_login_panel();
+    return li_render_account_login_panel() . $sds_section;
 }
 
 function li_render_account_login_panel(): string
@@ -145,6 +147,125 @@ function li_render_sds_access_panel_shortcode(): string
                 <?php esc_html_e('Get Access Help', 'lloyds-industrial'); ?>
             </a>
         </div>
+    </section>
+    <?php
+
+    return (string) ob_get_clean();
+}
+
+function li_user_has_purchased_product(int $product_id, ?int $user_id = null): bool
+{
+    $user_id = $user_id ?: get_current_user_id();
+
+    if (!$product_id || !$user_id || !function_exists('wc_customer_bought_product')) {
+        return false;
+    }
+
+    $user = get_userdata($user_id);
+
+    if (!$user instanceof WP_User) {
+        return false;
+    }
+
+    return wc_customer_bought_product($user->user_email, $user_id, $product_id);
+}
+
+function li_get_user_purchased_product_ids(int $user_id): array
+{
+    if (!$user_id || !function_exists('wc_get_orders')) {
+        return [];
+    }
+
+    $orders = wc_get_orders([
+        'customer_id' => $user_id,
+        'status'      => ['completed', 'processing', 'on-hold'],
+        'limit'       => -1,
+        'return'      => 'objects',
+    ]);
+    $product_ids = [];
+
+    foreach ($orders as $order) {
+        if (!is_object($order) || !method_exists($order, 'get_items')) {
+            continue;
+        }
+
+        foreach ($order->get_items() as $item) {
+            if (!is_object($item) || !method_exists($item, 'get_product_id')) {
+                continue;
+            }
+
+            $product_id = (int) $item->get_product_id();
+
+            if ($product_id) {
+                $product_ids[] = $product_id;
+            }
+        }
+    }
+
+    return array_values(array_unique(array_map('absint', $product_ids)));
+}
+
+function li_render_account_sds_section(): string
+{
+    if (!is_user_logged_in()) {
+        return '';
+    }
+
+    $product_ids = li_get_user_purchased_product_ids(get_current_user_id());
+    $items = [];
+
+    foreach ($product_ids as $product_id) {
+        $document_id = function_exists('li_get_product_sds_document_id') ? li_get_product_sds_document_id($product_id) : 0;
+
+        if (!$document_id || !function_exists('li_get_document_download_url')) {
+            continue;
+        }
+
+        $download_url = li_get_document_download_url($document_id);
+
+        if (!$download_url) {
+            continue;
+        }
+
+        $items[] = [
+            'product_id'   => $product_id,
+            'product_name' => get_the_title($product_id),
+            'product_url'  => get_permalink($product_id),
+            'document_id'  => $document_id,
+            'download_url' => $download_url,
+        ];
+    }
+
+    ob_start();
+    ?>
+    <section class="li-account-sds">
+        <div class="li-account-sds__header">
+            <p class="li-eyebrow"><?php esc_html_e('SDS Library', 'lloyds-industrial'); ?></p>
+            <h2><?php esc_html_e('SDS For Purchased Products', 'lloyds-industrial'); ?></h2>
+            <p><?php esc_html_e('Safety Data Sheets appear here when your account has purchase history for the related product.', 'lloyds-industrial'); ?></p>
+        </div>
+
+        <?php if (!$items) : ?>
+            <div class="li-account-sds__empty">
+                <p><?php esc_html_e('No eligible SDS downloads were found for this account yet.', 'lloyds-industrial'); ?></p>
+                <a class="li-button-secondary" href="<?php echo esc_url(home_url('/contact/')); ?>"><?php esc_html_e('Get SDS Access Help', 'lloyds-industrial'); ?></a>
+            </div>
+        <?php else : ?>
+            <div class="li-account-sds__list">
+                <?php foreach ($items as $item) : ?>
+                    <article class="li-account-sds__item">
+                        <div>
+                            <h3><?php echo esc_html($item['product_name']); ?></h3>
+                            <p><?php echo esc_html(get_the_title($item['document_id'])); ?></p>
+                        </div>
+                        <div class="li-account-sds__actions">
+                            <a class="li-button-secondary" href="<?php echo esc_url($item['product_url']); ?>"><?php esc_html_e('View Product', 'lloyds-industrial'); ?></a>
+                            <a class="li-button-primary" href="<?php echo esc_url($item['download_url']); ?>"><?php esc_html_e('Download SDS', 'lloyds-industrial'); ?></a>
+                        </div>
+                    </article>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
     </section>
     <?php
 

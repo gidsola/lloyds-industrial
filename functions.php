@@ -27,8 +27,11 @@ require_once get_template_directory() . '/inc/documents.php';
 require_once get_template_directory() . '/inc/document-fields.php';
 require_once get_template_directory() . '/inc/document-access.php';
 require_once get_template_directory() . '/inc/document-downloads.php';
+require_once get_template_directory() . '/inc/resellers.php';
 require_once get_template_directory() . '/inc/contact-forms.php';
 require_once get_template_directory() . '/inc/analytics.php';
+require_once get_template_directory() . '/inc/seo.php';
+require_once get_template_directory() . '/inc/mailing-list.php';
 
 require_once get_template_directory() . '/inc/customer-roles.php';
 require_once get_template_directory() . '/inc/multisite.php';

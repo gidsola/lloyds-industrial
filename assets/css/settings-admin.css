@@ -53,13 +53,15 @@
 .li-settings-summary {
     display: grid;
     gap: 10px;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    min-width: 0;
 }
 
 .li-settings-summary > div {
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: 8px;
+    min-width: 0;
     padding: 16px;
 }
 
@@ -78,6 +80,15 @@
     display: block;
     font-size: 20px;
     line-height: 1.1;
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+
+.li-settings-summary code {
+    color: inherit;
+    display: inline;
+    font-size: 0.92em;
+    white-space: normal;
 }
 
 .li-settings-form,
@@ -447,6 +458,238 @@
     padding: 11px 14px;
 }
 
+.li-seo-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0 0 18px;
+}
+
+.li-seo-checklist {
+    display: grid !important;
+    gap: 8px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.li-seo-checklist label {
+    align-items: center;
+    background: #f8faf9;
+    border: 1px solid #dde5e2;
+    border-radius: 6px;
+    display: flex;
+    gap: 8px;
+    min-height: 36px;
+    padding: 8px 10px;
+}
+
+.li-seo-metabox {
+    display: grid;
+    gap: 12px;
+}
+
+.li-seo-metabox p {
+    margin: 0;
+}
+
+.li-seo-metabox label,
+.li-seo-metabox strong {
+    color: #17443b;
+}
+
+.li-seo-metabox .description {
+    display: block;
+    margin-top: 5px;
+}
+
+.li-seo-status-grid {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 0 0 18px;
+}
+
+.li-seo-status-card {
+    background: #fff;
+    border: 1px solid #dde5e2;
+    border-radius: 8px;
+    box-shadow: 0 10px 28px rgba(24, 33, 38, 0.04);
+    padding: 16px;
+}
+
+.li-seo-status-card span {
+    color: #66736f;
+    display: block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.li-seo-status-card strong {
+    color: #17443b;
+    display: block;
+    font-size: 18px;
+    line-height: 1.2;
+}
+
+.li-mail-campaign-list {
+    display: grid;
+    gap: 14px;
+}
+
+.li-mail-campaign-card,
+.li-mail-empty-state,
+.li-mail-builder-main,
+.li-mail-builder-side section {
+    background: #fff;
+    border: 1px solid #dde5e2;
+    border-radius: 8px;
+    box-shadow: 0 10px 28px rgba(24, 33, 38, 0.04);
+}
+
+.li-mail-campaign-card {
+    align-items: center;
+    display: grid;
+    gap: 18px;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 420px) auto;
+    padding: 18px;
+}
+
+.li-mail-campaign-card span {
+    color: #2e5f73;
+    display: block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+
+.li-mail-campaign-card h2 {
+    color: #17443b;
+    font-size: 18px;
+    margin: 0 0 6px;
+}
+
+.li-mail-campaign-card p {
+    color: #66736f;
+    margin: 0;
+}
+
+.li-mail-campaign-card dl {
+    display: grid;
+    gap: 8px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 0;
+}
+
+.li-mail-campaign-card dt {
+    color: #66736f;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.li-mail-campaign-card dd {
+    color: #17443b;
+    font-size: 16px;
+    font-weight: 800;
+    margin: 4px 0 0;
+}
+
+.li-mail-empty-state {
+    padding: 26px;
+}
+
+.li-mail-builder {
+    align-items: start;
+    display: grid;
+    gap: 16px;
+    grid-template-columns: minmax(0, 1fr) 330px;
+}
+
+.li-mail-builder-main,
+.li-mail-builder-side section {
+    display: grid;
+    gap: 14px;
+    padding: 18px;
+}
+
+.li-mail-builder label {
+    display: grid;
+    gap: 7px;
+}
+
+.li-mail-builder label span,
+.li-mail-builder-side h2 {
+    color: #17443b;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.li-mail-builder input[type="text"],
+.li-mail-builder textarea,
+.li-mail-builder select {
+    border-color: #cfd9d5;
+    border-radius: 6px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.li-mail-builder-body {
+    font-family: Consolas, Monaco, monospace;
+    min-height: 420px;
+}
+
+.li-mail-builder-side {
+    display: grid;
+    gap: 14px;
+    position: sticky;
+    top: 42px;
+}
+
+.li-mail-builder-side code {
+    display: inline-block;
+    margin: 0 4px 6px 0;
+}
+
+.li-mail-builder-side .button {
+    margin: 0 6px 8px 0;
+}
+
+.li-mail-builder-side .button-primary,
+.li-mail-builder-side .button-secondary {
+    display: block;
+    text-align: center;
+    width: 100%;
+}
+
+.li-mail-builder-side .button-link {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    color: #2e5f73;
+    display: inline-block;
+    font-weight: 700;
+    margin: 4px 0 0;
+    min-height: 0;
+    padding: 0;
+    text-align: left;
+    text-decoration: none;
+    width: auto;
+}
+
+.li-mail-builder-side .button-link:hover,
+.li-mail-builder-side .button-link:focus {
+    color: #17443b;
+    text-decoration: underline;
+}
+
 @media (max-width: 1180px) {
     .li-analytics-kpi-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -454,6 +697,19 @@
 
     .li-analytics-grid {
         grid-template-columns: 1fr;
+    }
+
+    .li-seo-status-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .li-mail-campaign-card,
+    .li-mail-builder {
+        grid-template-columns: 1fr;
+    }
+
+    .li-mail-builder-side {
+        position: static;
     }
 }
 

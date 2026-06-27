@@ -495,6 +495,56 @@ function li_get_default_mega_menu(): array
                 ],
             ],
         ],
+        li_get_reseller_finder_mega_menu_item(),
+        li_get_reseller_mega_menu_item(),
+    ];
+}
+
+function li_get_reseller_finder_mega_menu_item(): array
+{
+    return [
+        'label' => __('Find A Reseller', 'lloyds-industrial'),
+        'url' => '/find-a-reseller',
+        'icon' => '',
+        'image' => '',
+        'description' => __('Search the Lloyds reseller and distributor directory.', 'lloyds-industrial'),
+        'bg_color' => '',
+        'text_color' => '',
+        'hover_color' => '',
+        'badge' => '',
+        'badge_color' => '#0066cc',
+        'badge_text_color' => '#ffffff',
+        'column' => 0,
+        'featured' => ['enabled' => false],
+        'enabled' => true,
+        'new_tab' => false,
+        'mobile_order' => 5,
+        'mobile_visible' => true,
+        'children' => [],
+    ];
+}
+
+function li_get_reseller_mega_menu_item(): array
+{
+    return [
+        'label' => __('Become A Reseller', 'lloyds-industrial'),
+        'url' => '/reseller-application',
+        'icon' => '',
+        'image' => '',
+        'description' => __('Apply to join the Lloyds reseller and distributor network.', 'lloyds-industrial'),
+        'bg_color' => '',
+        'text_color' => '',
+        'hover_color' => '',
+        'badge' => '',
+        'badge_color' => '#0066cc',
+        'badge_text_color' => '#ffffff',
+        'column' => 0,
+        'featured' => ['enabled' => false],
+        'enabled' => true,
+        'new_tab' => false,
+        'mobile_order' => 6,
+        'mobile_visible' => true,
+        'children' => [],
     ];
 }
 
@@ -502,27 +552,56 @@ add_action('admin_init', 'li_migrate_mega_menu_defaults');
 
 function li_migrate_mega_menu_defaults(): void
 {
-    if ((int) get_option('li_mega_menu_schema_version', 0) >= 3) {
+    if ((int) get_option('li_mega_menu_schema_version', 0) >= 5) {
         return;
     }
 
     $settings = get_option('li_theme_settings', []);
 
     if (!is_array($settings) || empty($settings['mega_menu_data'])) {
-        update_option('li_mega_menu_schema_version', 3);
+        update_option('li_mega_menu_schema_version', 5);
         return;
     }
 
     $menu = json_decode((string) $settings['mega_menu_data'], true);
 
     if (!is_array($menu)) {
-        update_option('li_mega_menu_schema_version', 3);
+        update_option('li_mega_menu_schema_version', 5);
         return;
     }
 
-    $settings['mega_menu_data'] = wp_json_encode(li_migrate_mega_menu_items($menu));
+    $menu = li_migrate_mega_menu_items($menu);
+
+    if (!li_mega_menu_has_url($menu, '/find-a-reseller')) {
+        $menu[] = li_get_reseller_finder_mega_menu_item();
+    }
+
+    if (!li_mega_menu_has_url($menu, '/reseller-application')) {
+        $menu[] = li_get_reseller_mega_menu_item();
+    }
+
+    $settings['mega_menu_data'] = wp_json_encode($menu);
     update_option('li_theme_settings', $settings);
-    update_option('li_mega_menu_schema_version', 3);
+    update_option('li_mega_menu_schema_version', 5);
+}
+
+function li_mega_menu_has_url(array $items, string $url): bool
+{
+    foreach ($items as $item) {
+        if (!is_array($item)) {
+            continue;
+        }
+
+        if ((string) ($item['url'] ?? '') === $url) {
+            return true;
+        }
+
+        if (!empty($item['children']) && is_array($item['children']) && li_mega_menu_has_url($item['children'], $url)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 function li_migrate_mega_menu_items(array $items): array

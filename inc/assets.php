@@ -66,12 +66,18 @@ add_action('enqueue_block_editor_assets', function (): void {
 
 add_action('admin_enqueue_scripts', function (string $hook_suffix): void {
     $screen = get_current_screen();
+    $admin_page = isset($_GET['page']) ? sanitize_key((string) $_GET['page']) : '';
 
     if (
         $hook_suffix === 'appearance_page_lloyds-industrial-settings'
         || $hook_suffix === 'toplevel_page_lloyds-contact-forms'
         || $hook_suffix === 'toplevel_page_lloyds-product-carousel'
         || $hook_suffix === 'toplevel_page_lloyds-analytics'
+        || $hook_suffix === 'toplevel_page_lloyds-seo'
+        || $hook_suffix === 'toplevel_page_lloyds-mailing-list'
+        || $hook_suffix === 'mailing-list_page_lloyds-mail-campaigns'
+        || $hook_suffix === 'mailing-list_page_lloyds-mail-campaign-builder'
+        || in_array($admin_page, ['lloyds-mailing-list', 'lloyds-mail-campaigns', 'lloyds-mail-campaign-builder'], true)
     ) {
         li_enqueue_google_fonts('lloyds-settings-admin-fonts');
 
@@ -94,7 +100,25 @@ add_action('admin_enqueue_scripts', function (string $hook_suffix): void {
         );
     }
 
-    if (!$screen || !in_array($screen->post_type, ['product', 'li_document'], true)) {
+    $seo_supported_post_types = function_exists('li_seo_get_supported_public_post_types')
+        ? li_seo_get_supported_public_post_types()
+        : [];
+
+    if ($hook_suffix === 'toplevel_page_lloyds-seo') {
+        wp_enqueue_media();
+
+        wp_enqueue_script(
+            'lloyds-admin',
+            get_template_directory_uri() . '/assets/js/admin.js',
+            ['jquery'],
+            filemtime(get_template_directory() . '/assets/js/admin.js'),
+            true
+        );
+
+        return;
+    }
+
+    if (!$screen || !in_array($screen->post_type, array_merge(['product', 'li_document'], $seo_supported_post_types), true)) {
         return;
     }
 

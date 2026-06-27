@@ -8,7 +8,7 @@ if (!defined('ABSPATH')) {
 
 function li_is_quote_mode_enabled(): bool
 {
-    $settings = get_option('li_theme_settings', []);
+    $settings = li_get_global_layout_settings();
 
     return !empty($settings['quote_mode']);
 }
@@ -25,7 +25,7 @@ add_action('admin_init', function (): void {
 
 function li_render_quote_mode_field(): void
 {
-    $settings = get_option('li_theme_settings', []);
+    $settings = li_get_global_layout_settings();
     $checked = !empty($settings['quote_mode']);
     ?>
     <label>
@@ -58,4 +58,12 @@ add_filter('woocommerce_product_add_to_cart_text', function (string $text): stri
     return li_is_quote_mode_enabled()
         ? __('Request Quote', 'lloyds-industrial')
         : $text;
+});
+
+add_filter('woocommerce_is_purchasable', function (bool $is_purchasable): bool {
+    return li_is_quote_mode_enabled() ? false : $is_purchasable;
+});
+
+add_filter('woocommerce_variation_is_purchasable', function (bool $is_purchasable): bool {
+    return li_is_quote_mode_enabled() ? false : $is_purchasable;
 });

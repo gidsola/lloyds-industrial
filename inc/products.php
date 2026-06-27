@@ -327,9 +327,95 @@ function li_render_product_card_meta(): string
     return '<div class="li-product-card-meta"><span>' . implode('</span><span>', $items) . '</span></div>';
 }
 
+function li_current_user_is_reseller(): bool
+{
+    $user = wp_get_current_user();
+
+    return $user instanceof WP_User && in_array('li_distributor', (array) $user->roles, true);
+}
+
+function li_get_product_reseller_search_term(int $product_id): string
+{
+    $terms = wp_get_post_terms($product_id, 'product_cat', ['fields' => 'names']);
+
+    if (!is_wp_error($terms) && !empty($terms[0])) {
+        return (string) $terms[0];
+    }
+
+    return get_the_title($product_id);
+}
+
+function li_render_product_b2b_actions(): string
+{
+    if (!is_singular('product')) {
+        return '';
+    }
+
+    $product_id = get_the_ID();
+
+    if (!$product_id) {
+        return '';
+    }
+
+    $product_title = get_the_title($product_id);
+    $quote_url = add_query_arg([
+        'li_inquiry_type' => 'quote',
+        'li_product'      => $product_title,
+    ], home_url('/contact/'));
+    $reseller_url = add_query_arg([
+        'reseller_product' => li_get_product_reseller_search_term($product_id),
+    ], home_url('/find-a-reseller/'));
+    $sds_document_id = function_exists('li_get_product_sds_document_id') ? li_get_product_sds_document_id($product_id) : 0;
+    $sds_download_url = $sds_document_id && function_exists('li_get_document_download_url')
+        ? li_get_document_download_url($sds_document_id)
+        : null;
+
+    ob_start();
+    ?>
+    <div class="li-product-b2b-actions">
+        <?php if (!is_user_logged_in()) : ?>
+            <p><?php esc_html_e('Lloyds products are supplied through approved reseller and distributor channels.', 'lloyds-industrial'); ?></p>
+            <a class="li-button-primary" href="<?php echo esc_url($reseller_url); ?>">
+                <?php esc_html_e('Find A Reseller For This Product', 'lloyds-industrial'); ?>
+            </a>
+            <a class="li-button-secondary" href="<?php echo esc_url(li_get_account_login_url(get_permalink($product_id))); ?>">
+                <?php esc_html_e('Sign In', 'lloyds-industrial'); ?>
+            </a>
+        <?php elseif (li_current_user_is_reseller()) : ?>
+            <p><?php esc_html_e('Use your reseller account to request pricing or access eligible product SDS documents.', 'lloyds-industrial'); ?></p>
+            <a class="li-button-primary" href="<?php echo esc_url($quote_url); ?>">
+                <?php esc_html_e('Request Quote', 'lloyds-industrial'); ?>
+            </a>
+            <?php if ($sds_download_url) : ?>
+                <a class="li-button-secondary" href="<?php echo esc_url($sds_download_url); ?>">
+                    <?php esc_html_e('Download SDS', 'lloyds-industrial'); ?>
+                </a>
+            <?php elseif ($sds_document_id) : ?>
+                <span class="li-button-secondary" aria-disabled="true">
+                    <?php esc_html_e('SDS Available After Purchase', 'lloyds-industrial'); ?>
+                </span>
+            <?php endif; ?>
+        <?php else : ?>
+            <p><?php esc_html_e('Need pricing or SDS access? Contact Lloyds support or use the account tied to your purchase history.', 'lloyds-industrial'); ?></p>
+            <a class="li-button-primary" href="<?php echo esc_url($quote_url); ?>">
+                <?php esc_html_e('Request Support', 'lloyds-industrial'); ?>
+            </a>
+            <?php if ($sds_download_url) : ?>
+                <a class="li-button-secondary" href="<?php echo esc_url($sds_download_url); ?>">
+                    <?php esc_html_e('Download SDS', 'lloyds-industrial'); ?>
+                </a>
+            <?php endif; ?>
+        <?php endif; ?>
+    </div>
+    <?php
+
+    return (string) ob_get_clean();
+}
+
 add_shortcode('li_product_search', 'li_render_product_search_form');
 add_shortcode('li_product_filters', 'li_render_product_filters');
 add_shortcode('li_product_card_meta', 'li_render_product_card_meta');
+add_shortcode('li_product_b2b_actions', 'li_render_product_b2b_actions');
 
 add_action('pre_get_posts', function (WP_Query $query): void {
     if (is_admin() || !$query->is_main_query()) {

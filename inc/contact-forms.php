@@ -14,6 +14,7 @@ function li_get_contact_form_types(): array
         'quote'           => __('Quote Request', 'lloyds-industrial'),
         'orders'          => __('Order Desk', 'lloyds-industrial'),
         'distributor'     => __('Distributor Inquiry', 'lloyds-industrial'),
+        'reseller_application' => __('Reseller Application', 'lloyds-industrial'),
         'accounting'      => __('Accounting', 'lloyds-industrial'),
         'general'         => __('General Contact', 'lloyds-industrial'),
     ];
@@ -28,6 +29,7 @@ function li_get_contact_form_settings(): array
         'quote_email'           => 'Orderdesk@lloydslaboratories.com',
         'orders_email'          => 'Orderdesk@lloydslaboratories.com',
         'distributor_email'     => 'Marketing@lloydslaboratories.com',
+        'reseller_application_email' => 'Marketing@lloydslaboratories.com',
         'accounting_email'      => 'Payables@lloydslaboratories.com',
         'general_email'         => get_option('admin_email'),
         'confirmation_subject'  => __('We received your Lloyds inquiry', 'lloyds-industrial'),
@@ -115,6 +117,7 @@ function li_sanitize_contact_form_settings(array $settings): array
         'quote_email',
         'orders_email',
         'distributor_email',
+        'reseller_application_email',
         'accounting_email',
         'general_email',
     ];
@@ -178,6 +181,7 @@ function li_render_contact_forms_settings_page(): void
                         'quote_email'           => __('Quote Requests', 'lloyds-industrial'),
                         'orders_email'          => __('Order Desk', 'lloyds-industrial'),
                         'distributor_email'     => __('Distributor Inquiries', 'lloyds-industrial'),
+                        'reseller_application_email' => __('Reseller Applications', 'lloyds-industrial'),
                         'accounting_email'      => __('Accounting', 'lloyds-industrial'),
                         'general_email'         => __('General Contact', 'lloyds-industrial'),
                     ];
@@ -246,13 +250,20 @@ function li_render_contact_form_shortcode(mixed $atts = []): string
 
     $types = li_get_contact_form_types();
     $selected_type = sanitize_key((string) $atts['type']);
+    $query_type = isset($_GET['li_inquiry_type']) ? sanitize_key(wp_unslash((string) $_GET['li_inquiry_type'])) : '';
 
     if (!isset($types[$selected_type])) {
         $selected_type = '';
     }
 
+    if ($selected_type === '' && isset($types[$query_type]) && $query_type !== 'reseller_application') {
+        $selected_type = $query_type;
+    }
+
     $status = isset($_GET['li_contact_status']) ? sanitize_key((string) $_GET['li_contact_status']) : '';
     $title = trim((string) $atts['title']);
+    $is_reseller_application = $selected_type === 'reseller_application';
+    $prefill_product = isset($_GET['li_product']) ? sanitize_text_field(wp_unslash((string) $_GET['li_product'])) : '';
 
     ob_start();
     ?>
@@ -281,17 +292,24 @@ function li_render_contact_form_shortcode(mixed $atts = []): string
         </p>
 
         <div class="li-contact-form__grid">
-            <p>
-                <label for="li_contact_type"><?php esc_html_e('Request Type', 'lloyds-industrial'); ?> <span>*</span></label>
-                <select id="li_contact_type" name="inquiry_type" required>
-                    <option value=""><?php esc_html_e('Select a request type', 'lloyds-industrial'); ?></option>
-                    <?php foreach ($types as $key => $label) : ?>
-                        <option value="<?php echo esc_attr($key); ?>" <?php selected($selected_type, $key); ?>>
-                            <?php echo esc_html($label); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </p>
+            <?php if ($is_reseller_application) : ?>
+                <input type="hidden" name="inquiry_type" value="reseller_application">
+            <?php else : ?>
+                <p>
+                    <label for="li_contact_type"><?php esc_html_e('Request Type', 'lloyds-industrial'); ?> <span>*</span></label>
+                    <select id="li_contact_type" name="inquiry_type" required>
+                        <option value=""><?php esc_html_e('Select a request type', 'lloyds-industrial'); ?></option>
+                        <?php foreach ($types as $key => $label) : ?>
+                            <?php if ($key === 'reseller_application') : ?>
+                                <?php continue; ?>
+                            <?php endif; ?>
+                            <option value="<?php echo esc_attr($key); ?>" <?php selected($selected_type, $key); ?>>
+                                <?php echo esc_html($label); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </p>
+            <?php endif; ?>
             <p>
                 <label for="li_contact_name"><?php esc_html_e('Name', 'lloyds-industrial'); ?> <span>*</span></label>
                 <input id="li_contact_name" name="name" type="text" autocomplete="name" required>
@@ -310,7 +328,7 @@ function li_render_contact_form_shortcode(mixed $atts = []): string
             </p>
             <p>
                 <label for="li_contact_product"><?php esc_html_e('Product / Subject', 'lloyds-industrial'); ?></label>
-                <input id="li_contact_product" name="product" type="text">
+                <input id="li_contact_product" name="product" type="text" value="<?php echo esc_attr($prefill_product); ?>">
             </p>
             <p class="li-contact-form__compact-field">
                 <label for="li_contact_quantity"><?php esc_html_e('Quantity / Volume', 'lloyds-industrial'); ?></label>
@@ -322,8 +340,56 @@ function li_render_contact_form_shortcode(mixed $atts = []): string
             </p>
         </div>
 
+        <?php if ($is_reseller_application) : ?>
+            <div class="li-contact-form__section">
+                <h4><?php esc_html_e('Company Profile', 'lloyds-industrial'); ?></h4>
+                <div class="li-contact-form__grid">
+                    <p>
+                        <label for="li_reseller_website"><?php esc_html_e('Company Website', 'lloyds-industrial'); ?></label>
+                        <input id="li_reseller_website" name="reseller_website" type="url" autocomplete="url">
+                    </p>
+                    <p>
+                        <label for="li_reseller_address"><?php esc_html_e('Company Address', 'lloyds-industrial'); ?> <span>*</span></label>
+                        <input id="li_reseller_address" name="reseller_address" type="text" autocomplete="street-address" required>
+                    </p>
+                    <p>
+                        <label for="li_reseller_territory"><?php esc_html_e('Primary Territory', 'lloyds-industrial'); ?> <span>*</span></label>
+                        <input id="li_reseller_territory" name="reseller_territory" type="text" required>
+                    </p>
+                    <p>
+                        <label for="li_reseller_years"><?php esc_html_e('Years In Business', 'lloyds-industrial'); ?></label>
+                        <input id="li_reseller_years" name="reseller_years" type="text">
+                    </p>
+                    <p>
+                        <label for="li_reseller_customer_types"><?php esc_html_e('Customer Base', 'lloyds-industrial'); ?> <span>*</span></label>
+                        <input id="li_reseller_customer_types" name="reseller_customer_types" type="text" required>
+                    </p>
+                    <p>
+                        <label for="li_reseller_current_lines"><?php esc_html_e('Current Product Lines', 'lloyds-industrial'); ?></label>
+                        <input id="li_reseller_current_lines" name="reseller_current_lines" type="text">
+                    </p>
+                    <p>
+                        <label for="li_reseller_product_interests"><?php esc_html_e('Lloyds Product Interests', 'lloyds-industrial'); ?> <span>*</span></label>
+                        <input id="li_reseller_product_interests" name="reseller_product_interests" type="text" required>
+                    </p>
+                    <p>
+                        <label for="li_reseller_sales_channels"><?php esc_html_e('Sales Channels', 'lloyds-industrial'); ?></label>
+                        <select id="li_reseller_sales_channels" name="reseller_sales_channels">
+                            <option value=""><?php esc_html_e('Select a channel', 'lloyds-industrial'); ?></option>
+                            <option value="outside_sales"><?php esc_html_e('Outside sales', 'lloyds-industrial'); ?></option>
+                            <option value="inside_sales"><?php esc_html_e('Inside sales / counter', 'lloyds-industrial'); ?></option>
+                            <option value="online"><?php esc_html_e('Online sales', 'lloyds-industrial'); ?></option>
+                            <option value="mixed"><?php esc_html_e('Mixed channels', 'lloyds-industrial'); ?></option>
+                        </select>
+                    </p>
+                </div>
+            </div>
+        <?php endif; ?>
+
         <p>
-            <label for="li_contact_message"><?php esc_html_e('Message', 'lloyds-industrial'); ?> <span>*</span></label>
+            <label for="li_contact_message">
+                <?php echo esc_html($is_reseller_application ? __('Application Notes', 'lloyds-industrial') : __('Message', 'lloyds-industrial')); ?> <span>*</span>
+            </label>
             <textarea id="li_contact_message" name="message" rows="4" required></textarea>
         </p>
 
@@ -334,7 +400,9 @@ function li_render_contact_form_shortcode(mixed $atts = []): string
             </label>
         </p>
 
-        <button class="li-button-primary" type="submit"><?php esc_html_e('Send Request', 'lloyds-industrial'); ?></button>
+        <button class="li-button-primary" type="submit">
+            <?php echo esc_html($is_reseller_application ? __('Submit Application', 'lloyds-industrial') : __('Send Request', 'lloyds-industrial')); ?>
+        </button>
     </form>
     <?php
 
@@ -368,8 +436,22 @@ function li_handle_contact_form_submission(): void
     $order_number = sanitize_text_field(wp_unslash((string) ($_POST['order_number'] ?? '')));
     $message = sanitize_textarea_field(wp_unslash((string) ($_POST['message'] ?? '')));
     $consent = !empty($_POST['consent']);
+    $reseller_data = [];
+
+    foreach (li_get_reseller_application_field_labels() as $key => $label) {
+        $raw_value = wp_unslash((string) ($_POST['reseller_' . $key] ?? ''));
+        $reseller_data[$key] = $key === 'website' ? esc_url_raw($raw_value) : sanitize_text_field($raw_value);
+    }
 
     if (!isset($types[$type]) || $name === '' || $email === '' || $message === '' || !$consent) {
+        wp_safe_redirect($redirect_error);
+        exit;
+    }
+
+    if (
+        $type === 'reseller_application'
+        && ($company === '' || $reseller_data['address'] === '' || $reseller_data['territory'] === '' || $reseller_data['customer_types'] === '' || $reseller_data['product_interests'] === '')
+    ) {
         wp_safe_redirect($redirect_error);
         exit;
     }
@@ -389,8 +471,12 @@ function li_handle_contact_form_submission(): void
             update_post_meta((int) $submission_id, '_li_contact_' . $key, $value);
         }
 
+        foreach ($reseller_data as $key => $value) {
+            update_post_meta((int) $submission_id, '_li_reseller_' . $key, $value);
+        }
+
         if (function_exists('li_analytics_track_contact_submission')) {
-            li_analytics_track_contact_submission((int) $submission_id, $type, $meta);
+            li_analytics_track_contact_submission((int) $submission_id, $type, array_merge($meta, $reseller_data));
         }
     }
 
@@ -404,10 +490,25 @@ function li_handle_contact_form_submission(): void
         'order_number' => $order_number,
         'message'      => $message,
         'source_url'   => $source_url,
+        'reseller'     => $reseller_data,
     ]);
 
     wp_safe_redirect($redirect_success);
     exit;
+}
+
+function li_get_reseller_application_field_labels(): array
+{
+    return [
+        'website'           => __('Company Website', 'lloyds-industrial'),
+        'address'           => __('Company Address', 'lloyds-industrial'),
+        'territory'         => __('Primary Territory', 'lloyds-industrial'),
+        'years'             => __('Years In Business', 'lloyds-industrial'),
+        'customer_types'    => __('Customer Base', 'lloyds-industrial'),
+        'current_lines'     => __('Current Product Lines', 'lloyds-industrial'),
+        'product_interests' => __('Lloyds Product Interests', 'lloyds-industrial'),
+        'sales_channels'    => __('Sales Channels', 'lloyds-industrial'),
+    ];
 }
 
 function li_send_contact_form_notifications(string $type, array $data): void
@@ -426,10 +527,21 @@ function li_send_contact_form_notifications(string $type, array $data): void
         'Quantity / Volume: ' . $data['quantity'],
         'Order Number: ' . $data['order_number'],
         'Source: ' . $data['source_url'],
-        '',
-        'Message:',
-        $data['message'],
     ];
+
+    if ($type === 'reseller_application' && !empty($data['reseller']) && is_array($data['reseller'])) {
+        $lines[] = '';
+        $lines[] = 'Reseller Application:';
+
+        foreach (li_get_reseller_application_field_labels() as $key => $label) {
+            $lines[] = wp_strip_all_tags((string) $label) . ': ' . (string) ($data['reseller'][$key] ?? '');
+        }
+    }
+
+    $lines[] = '';
+    $lines[] = 'Message:';
+    $lines[] = $data['message'];
+
     $headers = [];
 
     if (!empty($data['email'])) {
@@ -453,6 +565,12 @@ add_shortcode('li_contact_form', 'li_render_contact_form_shortcode');
 add_shortcode('contact_form', 'li_render_contact_form_shortcode');
 add_shortcode('quote_request_form', function (): string {
     return li_render_contact_form_shortcode(['type' => 'quote', 'title' => __('Quote Request', 'lloyds-industrial')]);
+});
+add_shortcode('li_reseller_application_form', function (): string {
+    return li_render_contact_form_shortcode([
+        'type'  => 'reseller_application',
+        'title' => __('Reseller Application', 'lloyds-industrial'),
+    ]);
 });
 
 add_filter('manage_li_contact_msg_posts_columns', function (array $columns): array {
@@ -497,9 +615,25 @@ add_action('manage_li_contact_msg_posts_custom_column', function (string $column
     }
 
     if ($column === 'li_contact_meta') {
+        $type = (string) get_post_meta($post_id, '_li_contact_type', true);
         $product = (string) get_post_meta($post_id, '_li_contact_product', true);
         $quantity = (string) get_post_meta($post_id, '_li_contact_quantity', true);
         $order_number = (string) get_post_meta($post_id, '_li_contact_order_number', true);
+
+        if ($type === 'reseller_application') {
+            $territory = (string) get_post_meta($post_id, '_li_reseller_territory', true);
+            $interests = (string) get_post_meta($post_id, '_li_reseller_product_interests', true);
+
+            if ($territory !== '') {
+                echo esc_html(sprintf(__('Territory: %s', 'lloyds-industrial'), $territory));
+            }
+
+            if ($interests !== '') {
+                echo '<br><span class="description">' . esc_html($interests) . '</span>';
+            }
+
+            return;
+        }
 
         if ($product !== '') {
             echo esc_html($product);
@@ -542,17 +676,37 @@ function li_render_contact_submission_details_metabox(WP_Post $post): void
         'source_url'   => __('Source URL', 'lloyds-industrial'),
     ];
     $types = li_get_contact_form_types();
+    $submission_type = (string) get_post_meta($post->ID, '_li_contact_type', true);
     $status = (string) get_post_meta($post->ID, '_li_contact_status', true);
-    $status = in_array($status, ['new', 'in_progress', 'closed'], true) ? $status : 'new';
+    $status = in_array($status, ['new', 'in_progress', 'accepted', 'rejected', 'closed'], true) ? $status : 'new';
     ?>
     <p>
         <label for="li_contact_status"><strong><?php esc_html_e('Status', 'lloyds-industrial'); ?></strong></label>
         <select id="li_contact_status" name="li_contact_status">
             <option value="new" <?php selected($status, 'new'); ?>><?php esc_html_e('New', 'lloyds-industrial'); ?></option>
             <option value="in_progress" <?php selected($status, 'in_progress'); ?>><?php esc_html_e('In Progress', 'lloyds-industrial'); ?></option>
+            <?php if ($submission_type === 'reseller_application') : ?>
+                <option value="accepted" <?php selected($status, 'accepted'); ?>><?php esc_html_e('Accepted', 'lloyds-industrial'); ?></option>
+                <option value="rejected" <?php selected($status, 'rejected'); ?>><?php esc_html_e('Rejected', 'lloyds-industrial'); ?></option>
+            <?php endif; ?>
             <option value="closed" <?php selected($status, 'closed'); ?>><?php esc_html_e('Closed', 'lloyds-industrial'); ?></option>
         </select>
     </p>
+    <?php if ($submission_type === 'reseller_application') : ?>
+        <?php
+        $created_user_id = (int) get_post_meta($post->ID, '_li_contact_created_user_id', true);
+        $created_reseller_id = (int) get_post_meta($post->ID, '_li_contact_created_reseller_id', true);
+        ?>
+        <p class="description">
+            <?php esc_html_e('Setting this application to Accepted creates or links a Distributor user account and creates a draft reseller directory listing.', 'lloyds-industrial'); ?>
+            <?php if ($created_user_id) : ?>
+                <br><?php echo esc_html(sprintf(__('Linked user ID: %d', 'lloyds-industrial'), $created_user_id)); ?>
+            <?php endif; ?>
+            <?php if ($created_reseller_id) : ?>
+                <br><a href="<?php echo esc_url(get_edit_post_link($created_reseller_id)); ?>"><?php esc_html_e('Edit reseller listing', 'lloyds-industrial'); ?></a>
+            <?php endif; ?>
+        </p>
+    <?php endif; ?>
     <table class="widefat striped">
         <tbody>
             <?php foreach ($fields as $key => $label) : ?>
@@ -578,6 +732,27 @@ function li_render_contact_submission_details_metabox(WP_Post $post): void
             <?php endforeach; ?>
         </tbody>
     </table>
+
+    <?php if ($submission_type === 'reseller_application') : ?>
+        <h3><?php esc_html_e('Reseller Application Details', 'lloyds-industrial'); ?></h3>
+        <table class="widefat striped">
+            <tbody>
+                <?php foreach (li_get_reseller_application_field_labels() as $key => $label) : ?>
+                    <?php $value = (string) get_post_meta($post->ID, '_li_reseller_' . $key, true); ?>
+                    <tr>
+                        <th scope="row" style="width:180px;"><?php echo esc_html($label); ?></th>
+                        <td>
+                            <?php if ($key === 'website' && $value !== '') : ?>
+                                <a href="<?php echo esc_url($value); ?>"><?php echo esc_html($value); ?></a>
+                            <?php else : ?>
+                                <?php echo esc_html($value ?: '-'); ?>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
     <?php
 }
 
@@ -597,13 +772,22 @@ add_action('save_post_li_contact_msg', function (int $post_id): void {
         return;
     }
 
+    $type = (string) get_post_meta($post_id, '_li_contact_type', true);
+    $allowed_statuses = $type === 'reseller_application'
+        ? ['new', 'in_progress', 'accepted', 'rejected', 'closed']
+        : ['new', 'in_progress', 'closed'];
+
     $status = isset($_POST['li_contact_status'])
         ? sanitize_key(wp_unslash((string) $_POST['li_contact_status']))
         : 'new';
 
-    if (!in_array($status, ['new', 'in_progress', 'closed'], true)) {
+    if (!in_array($status, $allowed_statuses, true)) {
         $status = 'new';
     }
 
     update_post_meta($post_id, '_li_contact_status', $status);
+
+    if ($type === 'reseller_application' && $status === 'accepted' && function_exists('li_accept_reseller_application')) {
+        li_accept_reseller_application($post_id);
+    }
 });

@@ -447,6 +447,56 @@ a {
     max-width: 760px;
 }
 
+.li-account-sds {
+    margin-top: 28px;
+    padding-top: 28px;
+    border-top: 1px solid var(--li-border);
+}
+
+.li-account-sds__header {
+    max-width: 780px;
+    margin-bottom: 20px;
+}
+
+.li-account-sds__header h2 {
+    margin: 0.2em 0;
+}
+
+.li-account-sds__list {
+    display: grid;
+    gap: 14px;
+}
+
+.li-account-sds__item,
+.li-account-sds__empty {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 18px;
+    border: 1px solid var(--li-border);
+    border-radius: var(--li-radius-md);
+    background: var(--li-white);
+}
+
+.li-account-sds__item h3 {
+    margin: 0 0 4px;
+    color: var(--li-primary);
+    font-size: 1rem;
+}
+
+.li-account-sds__item p,
+.li-account-sds__empty p {
+    margin: 0;
+}
+
+.li-account-sds__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
 .li-woo-account {
     max-width: var(--li-wide);
 }
@@ -737,6 +787,20 @@ a {
     color: color-mix(in srgb, var(--li-text) 78%, white);
 }
 
+.li-contact-form__section {
+    margin: 10px 0 24px;
+    padding: 18px;
+    border: 1px solid var(--li-border);
+    border-radius: var(--li-radius-md);
+    background: color-mix(in srgb, var(--li-surface) 64%, white);
+}
+
+.li-contact-form__section h4 {
+    margin: 0 0 16px;
+    color: var(--li-primary);
+    font-size: 1rem;
+}
+
 .li-contact-form__consent label {
     align-items: flex-start;
     display: flex;
@@ -773,6 +837,71 @@ a {
 .li-contact-form__honeypot {
     left: -9999px;
     position: absolute;
+}
+
+.li-reseller-finder {
+    display: grid;
+    gap: 28px;
+}
+
+.li-reseller-finder__header {
+    max-width: 820px;
+}
+
+.li-reseller-finder__header h2 {
+    margin: 0.2em 0;
+}
+
+.li-reseller-finder__search {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid var(--li-border);
+    border-radius: var(--li-radius-md);
+    background: var(--li-white);
+    box-shadow: var(--li-shadow-sm);
+}
+
+.li-reseller-finder__search input {
+    flex: 1 1 280px;
+    min-height: 44px;
+    border: 1px solid var(--li-border);
+    border-radius: var(--li-radius-sm);
+    padding: 9px 12px;
+}
+
+.li-reseller-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.li-reseller-card,
+.li-reseller-finder__empty {
+    padding: 24px;
+    border: 1px solid var(--li-border);
+    border-radius: var(--li-radius-md);
+    background: var(--li-white);
+    box-shadow: var(--li-shadow-sm);
+}
+
+.li-reseller-card h3,
+.li-reseller-finder__empty h3 {
+    margin-top: 0;
+    color: var(--li-primary);
+}
+
+.li-reseller-card__location {
+    color: var(--li-accent);
+    font-weight: 800;
+}
+
+.li-reseller-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
 }
 
 .li-contact-routing-grid {
@@ -1420,6 +1549,24 @@ a {
     color: var(--li-text);
     font-size: 0.78rem;
     font-weight: 800;
+}
+
+.li-product-b2b-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    padding: 18px;
+    border: 1px solid var(--li-border);
+    border-radius: var(--li-radius-md);
+    background: var(--li-white);
+    box-shadow: var(--li-shadow-sm);
+}
+
+.li-product-b2b-actions p {
+    flex: 1 1 100%;
+    margin: 0;
+    color: color-mix(in srgb, var(--li-text) 78%, white);
 }
 
 /* Product Carousel */

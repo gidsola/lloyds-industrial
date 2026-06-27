@@ -15,7 +15,7 @@ function li_get_global_layout_defaults(): array
 {
     return [
         'partner_mode'               => false,
-        'quote_mode'                 => false,
+        'quote_mode'                 => true,
         'documents_mode'             => 'controlled',
         'sticky_header'              => true,
         'compact_header'             => false,
@@ -27,12 +27,12 @@ function li_get_global_layout_defaults(): array
         'announcement_text'          => __('Industrial chemical solutions engineered for modern industry.', 'lloyds-industrial'),
         'announcement_link_label'    => __('Contact technical support', 'lloyds-industrial'),
         'announcement_link_url'      => '/contact',
-        'header_primary_label'       => __('Shop', 'lloyds-industrial'),
+        'header_primary_label'       => __('Products', 'lloyds-industrial'),
         'header_primary_url'         => '/products',
         'header_secondary_label'     => __('Request Quote', 'lloyds-industrial'),
         'header_secondary_url'       => '/contact',
         'show_account_link'          => true,
-        'show_cart_link'             => true,
+        'show_cart_link'             => false,
         'footer_tagline'             => __('Industrial chemical solutions, product knowledge, and SDS access for professional customers.', 'lloyds-industrial'),
         'footer_legal_text'          => '&copy; {year} {site}. All rights reserved.',
         'footer_note_enabled'        => true,
