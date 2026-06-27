@@ -87,6 +87,8 @@ add_action('admin_enqueue_scripts', function (string $hook_suffix): void {
         || $hook_suffix === 'mailing-list_page_lloyds-mail-campaigns'
         || $hook_suffix === 'mailing-list_page_lloyds-mail-campaign-builder'
         || $hook_suffix === 'tools_page_lloyds-product-media-organizer'
+        || $hook_suffix === 'upload.php'
+        || $hook_suffix === 'media-new.php'
         || in_array($admin_page, ['lloyds-mailing-list', 'lloyds-mail-campaigns', 'lloyds-mail-campaign-builder'], true)
         || ($screen && in_array((string) $screen->post_type, $styled_post_types, true))
     ) {
@@ -98,6 +100,31 @@ add_action('admin_enqueue_scripts', function (string $hook_suffix): void {
             [],
             filemtime(get_template_directory() . '/assets/css/settings-admin.css')
         );
+    }
+
+    if (in_array($hook_suffix, ['upload.php', 'media-new.php'], true)) {
+        wp_enqueue_script(
+            'lloyds-admin',
+            get_template_directory_uri() . '/assets/js/admin.js',
+            ['jquery'],
+            filemtime(get_template_directory() . '/assets/js/admin.js'),
+            true
+        );
+
+        wp_localize_script('lloyds-admin', 'lloydsAdmin', [
+            'ajaxUrl' => admin_url('admin-ajax.php'),
+            'nonce'   => wp_create_nonce('li_admin_search_products'),
+            'mediaLibrary' => [
+                'enabled' => true,
+                'title' => __('Lloyds Media Library', 'lloyds-industrial'),
+                'copy' => __('Product images, flipbooks, and protected SDS files are now tracked with Lloyds-aware context so the library stays useful after imports.', 'lloyds-industrial'),
+                'cards' => [
+                    __('Woo product images organize by category and item.', 'lloyds-industrial'),
+                    __('Flipbook PDFs stay with their catalogue records.', 'lloyds-industrial'),
+                    __('SDS files remain protected and purchase-gated.', 'lloyds-industrial'),
+                ],
+            ],
+        ]);
     }
 
     if ($hook_suffix === 'toplevel_page_lloyds-mega-menu') {

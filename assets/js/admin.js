@@ -1,4 +1,12 @@
 (() => {
+    const escapeText = (value) => String(value || '').replace(/[&<>"']/g, (character) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;',
+    }[character]));
+
     const bindMediaPicker = (container) => {
         const input = container.querySelector('[data-li-media-id]');
         const label = container.querySelector('[data-li-media-label]');
@@ -8,6 +16,62 @@
         if (!input || !selectButton || !window.wp?.media) {
             return;
         }
+
+        const renderSelectionCard = (attachment) => {
+            let card = container.querySelector('[data-li-media-card]');
+
+            if (!attachment || !attachment.id) {
+                if (card) {
+                    card.remove();
+                }
+
+                return;
+            }
+
+            if (!card) {
+                card = document.createElement('span');
+                card.className = 'li-media-picker-card';
+                card.dataset.liMediaCard = 'true';
+                input.insertAdjacentElement('afterend', card);
+            }
+
+            const title = attachment.filename || attachment.title || `Attachment ${attachment.id}`;
+            const type = attachment.mime || attachment.type || 'file';
+            const thumb = attachment.sizes?.thumbnail?.url || attachment.icon || '';
+            const preview = thumb
+                ? `<span class="li-media-picker-card__preview"><img src="${escapeText(thumb)}" alt=""></span>`
+                : '<span class="li-media-picker-card__preview li-media-picker-card__preview--icon">File</span>';
+
+            card.innerHTML = `
+                ${preview}
+                <span class="li-media-picker-card__body">
+                    <strong>${escapeText(title)}</strong>
+                    <small>${escapeText(type)} - #${escapeText(attachment.id)}</small>
+                </span>
+            `;
+        };
+
+        const hydrateSelection = () => {
+            const attachmentId = parseInt(input.value || '0', 10);
+
+            if (!attachmentId || !window.wp?.media?.attachment) {
+                renderSelectionCard(null);
+                return;
+            }
+
+            const attachment = window.wp.media.attachment(attachmentId);
+            attachment.fetch().done(() => {
+                renderSelectionCard({
+                    id: attachmentId,
+                    filename: attachment.attributes.filename,
+                    title: attachment.attributes.title,
+                    mime: attachment.attributes.mime,
+                    type: attachment.attributes.type,
+                    sizes: attachment.attributes.sizes,
+                    icon: attachment.attributes.icon,
+                });
+            });
+        };
 
         selectButton.addEventListener('click', (event) => {
             event.preventDefault();
@@ -41,6 +105,8 @@
                     label.textContent = attachment.filename || attachment.title || `Attachment ${attachment.id}`;
                 }
 
+                renderSelectionCard(attachment);
+
                 if (removeButton) {
                     removeButton.hidden = false;
                 }
@@ -59,9 +125,12 @@
                     label.textContent = 'No file selected';
                 }
 
+                renderSelectionCard(null);
                 removeButton.hidden = true;
             });
         }
+
+        hydrateSelection();
     };
 
     const bindProductFinder = (container) => {
@@ -155,4 +224,27 @@
 
     document.querySelectorAll('[data-li-media-picker]').forEach(bindMediaPicker);
     document.querySelectorAll('[data-li-product-finder]').forEach(bindProductFinder);
+
+    if (window.lloydsAdmin?.mediaLibrary?.enabled) {
+        const heading = document.querySelector('.wrap h1');
+        const existing = document.querySelector('.li-media-library-banner');
+
+        if (heading && !existing) {
+            const settings = window.lloydsAdmin.mediaLibrary;
+            const banner = document.createElement('section');
+            banner.className = 'li-media-library-banner';
+            banner.innerHTML = `
+                <div>
+                    <p class="li-settings-kicker">Media Library</p>
+                    <h2>${escapeText(settings.title || 'Lloyds Media Library')}</h2>
+                    <p>${escapeText(settings.copy || '')}</p>
+                </div>
+                <div class="li-media-library-banner__cards">
+                    ${(settings.cards || []).map((card) => `<span>${escapeText(card)}</span>`).join('')}
+                </div>
+            `;
+
+            heading.insertAdjacentElement('afterend', banner);
+        }
+    }
 })();
