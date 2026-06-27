@@ -533,6 +533,154 @@
     line-height: 1.2;
 }
 
+.li-seo-editor-panel-wrap {
+    box-sizing: border-box;
+    margin: 0 auto 22px;
+    max-width: 980px;
+    padding: 0 24px;
+    width: 100%;
+}
+
+.li-seo-editor-panel {
+    background: #fff;
+    border: 1px solid #dde5e2;
+    border-radius: 8px;
+    box-shadow: 0 10px 28px rgba(24, 33, 38, 0.04);
+    color: #182126;
+    display: grid;
+    gap: 18px;
+    padding: 18px;
+}
+
+.li-seo-editor-panel,
+.li-seo-editor-panel input,
+.li-seo-editor-panel textarea,
+.li-seo-editor-panel select,
+.li-seo-editor-panel button {
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.li-seo-editor-panel__header {
+    align-items: center;
+    background: #17443b;
+    border-radius: 8px;
+    color: #fff;
+    display: grid;
+    gap: 16px;
+    grid-template-columns: auto minmax(0, 1fr);
+    padding: 18px;
+}
+
+.li-seo-editor-panel__header > span {
+    align-items: center;
+    background: rgba(217, 164, 65, 0.14);
+    border: 1px solid rgba(217, 164, 65, 0.3);
+    border-radius: 999px;
+    color: #d9a441;
+    display: inline-flex;
+    font-size: 11px;
+    font-weight: 900;
+    height: 42px;
+    justify-content: center;
+    letter-spacing: 0.08em;
+    padding: 0 14px;
+    text-transform: uppercase;
+}
+
+.li-seo-editor-panel__header h2 {
+    color: #fff;
+    font-size: 20px;
+    line-height: 1.25;
+    margin: 0 0 5px;
+}
+
+.li-seo-editor-panel__header p {
+    color: rgba(255, 255, 255, 0.82);
+    line-height: 1.5;
+    margin: 0;
+}
+
+.li-seo-editor-panel__grid {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.li-seo-editor-panel__field {
+    display: grid;
+    gap: 7px;
+}
+
+.li-seo-editor-panel__field span,
+.li-seo-editor-panel__media strong {
+    color: #17443b;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.li-seo-editor-panel__field input,
+.li-seo-editor-panel__field textarea,
+.li-seo-editor-panel__field select {
+    border: 1px solid #cfd9d5;
+    border-radius: 6px;
+    box-sizing: border-box;
+    color: #182126;
+    min-height: 38px;
+    padding: 7px 10px;
+    width: 100%;
+}
+
+.li-seo-editor-panel__field input:focus,
+.li-seo-editor-panel__field textarea:focus,
+.li-seo-editor-panel__field select:focus {
+    border-color: #2e5f73;
+    box-shadow: 0 0 0 1px #2e5f73;
+    outline: none;
+}
+
+.li-seo-editor-panel__field em {
+    color: #66736f;
+    font-size: 12px;
+    font-style: normal;
+    line-height: 1.4;
+}
+
+.li-seo-editor-panel__social {
+    background: #f8faf9;
+    border: 1px solid #dde5e2;
+    border-radius: 8px;
+    display: grid;
+    gap: 14px;
+    padding: 16px;
+}
+
+.li-seo-editor-panel__social h3 {
+    color: #17443b;
+    font-size: 16px;
+    margin: 0;
+}
+
+.li-seo-editor-panel__media {
+    background: #fff;
+    border: 1px solid #dde5e2;
+    border-radius: 8px;
+    display: grid;
+    gap: 8px;
+    padding: 12px;
+}
+
+.li-seo-editor-panel__media > span {
+    color: #66736f;
+}
+
+.li-seo-editor-panel__media .button {
+    border-radius: 6px;
+    font-weight: 800;
+    margin: 0 6px 0 0;
+}
+
 .li-mail-campaign-list {
     display: grid;
     gap: 14px;
@@ -690,6 +838,576 @@
     text-decoration: underline;
 }
 
+.post-type-product #titlediv #title,
+.post-type-li_document #titlediv #title,
+.post-type-li_contact_msg #titlediv #title,
+.post-type-li_mail_subscriber #titlediv #title,
+.post-type-li_mail_campaign #titlediv #title,
+.post-type-li_reseller #titlediv #title,
+.post-type-lloyds_flipbook #titlediv #title {
+    border-color: #cfd9d5;
+    border-radius: 8px;
+    box-shadow: 0 10px 28px rgba(24, 33, 38, 0.04);
+    min-height: 42px;
+}
+
+.post-type-li_document #poststuff,
+.post-type-li_contact_msg #poststuff,
+.post-type-li_mail_subscriber #poststuff,
+.post-type-li_mail_campaign #poststuff,
+.post-type-li_reseller #poststuff,
+.post-type-lloyds_flipbook #poststuff {
+    max-width: 1280px;
+}
+
+.post-type-li_document .postbox,
+.post-type-li_contact_msg .postbox,
+.post-type-li_mail_subscriber .postbox,
+.post-type-li_mail_campaign .postbox,
+.post-type-li_reseller .postbox,
+.post-type-lloyds_flipbook .postbox {
+    border-color: #dde5e2;
+    border-radius: 8px;
+    box-shadow: 0 10px 28px rgba(24, 33, 38, 0.04);
+    overflow: hidden;
+}
+
+.post-type-li_document .postbox-header,
+.post-type-li_contact_msg .postbox-header,
+.post-type-li_mail_subscriber .postbox-header,
+.post-type-li_mail_campaign .postbox-header,
+.post-type-lloyds_flipbook .postbox-header {
+    background: #fff;
+    border-bottom-color: #dde5e2;
+}
+
+.post-type-li_document .postbox-header h2,
+.post-type-li_contact_msg .postbox-header h2,
+.post-type-li_mail_subscriber .postbox-header h2,
+.post-type-li_mail_campaign .postbox-header h2,
+.post-type-lloyds_flipbook .postbox-header h2 {
+    color: #17443b;
+    font-weight: 800;
+}
+
+.li-editor-panel {
+    display: grid;
+    gap: 16px;
+}
+
+.li-editor-panel--compact {
+    gap: 14px;
+}
+
+.li-editor-panel__intro {
+    align-items: center;
+    background: #fff;
+    border: 1px solid #dde5e2;
+    border-radius: 8px;
+    display: flex;
+    gap: 16px;
+    padding: 18px;
+}
+
+.li-editor-panel--compact .li-editor-panel__intro {
+    border: 0;
+    border-bottom: 1px solid #edf1ef;
+    border-radius: 0;
+    margin: -6px -12px 4px;
+    padding: 16px 12px;
+}
+
+.li-editor-panel__intro .dashicons {
+    align-items: center;
+    background: #edf4f1;
+    border-radius: 8px;
+    color: #17443b;
+    display: inline-flex;
+    flex: 0 0 auto;
+    font-size: 24px;
+    height: 46px;
+    justify-content: center;
+    width: 46px;
+}
+
+.li-editor-panel__intro h2 {
+    color: #17443b;
+    font-size: 18px;
+    line-height: 1.25;
+    margin: 0;
+    padding: 0;
+}
+
+.li-editor-panel__intro p {
+    color: #66736f;
+    line-height: 1.5;
+    margin: 5px 0 0;
+}
+
+.li-editor-panel__grid {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.li-editor-panel__field {
+    display: grid;
+    gap: 7px;
+    margin: 0;
+}
+
+.li-editor-panel__field > span,
+.li-editor-panel__field strong,
+.li-editor-panel__shortcodes > span {
+    color: #17443b;
+    display: block;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.li-editor-panel__field input:not([type="checkbox"]),
+.li-editor-panel__field textarea,
+.li-editor-panel__field select,
+.li-editor-panel input[type="text"],
+.li-editor-panel input[type="email"],
+.li-editor-panel input[type="url"],
+.li-editor-panel input[type="tel"],
+.li-editor-panel input[type="number"],
+.li-editor-panel input[type="search"],
+.li-editor-panel textarea,
+.li-editor-panel select {
+    border-color: #cfd9d5;
+    border-radius: 6px;
+    box-sizing: border-box;
+    max-width: none;
+    width: 100%;
+}
+
+.li-editor-panel__field input:focus,
+.li-editor-panel__field textarea:focus,
+.li-editor-panel__field select:focus,
+.li-editor-panel input:focus,
+.li-editor-panel textarea:focus,
+.li-editor-panel select:focus {
+    border-color: #2e5f73;
+    box-shadow: 0 0 0 1px #2e5f73;
+}
+
+.li-editor-panel .description {
+    color: #66736f;
+    display: block;
+    line-height: 1.45;
+    margin-top: 6px;
+}
+
+.li-editor-panel__notice,
+.li-editor-panel__selected-file,
+.li-editor-panel__shortcodes {
+    background: #f8faf9;
+    border: 1px solid #dde5e2;
+    border-radius: 8px;
+    color: #66736f;
+    line-height: 1.5;
+    padding: 12px;
+}
+
+.li-editor-panel__selected-file span {
+    color: #2e5f73;
+    display: block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.li-editor-panel__selected-file strong {
+    color: #17443b;
+    display: block;
+    overflow-wrap: anywhere;
+}
+
+.li-editor-panel__selected-file a {
+    display: inline-block;
+    font-weight: 700;
+    margin-top: 6px;
+}
+
+.li-editor-panel__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.li-editor-panel__actions .button {
+    margin: 0;
+}
+
+.li-editor-panel .button-primary {
+    background: #17443b;
+    border-color: #17443b;
+}
+
+.li-editor-panel .button-primary:hover,
+.li-editor-panel .button-primary:focus {
+    background: #12332e;
+    border-color: #12332e;
+}
+
+.li-editor-panel__toggle {
+    align-items: flex-start;
+    display: flex;
+    gap: 9px;
+    line-height: 1.45;
+}
+
+.li-editor-panel__shortcodes {
+    display: grid;
+    gap: 7px;
+}
+
+.li-editor-panel__shortcodes code {
+    background: #fff;
+    border: 1px solid #dde5e2;
+    border-radius: 6px;
+    color: #17443b;
+    display: block;
+    line-height: 1.4;
+    padding: 7px 8px;
+    white-space: normal;
+}
+
+.li-editor-panel__table {
+    border-color: #dde5e2;
+    border-radius: 8px;
+    box-shadow: none;
+    overflow: hidden;
+}
+
+.li-editor-panel__table th {
+    color: #17443b;
+    font-weight: 800;
+}
+
+.li-editor-panel__stats {
+    display: grid;
+    gap: 8px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0;
+}
+
+.li-editor-panel__stats div {
+    background: #f8faf9;
+    border: 1px solid #dde5e2;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.li-editor-panel__stats dt {
+    color: #66736f;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.li-editor-panel__stats dd {
+    color: #17443b;
+    font-size: 16px;
+    font-weight: 800;
+    margin: 4px 0 0;
+}
+
+.li-product-admin-panel {
+    background: #f8faf9;
+    border-top: 1px solid #dde5e2;
+}
+
+.li-product-admin-panel .form-field {
+    border-bottom: 1px solid #edf1ef;
+    margin: 0 !important;
+    padding: 16px 20px !important;
+}
+
+.li-product-admin-panel input,
+.li-product-admin-panel textarea {
+    border-color: #cfd9d5;
+    border-radius: 6px;
+}
+
+.li-product-admin-panel [data-li-media-picker] {
+    display: grid;
+    gap: 8px;
+}
+
+.post-type-lloyds_flipbook #post-body-content {
+    background: #fff;
+    border: 1px solid #dde5e2;
+    border-radius: 8px;
+    box-shadow: 0 10px 28px rgba(24, 33, 38, 0.04);
+    box-sizing: border-box;
+    margin-bottom: 16px;
+    padding: 18px;
+}
+
+.post-type-lloyds_flipbook #titlediv {
+    margin: 0;
+}
+
+.post-type-lloyds_flipbook #titlediv #title-prompt-text {
+    color: #66736f;
+    padding: 10px 12px;
+}
+
+.post-type-lloyds_flipbook #postdivrich,
+.post-type-lloyds_flipbook #postexcerpt .postbox-header {
+    display: none;
+}
+
+.post-type-lloyds_flipbook #lloyds_flipbook_pdf {
+    border: 0;
+    box-shadow: none;
+    background: transparent;
+}
+
+.post-type-lloyds_flipbook #lloyds_flipbook_pdf .postbox-header {
+    display: none;
+}
+
+.post-type-lloyds_flipbook #lloyds_flipbook_pdf .inside {
+    margin: 0;
+    padding: 0;
+}
+
+.lloyds-flipbook-builder {
+    background: #fff;
+    border: 1px solid #dde5e2;
+    border-radius: 8px;
+    box-shadow: 0 10px 28px rgba(24, 33, 38, 0.04);
+    padding: 18px;
+}
+
+.lloyds-flipbook-builder .li-editor-panel__intro {
+    background: #17443b;
+    border-color: #12332e;
+    color: #fff;
+}
+
+.lloyds-flipbook-builder .li-editor-panel__intro .dashicons {
+    background: rgba(255, 255, 255, 0.12);
+    color: #d9a441;
+}
+
+.lloyds-flipbook-builder .li-editor-panel__intro h2 {
+    color: #fff;
+}
+
+.lloyds-flipbook-builder .li-editor-panel__intro p {
+    color: rgba(255, 255, 255, 0.82);
+}
+
+.lloyds-flipbook-builder__grid {
+    align-items: stretch;
+    display: grid;
+    gap: 16px;
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+}
+
+.lloyds-flipbook-builder__main,
+.lloyds-flipbook-builder__side {
+    background: #f8faf9;
+    border: 1px solid #dde5e2;
+    border-radius: 8px;
+    display: grid;
+    gap: 14px;
+    padding: 16px;
+}
+
+.lloyds-flipbook-builder__main .li-editor-panel__selected-file {
+    background: #fff;
+    min-height: 108px;
+}
+
+.lloyds-flipbook-builder__main .li-editor-panel__selected-file strong {
+    font-size: 20px;
+    line-height: 1.25;
+}
+
+.lloyds-flipbook-builder__steps {
+    background: #fff;
+    border: 1px solid #dde5e2;
+    border-radius: 8px;
+    counter-reset: flipbook-step;
+    display: grid;
+    gap: 10px;
+    list-style: none;
+    margin: 0;
+    padding: 12px;
+}
+
+.lloyds-flipbook-builder__steps li {
+    align-items: center;
+    color: #182126;
+    display: grid;
+    gap: 10px;
+    grid-template-columns: 30px minmax(0, 1fr);
+    line-height: 1.4;
+}
+
+.lloyds-flipbook-builder__steps li::before {
+    align-items: center;
+    background: #17443b;
+    border-radius: 999px;
+    color: #fff;
+    content: counter(flipbook-step);
+    counter-increment: flipbook-step;
+    display: inline-flex;
+    font-size: 12px;
+    font-weight: 800;
+    height: 30px;
+    justify-content: center;
+    width: 30px;
+}
+
+.post-type-li_reseller #poststuff {
+    max-width: 1280px;
+}
+
+.post-type-li_reseller #titlediv #title {
+    border-color: #cfd9d5;
+    border-radius: 8px;
+    box-shadow: 0 10px 28px rgba(24, 33, 38, 0.04);
+    min-height: 42px;
+}
+
+.post-type-li_reseller #li_reseller_details {
+    border: 0;
+    box-shadow: none;
+    background: transparent;
+}
+
+.post-type-li_reseller #li_reseller_details .postbox-header {
+    display: none;
+}
+
+.post-type-li_reseller #li_reseller_details .inside {
+    margin: 0;
+    padding: 0;
+}
+
+.li-reseller-builder {
+    display: grid;
+    gap: 16px;
+}
+
+.li-reseller-builder__intro,
+.li-reseller-builder__section {
+    background: #fff;
+    border: 1px solid #dde5e2;
+    border-radius: 8px;
+    box-shadow: 0 10px 28px rgba(24, 33, 38, 0.04);
+}
+
+.li-reseller-builder__intro {
+    align-items: center;
+    display: flex;
+    gap: 16px;
+    padding: 20px;
+}
+
+.li-reseller-builder__intro .dashicons {
+    align-items: center;
+    background: #edf4f1;
+    border-radius: 8px;
+    color: #17443b;
+    display: inline-flex;
+    flex: 0 0 auto;
+    font-size: 24px;
+    height: 46px;
+    justify-content: center;
+    width: 46px;
+}
+
+.li-reseller-builder__intro h2,
+.li-reseller-builder__section h3 {
+    color: #17443b;
+    margin: 0;
+}
+
+.li-reseller-builder__intro p,
+.li-reseller-builder__section header p {
+    color: #66736f;
+    line-height: 1.5;
+    margin: 6px 0 0;
+}
+
+.li-reseller-builder__grid {
+    align-items: start;
+    display: grid;
+    gap: 16px;
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
+}
+
+.li-reseller-builder__section {
+    overflow: hidden;
+}
+
+.li-reseller-builder__section header {
+    border-bottom: 1px solid #edf1ef;
+    padding: 18px;
+}
+
+.li-reseller-builder__section:nth-child(3),
+.li-reseller-builder__section:nth-child(4) {
+    grid-column: 1 / -1;
+}
+
+.li-reseller-builder__fields {
+    display: grid;
+    gap: 14px;
+    padding: 18px;
+}
+
+.li-reseller-builder__section:nth-child(3) .li-reseller-builder__fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.li-reseller-builder__field {
+    display: grid;
+    gap: 7px;
+}
+
+.li-reseller-builder__field span {
+    color: #17443b;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.li-reseller-builder__field input,
+.li-reseller-builder__field textarea {
+    border-color: #cfd9d5;
+    border-radius: 6px;
+    box-sizing: border-box;
+    max-width: none;
+    width: 100%;
+}
+
+.li-reseller-builder__field input:focus,
+.li-reseller-builder__field textarea:focus {
+    border-color: #2e5f73;
+    box-shadow: 0 0 0 1px #2e5f73;
+}
+
+.li-reseller-builder__field input[readonly],
+.li-reseller-builder__field textarea[readonly] {
+    background: #f8faf9;
+    color: #66736f;
+}
+
 @media (max-width: 1180px) {
     .li-analytics-kpi-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -704,7 +1422,13 @@
     }
 
     .li-mail-campaign-card,
-    .li-mail-builder {
+    .li-mail-builder,
+    .li-seo-editor-panel__grid,
+    .li-seo-editor-panel__header,
+    .li-editor-panel__grid,
+    .lloyds-flipbook-builder__grid,
+    .li-reseller-builder__grid,
+    .li-reseller-builder__section:nth-child(3) .li-reseller-builder__fields {
         grid-template-columns: 1fr;
     }
 

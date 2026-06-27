@@ -27,6 +27,10 @@ add_action('wp_ajax_nopriv_lloyds_flipbook_manifest', 'lloyds_flipbook_ajax_mani
 add_shortcode('lloyds_pdf_flipbook', 'lloyds_flipbook_shortcode');
 add_shortcode('lloyds_pdf_catalogue_library', 'lloyds_flipbook_library_shortcode');
 
+add_filter('use_block_editor_for_post_type', static function (bool $use_block_editor, string $post_type): bool {
+    return $post_type === 'lloyds_flipbook' ? false : $use_block_editor;
+}, 10, 2);
+
 register_activation_hook(__FILE__, static function (): void {
     lloyds_flipbook_register_post_type();
     flush_rewrite_rules();
@@ -51,9 +55,9 @@ function lloyds_flipbook_register_post_type(): void
             'not_found_in_trash' => __('No PDF flipbooks found in Trash.', 'lloyds-pdf-flipbook'),
         ],
         'public'       => true,
-        'show_in_rest' => true,
+        'show_in_rest' => false,
         'menu_icon'    => 'dashicons-book',
-        'supports'     => ['title', 'editor', 'excerpt', 'thumbnail', 'page-attributes'],
+        'supports'     => ['title', 'excerpt', 'thumbnail', 'page-attributes'],
         'rewrite'      => [
             'slug' => 'flipbook',
         ],
@@ -94,13 +98,21 @@ function lloyds_flipbook_add_meta_boxes(): void
 {
     add_meta_box(
         'lloyds_flipbook_pdf',
-        __('PDF File', 'lloyds-pdf-flipbook'),
+        __('Flipbook Builder', 'lloyds-pdf-flipbook'),
         'lloyds_flipbook_render_pdf_meta_box',
         'lloyds_flipbook',
-        'side',
+        'normal',
         'high'
     );
 }
+
+add_filter('enter_title_here', static function (string $placeholder, WP_Post $post): string {
+    if ($post->post_type !== 'lloyds_flipbook') {
+        return $placeholder;
+    }
+
+    return __('Catalogue or document title', 'lloyds-pdf-flipbook');
+}, 10, 2);
 
 function lloyds_flipbook_render_pdf_meta_box(WP_Post $post): void
 {
@@ -109,29 +121,70 @@ function lloyds_flipbook_render_pdf_meta_box(WP_Post $post): void
     $pdf_id = (int) get_post_meta($post->ID, '_lloyds_flipbook_pdf_id', true);
     $featured = (bool) get_post_meta($post->ID, '_lloyds_flipbook_featured', true);
     $pdf_title = $pdf_id ? get_the_title($pdf_id) : __('No PDF selected', 'lloyds-pdf-flipbook');
+    $pdf_url = $pdf_id ? wp_get_attachment_url($pdf_id) : '';
+    $status = $pdf_id ? __('Ready', 'lloyds-pdf-flipbook') : __('Needs PDF', 'lloyds-pdf-flipbook');
     ?>
-    <p>
-        <strong><?php esc_html_e('Selected PDF', 'lloyds-pdf-flipbook'); ?></strong><br>
-        <span data-lloyds-flipbook-pdf-label><?php echo esc_html($pdf_title); ?></span>
-    </p>
-    <input type="hidden" name="lloyds_flipbook_pdf_id" value="<?php echo esc_attr((string) $pdf_id); ?>" data-lloyds-flipbook-pdf-id>
-    <p>
-        <button type="button" class="button" data-lloyds-flipbook-select-pdf>
-            <?php esc_html_e('Select PDF', 'lloyds-pdf-flipbook'); ?>
-        </button>
-        <button type="button" class="button" data-lloyds-flipbook-remove-pdf <?php echo $pdf_id ? '' : 'hidden'; ?>>
-            <?php esc_html_e('Remove', 'lloyds-pdf-flipbook'); ?>
-        </button>
-    </p>
-    <p>
-        <label>
-            <input type="checkbox" name="lloyds_flipbook_featured" value="1" <?php checked($featured); ?>>
-            <?php esc_html_e('Feature this flipbook in catalogue lists.', 'lloyds-pdf-flipbook'); ?>
-        </label>
-    </p>
-    <p class="description">
-        <?php esc_html_e('The PDF is rendered locally into page images when Poppler pdftoppm or Imagick with Ghostscript is available. No external flipbook service is used.', 'lloyds-pdf-flipbook'); ?>
-    </p>
+    <div class="li-editor-panel lloyds-flipbook-builder">
+        <div class="li-editor-panel__intro">
+            <span class="dashicons dashicons-book"></span>
+            <div>
+                <h2><?php esc_html_e('Build A Local PDF Flipbook', 'lloyds-pdf-flipbook'); ?></h2>
+                <p><?php esc_html_e('Select the source PDF, decide whether it should be featured, then publish. Lloyds renders the pages locally for the public catalogue viewer.', 'lloyds-pdf-flipbook'); ?></p>
+            </div>
+        </div>
+
+        <div class="lloyds-flipbook-builder__grid">
+            <section class="lloyds-flipbook-builder__main">
+                <div class="li-editor-panel__selected-file">
+                    <span data-lloyds-flipbook-pdf-status><?php echo esc_html($status); ?></span>
+                    <strong data-lloyds-flipbook-pdf-label><?php echo esc_html($pdf_title); ?></strong>
+                    <a
+                        href="<?php echo esc_url((string) $pdf_url); ?>"
+                        target="_blank"
+                        rel="noopener"
+                        data-lloyds-flipbook-pdf-open
+                        <?php echo $pdf_url ? '' : 'hidden'; ?>
+                    >
+                        <?php esc_html_e('Open PDF', 'lloyds-pdf-flipbook'); ?>
+                    </a>
+                </div>
+
+                <input type="hidden" name="lloyds_flipbook_pdf_id" value="<?php echo esc_attr((string) $pdf_id); ?>" data-lloyds-flipbook-pdf-id>
+
+                <div class="li-editor-panel__actions">
+                    <button type="button" class="button button-primary" data-lloyds-flipbook-select-pdf>
+                        <?php esc_html_e('Select / Upload PDF', 'lloyds-pdf-flipbook'); ?>
+                    </button>
+                    <button type="button" class="button button-secondary" data-lloyds-flipbook-remove-pdf <?php echo $pdf_id ? '' : 'hidden'; ?>>
+                        <?php esc_html_e('Remove PDF', 'lloyds-pdf-flipbook'); ?>
+                    </button>
+                </div>
+
+                <label class="li-editor-panel__toggle">
+                    <input type="checkbox" name="lloyds_flipbook_featured" value="1" <?php checked($featured); ?>>
+                    <span><?php esc_html_e('Feature this flipbook in catalogue lists.', 'lloyds-pdf-flipbook'); ?></span>
+                </label>
+            </section>
+
+            <aside class="lloyds-flipbook-builder__side">
+                <div class="li-editor-panel__notice">
+                    <?php esc_html_e('Local rendering uses Poppler pdftoppm first, then Imagick with Ghostscript when available. No external flipbook service is used.', 'lloyds-pdf-flipbook'); ?>
+                </div>
+
+                <div class="li-editor-panel__shortcodes">
+                    <span><?php esc_html_e('Embed Shortcodes', 'lloyds-pdf-flipbook'); ?></span>
+                    <code>[lloyds_pdf_flipbook id="<?php echo esc_attr((string) $post->ID); ?>"]</code>
+                    <code>[lloyds_pdf_catalogue_library]</code>
+                </div>
+
+                <ol class="lloyds-flipbook-builder__steps">
+                    <li><?php esc_html_e('Name the flipbook.', 'lloyds-pdf-flipbook'); ?></li>
+                    <li><?php esc_html_e('Select or upload the PDF.', 'lloyds-pdf-flipbook'); ?></li>
+                    <li><?php esc_html_e('Publish when it is ready for the catalogue.', 'lloyds-pdf-flipbook'); ?></li>
+                </ol>
+            </aside>
+        </div>
+    </div>
     <?php
 }
 

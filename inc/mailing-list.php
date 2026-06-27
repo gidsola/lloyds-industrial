@@ -674,24 +674,32 @@ function li_mail_render_subscriber_metabox(WP_Post $post): void
     $status = (string) get_post_meta($post->ID, '_li_mail_status', true);
     $status = in_array($status, ['active', 'pending', 'unsubscribed', 'bounced'], true) ? $status : 'active';
     ?>
-    <table class="form-table" role="presentation"><tbody>
-        <?php foreach ($fields as $key => $label) : ?>
-            <tr>
-                <th scope="row"><label for="li_mail_<?php echo esc_attr($key); ?>"><?php echo esc_html($label); ?></label></th>
-                <td><input class="regular-text" id="li_mail_<?php echo esc_attr($key); ?>" name="li_mail_<?php echo esc_attr($key); ?>" type="<?php echo $key === 'email' ? 'email' : 'text'; ?>" value="<?php echo esc_attr((string) get_post_meta($post->ID, '_li_mail_' . $key, true)); ?>"></td>
-            </tr>
-        <?php endforeach; ?>
-        <tr>
-            <th scope="row"><label for="li_mail_status"><?php esc_html_e('Status', 'lloyds-industrial'); ?></label></th>
-            <td>
+    <div class="li-editor-panel li-mail-subscriber-panel">
+        <div class="li-editor-panel__intro">
+            <span class="dashicons dashicons-groups"></span>
+            <div>
+                <h2><?php esc_html_e('Subscriber Profile', 'lloyds-industrial'); ?></h2>
+                <p><?php esc_html_e('Maintain subscriber contact details and delivery status for Lloyds mailing list campaigns.', 'lloyds-industrial'); ?></p>
+            </div>
+        </div>
+
+        <div class="li-editor-panel__grid">
+            <?php foreach ($fields as $key => $label) : ?>
+                <label class="li-editor-panel__field" for="li_mail_<?php echo esc_attr($key); ?>">
+                    <span><?php echo esc_html($label); ?></span>
+                    <input id="li_mail_<?php echo esc_attr($key); ?>" name="li_mail_<?php echo esc_attr($key); ?>" type="<?php echo $key === 'email' ? 'email' : 'text'; ?>" value="<?php echo esc_attr((string) get_post_meta($post->ID, '_li_mail_' . $key, true)); ?>">
+                </label>
+            <?php endforeach; ?>
+            <label class="li-editor-panel__field" for="li_mail_status">
+                <span><?php esc_html_e('Status', 'lloyds-industrial'); ?></span>
                 <select id="li_mail_status" name="li_mail_status">
                     <?php foreach (['active', 'pending', 'unsubscribed', 'bounced'] as $option) : ?>
                         <option value="<?php echo esc_attr($option); ?>" <?php selected($status, $option); ?>><?php echo esc_html(ucfirst($option)); ?></option>
                     <?php endforeach; ?>
                 </select>
-            </td>
-        </tr>
-    </tbody></table>
+            </label>
+        </div>
+    </div>
     <?php
 }
 
@@ -704,34 +712,36 @@ function li_mail_render_campaign_metabox(WP_Post $post): void
     $preheader = (string) get_post_meta($post->ID, '_li_mail_preheader', true);
     $tags = get_terms(['taxonomy' => 'li_mail_tag', 'hide_empty' => false]);
     ?>
-    <p>
-        <label for="li_mail_subject"><strong><?php esc_html_e('Email Subject', 'lloyds-industrial'); ?></strong></label>
-        <input class="widefat" id="li_mail_subject" name="li_mail_subject" type="text" value="<?php echo esc_attr($subject); ?>">
-    </p>
-    <p>
-        <label for="li_mail_preheader"><strong><?php esc_html_e('Preheader', 'lloyds-industrial'); ?></strong></label>
-        <textarea class="widefat" id="li_mail_preheader" name="li_mail_preheader" rows="2"><?php echo esc_textarea($preheader); ?></textarea>
-    </p>
-    <p>
-        <label for="li_mail_campaign_type"><strong><?php esc_html_e('Campaign Type', 'lloyds-industrial'); ?></strong></label>
-        <select class="widefat" id="li_mail_campaign_type" name="li_mail_campaign_type">
+    <div class="li-editor-panel li-editor-panel--compact">
+        <label class="li-editor-panel__field" for="li_mail_subject">
+            <span><?php esc_html_e('Email Subject', 'lloyds-industrial'); ?></span>
+            <input id="li_mail_subject" name="li_mail_subject" type="text" value="<?php echo esc_attr($subject); ?>">
+        </label>
+        <label class="li-editor-panel__field" for="li_mail_preheader">
+            <span><?php esc_html_e('Preheader', 'lloyds-industrial'); ?></span>
+            <textarea id="li_mail_preheader" name="li_mail_preheader" rows="2"><?php echo esc_textarea($preheader); ?></textarea>
+        </label>
+        <label class="li-editor-panel__field" for="li_mail_campaign_type">
+            <span><?php esc_html_e('Campaign Type', 'lloyds-industrial'); ?></span>
+            <select id="li_mail_campaign_type" name="li_mail_campaign_type">
             <?php foreach (li_mail_get_campaign_types() as $key => $label) : ?>
                 <option value="<?php echo esc_attr($key); ?>" <?php selected($type ?: 'newsletter', $key); ?>><?php echo esc_html($label); ?></option>
             <?php endforeach; ?>
-        </select>
-    </p>
-    <p>
-        <label for="li_mail_audience_tag"><strong><?php esc_html_e('Audience Tag', 'lloyds-industrial'); ?></strong></label>
-        <select class="widefat" id="li_mail_audience_tag" name="li_mail_audience_tag">
+            </select>
+        </label>
+        <label class="li-editor-panel__field" for="li_mail_audience_tag">
+            <span><?php esc_html_e('Audience Tag', 'lloyds-industrial'); ?></span>
+            <select id="li_mail_audience_tag" name="li_mail_audience_tag">
             <option value=""><?php esc_html_e('All active subscribers', 'lloyds-industrial'); ?></option>
             <?php if (!is_wp_error($tags)) : ?>
                 <?php foreach ($tags as $tag) : ?>
                     <option value="<?php echo esc_attr($tag->slug); ?>" <?php selected($audience_tag, $tag->slug); ?>><?php echo esc_html($tag->name); ?></option>
                 <?php endforeach; ?>
             <?php endif; ?>
-        </select>
-    </p>
-    <p class="description"><?php esc_html_e('Placeholders: {{first_name}}, {{name}}, {{email}}, {{company}}, {{site_name}}, {{unsubscribe_url}}.', 'lloyds-industrial'); ?></p>
+            </select>
+        </label>
+        <p class="li-editor-panel__notice"><?php esc_html_e('Placeholders: {{first_name}}, {{name}}, {{email}}, {{company}}, {{site_name}}, {{unsubscribe_url}}.', 'lloyds-industrial'); ?></p>
+    </div>
     <?php
 }
 
@@ -745,13 +755,19 @@ function li_mail_render_campaign_send_metabox(WP_Post $post): void
     $process_url = wp_nonce_url(admin_url('admin.php?page=lloyds-mailing-list&li_mail_action=process_queue&campaign_id=' . $post->ID), 'li_mail_process_queue');
     $test_url = wp_nonce_url(admin_url('admin.php?page=lloyds-mailing-list&li_mail_action=send_test_campaign&campaign_id=' . $post->ID), 'li_mail_send_test_campaign');
     ?>
-    <p><strong><?php esc_html_e('Sent', 'lloyds-industrial'); ?>:</strong> <?php echo esc_html((string) $sent); ?></p>
-    <p><strong><?php esc_html_e('Failed', 'lloyds-industrial'); ?>:</strong> <?php echo esc_html((string) $failed); ?></p>
-    <p><strong><?php esc_html_e('Queued', 'lloyds-industrial'); ?>:</strong> <?php echo esc_html((string) $queued); ?></p>
-    <p><strong><?php esc_html_e('Last Sent', 'lloyds-industrial'); ?>:</strong> <?php echo esc_html($last_sent ?: '-'); ?></p>
-    <p><a class="button button-secondary" href="<?php echo esc_url($test_url); ?>"><?php esc_html_e('Send Test', 'lloyds-industrial'); ?></a></p>
-    <p><a class="button button-primary" href="<?php echo esc_url($send_url); ?>" onclick="return confirm('<?php echo esc_js(__('Queue this campaign for scheduled delivery?', 'lloyds-industrial')); ?>');"><?php esc_html_e('Queue Campaign', 'lloyds-industrial'); ?></a></p>
-    <p><a class="button button-secondary" href="<?php echo esc_url($process_url); ?>"><?php esc_html_e('Process Queue Now', 'lloyds-industrial'); ?></a></p>
+    <div class="li-editor-panel li-editor-panel--compact">
+        <dl class="li-editor-panel__stats">
+            <div><dt><?php esc_html_e('Sent', 'lloyds-industrial'); ?></dt><dd><?php echo esc_html((string) $sent); ?></dd></div>
+            <div><dt><?php esc_html_e('Failed', 'lloyds-industrial'); ?></dt><dd><?php echo esc_html((string) $failed); ?></dd></div>
+            <div><dt><?php esc_html_e('Queued', 'lloyds-industrial'); ?></dt><dd><?php echo esc_html((string) $queued); ?></dd></div>
+            <div><dt><?php esc_html_e('Last Sent', 'lloyds-industrial'); ?></dt><dd><?php echo esc_html($last_sent ?: '-'); ?></dd></div>
+        </dl>
+        <div class="li-editor-panel__actions">
+            <a class="button button-secondary" href="<?php echo esc_url($test_url); ?>"><?php esc_html_e('Send Test', 'lloyds-industrial'); ?></a>
+            <a class="button button-primary" href="<?php echo esc_url($send_url); ?>" onclick="return confirm('<?php echo esc_js(__('Queue this campaign for scheduled delivery?', 'lloyds-industrial')); ?>');"><?php esc_html_e('Queue Campaign', 'lloyds-industrial'); ?></a>
+            <a class="button button-secondary" href="<?php echo esc_url($process_url); ?>"><?php esc_html_e('Process Queue Now', 'lloyds-industrial'); ?></a>
+        </div>
+    </div>
     <?php
 }
 

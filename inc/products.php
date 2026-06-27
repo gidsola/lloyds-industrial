@@ -76,7 +76,9 @@ function li_get_product_filter_url(array $filters = []): string
         }
     }
 
-    return $query_args ? add_query_arg($query_args, $url) : $url;
+    $url = $query_args ? add_query_arg($query_args, $url) : $url;
+
+    return $url . '#li-product-results';
 }
 
 function li_render_product_filter_group(string $taxonomy, string $label): string
@@ -155,6 +157,88 @@ function li_render_product_filters(): string
 
     return $output;
 }
+
+function li_render_product_category_cards(): string
+{
+    if (!taxonomy_exists('product_cat')) {
+        return '';
+    }
+
+    $terms = get_terms([
+        'taxonomy'   => 'product_cat',
+        'hide_empty' => true,
+        'orderby'    => 'name',
+        'order'      => 'ASC',
+    ]);
+
+    if (is_wp_error($terms) || !$terms) {
+        return '';
+    }
+
+    $excluded_slugs = apply_filters('li_product_family_card_excluded_slugs', [
+        'popular-products',
+        'uncategorized',
+    ]);
+    $excluded_slugs = array_map('sanitize_title', is_array($excluded_slugs) ? $excluded_slugs : []);
+    $terms = array_values(array_filter($terms, static function ($term) use ($excluded_slugs): bool {
+        return $term instanceof WP_Term && !in_array($term->slug, $excluded_slugs, true);
+    }));
+
+    if (!$terms) {
+        return '';
+    }
+
+    ob_start();
+    ?>
+    <div class="alignwide li-dynamic-category-grid">
+        <?php foreach ($terms as $term) : ?>
+            <?php
+            $url = get_term_link($term, 'product_cat');
+
+            if (is_wp_error($url)) {
+                continue;
+            }
+
+            $description = trim(wp_strip_all_tags(term_description($term, 'product_cat')));
+            ?>
+            <article class="li-card li-product-family-card">
+                <h3><?php echo esc_html($term->name); ?></h3>
+                <?php if ($description !== '') : ?>
+                    <p><?php echo esc_html(wp_trim_words($description, 20)); ?></p>
+                <?php else : ?>
+                    <p>
+                        <?php
+                        echo esc_html(sprintf(
+                            /* translators: %s: product category name */
+                            __('Browse Lloyds products in %s.', 'lloyds-industrial'),
+                            $term->name
+                        ));
+                        ?>
+                    </p>
+                <?php endif; ?>
+                <p class="li-card-link">
+                    <a href="<?php echo esc_url($url); ?>"><?php esc_html_e('View Products', 'lloyds-industrial'); ?></a>
+                </p>
+            </article>
+        <?php endforeach; ?>
+    </div>
+    <?php
+
+    return (string) ob_get_clean();
+}
+
+function li_register_product_category_cards_block(): void
+{
+    register_block_type('lloyds-industrial/product-category-grid', [
+        'api_version'     => 2,
+        'render_callback' => 'li_render_product_category_cards',
+        'supports'        => [
+            'html' => false,
+        ],
+    ]);
+}
+
+add_action('init', 'li_register_product_category_cards_block');
 
 function li_render_product_search_form(): string
 {
@@ -414,6 +498,7 @@ function li_render_product_b2b_actions(): string
 
 add_shortcode('li_product_search', 'li_render_product_search_form');
 add_shortcode('li_product_filters', 'li_render_product_filters');
+add_shortcode('li_product_category_cards', 'li_render_product_category_cards');
 add_shortcode('li_product_card_meta', 'li_render_product_card_meta');
 add_shortcode('li_product_b2b_actions', 'li_render_product_b2b_actions');
 

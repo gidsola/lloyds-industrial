@@ -67,6 +67,15 @@ add_action('enqueue_block_editor_assets', function (): void {
 add_action('admin_enqueue_scripts', function (string $hook_suffix): void {
     $screen = get_current_screen();
     $admin_page = isset($_GET['page']) ? sanitize_key((string) $_GET['page']) : '';
+    $styled_post_types = [
+        'product',
+        'li_document',
+        'li_contact_msg',
+        'li_mail_subscriber',
+        'li_mail_campaign',
+        'li_reseller',
+        'lloyds_flipbook',
+    ];
 
     if (
         $hook_suffix === 'appearance_page_lloyds-industrial-settings'
@@ -78,6 +87,7 @@ add_action('admin_enqueue_scripts', function (string $hook_suffix): void {
         || $hook_suffix === 'mailing-list_page_lloyds-mail-campaigns'
         || $hook_suffix === 'mailing-list_page_lloyds-mail-campaign-builder'
         || in_array($admin_page, ['lloyds-mailing-list', 'lloyds-mail-campaigns', 'lloyds-mail-campaign-builder'], true)
+        || ($screen && in_array((string) $screen->post_type, $styled_post_types, true))
     ) {
         li_enqueue_google_fonts('lloyds-settings-admin-fonts');
 

@@ -13,6 +13,8 @@
         var removeButton = document.querySelector('[data-lloyds-flipbook-remove-pdf]');
         var input = document.querySelector('[data-lloyds-flipbook-pdf-id]');
         var label = document.querySelector('[data-lloyds-flipbook-pdf-label]');
+        var status = document.querySelector('[data-lloyds-flipbook-pdf-status]');
+        var openLink = document.querySelector('[data-lloyds-flipbook-pdf-open]');
 
         if (!selectButton || !input) {
             return;
@@ -46,6 +48,15 @@
                     label.textContent = attachment.filename || attachment.title || 'Selected PDF';
                 }
 
+                if (status) {
+                    status.textContent = 'Ready';
+                }
+
+                if (openLink) {
+                    openLink.href = attachment.url || '#';
+                    openLink.hidden = !attachment.url;
+                }
+
                 if (removeButton) {
                     removeButton.hidden = false;
                 }
@@ -61,6 +72,15 @@
 
                 if (label) {
                     label.textContent = 'No PDF selected';
+                }
+
+                if (status) {
+                    status.textContent = 'Needs PDF';
+                }
+
+                if (openLink) {
+                    openLink.href = '#';
+                    openLink.hidden = true;
                 }
 
                 removeButton.hidden = true;

@@ -33,7 +33,16 @@ function li_render_document_settings_metabox(WP_Post $post): void
     }
 
     ?>
-    <p>
+    <div class="li-editor-panel li-document-editor-panel">
+        <div class="li-editor-panel__intro">
+            <span class="dashicons dashicons-media-document"></span>
+            <div>
+                <h2><?php esc_html_e('Document Access Record', 'lloyds-industrial'); ?></h2>
+                <p><?php esc_html_e('Attach the source file, connect it to a product when needed, and control whether customers can access it publicly or through purchase-gated SDS rules.', 'lloyds-industrial'); ?></p>
+            </div>
+        </div>
+
+    <p class="li-editor-panel__field">
         <label for="li_document_file_id">
             <strong><?php esc_html_e('Document File', 'lloyds-industrial'); ?></strong>
         </label>
@@ -65,7 +74,7 @@ function li_render_document_settings_metabox(WP_Post $post): void
         </span>
     </p>
 
-    <p>
+    <p class="li-editor-panel__field">
         <label for="li_related_product_id">
             <strong><?php esc_html_e('Related Product ID', 'lloyds-industrial'); ?></strong>
         </label>
@@ -92,7 +101,7 @@ function li_render_document_settings_metabox(WP_Post $post): void
         >
     </p>
 
-    <p>
+    <p class="li-editor-panel__field">
         <label for="li_access_level">
             <strong><?php esc_html_e('Access Level', 'lloyds-industrial'); ?></strong>
         </label>
@@ -116,6 +125,7 @@ function li_render_document_settings_metabox(WP_Post $post): void
             </span>
         <?php endif; ?>
     </p>
+    </div>
     <?php
 }
 

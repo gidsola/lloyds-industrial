@@ -112,44 +112,95 @@ add_action('add_meta_boxes', function (): void {
     );
 });
 
+add_filter('enter_title_here', function (string $placeholder, WP_Post $post): string {
+    if ($post->post_type !== 'li_reseller') {
+        return $placeholder;
+    }
+
+    return __('Internal reseller record name', 'lloyds-industrial');
+}, 10, 2);
+
 function li_render_reseller_details_metabox(WP_Post $post): void
 {
     wp_nonce_field('li_save_reseller_details', 'li_reseller_nonce');
     $labels = li_get_reseller_field_labels();
+    $sections = [
+        'profile' => [
+            'title'       => __('Public Profile', 'lloyds-industrial'),
+            'description' => __('These fields appear in the public reseller finder and help customers choose the right channel partner.', 'lloyds-industrial'),
+            'fields'      => ['public_name', 'website', 'public_notes'],
+        ],
+        'contact' => [
+            'title'       => __('Contact Details', 'lloyds-industrial'),
+            'description' => __('Primary business contact and location information for customer routing.', 'lloyds-industrial'),
+            'fields'      => ['contact_name', 'email', 'phone', 'address', 'city', 'province', 'postal_code', 'country'],
+        ],
+        'coverage' => [
+            'title'       => __('Coverage and Fit', 'lloyds-industrial'),
+            'description' => __('Use these fields to match reseller listings with product, territory, and customer searches.', 'lloyds-industrial'),
+            'fields'      => ['territory', 'product_focus', 'customer_types', 'sales_channels'],
+        ],
+        'operations' => [
+            'title'       => __('Internal Operations', 'lloyds-industrial'),
+            'description' => __('Private notes and system links are visible to administrators only.', 'lloyds-industrial'),
+            'fields'      => ['internal_notes', 'linked_user_id', 'application_id'],
+        ],
+    ];
     ?>
-    <table class="form-table" role="presentation">
-        <tbody>
-            <?php foreach ($labels as $key => $label) : ?>
-                <?php
-                $value = (string) get_post_meta($post->ID, '_li_reseller_' . $key, true);
-                $readonly = in_array($key, ['linked_user_id', 'application_id'], true);
-                ?>
-                <tr>
-                    <th scope="row"><label for="li_reseller_<?php echo esc_attr($key); ?>"><?php echo esc_html($label); ?></label></th>
-                    <td>
-                        <?php if (in_array($key, ['public_notes', 'internal_notes'], true)) : ?>
-                            <textarea
-                                class="large-text"
-                                id="li_reseller_<?php echo esc_attr($key); ?>"
-                                name="li_reseller[<?php echo esc_attr($key); ?>]"
-                                rows="4"
-                                <?php readonly($readonly); ?>
-                            ><?php echo esc_textarea($value); ?></textarea>
-                        <?php else : ?>
-                            <input
-                                class="regular-text"
-                                id="li_reseller_<?php echo esc_attr($key); ?>"
-                                name="li_reseller[<?php echo esc_attr($key); ?>]"
-                                type="text"
-                                value="<?php echo esc_attr($value); ?>"
-                                <?php readonly($readonly); ?>
-                            >
-                        <?php endif; ?>
-                    </td>
-                </tr>
+    <div class="li-reseller-builder">
+        <div class="li-reseller-builder__intro">
+            <span class="dashicons dashicons-store"></span>
+            <div>
+                <h2><?php esc_html_e('Reseller Directory Listing', 'lloyds-industrial'); ?></h2>
+                <p><?php esc_html_e('Build the listing customers see when they search for approved Lloyds reseller and distributor channels.', 'lloyds-industrial'); ?></p>
+            </div>
+        </div>
+
+        <div class="li-reseller-builder__grid">
+            <?php foreach ($sections as $section) : ?>
+                <section class="li-reseller-builder__section">
+                    <header>
+                        <h3><?php echo esc_html($section['title']); ?></h3>
+                        <p><?php echo esc_html($section['description']); ?></p>
+                    </header>
+
+                    <div class="li-reseller-builder__fields">
+                        <?php foreach ($section['fields'] as $key) : ?>
+                            <?php
+                            $value = (string) get_post_meta($post->ID, '_li_reseller_' . $key, true);
+                            $readonly = in_array($key, ['linked_user_id', 'application_id'], true);
+                            $input_type = match ($key) {
+                                'email' => 'email',
+                                'website' => 'url',
+                                'phone' => 'tel',
+                                default => 'text',
+                            };
+                            ?>
+                            <label class="li-reseller-builder__field" for="li_reseller_<?php echo esc_attr($key); ?>">
+                                <span><?php echo esc_html($labels[$key] ?? $key); ?></span>
+                                <?php if (in_array($key, ['public_notes', 'internal_notes'], true)) : ?>
+                                    <textarea
+                                        id="li_reseller_<?php echo esc_attr($key); ?>"
+                                        name="li_reseller[<?php echo esc_attr($key); ?>]"
+                                        rows="4"
+                                        <?php echo $readonly ? 'readonly' : ''; ?>
+                                    ><?php echo esc_textarea($value); ?></textarea>
+                                <?php else : ?>
+                                    <input
+                                        id="li_reseller_<?php echo esc_attr($key); ?>"
+                                        name="li_reseller[<?php echo esc_attr($key); ?>]"
+                                        type="<?php echo esc_attr($input_type); ?>"
+                                        value="<?php echo esc_attr($value); ?>"
+                                        <?php echo $readonly ? 'readonly' : ''; ?>
+                                    >
+                                <?php endif; ?>
+                            </label>
+                        <?php endforeach; ?>
+                    </div>
+                </section>
             <?php endforeach; ?>
-        </tbody>
-    </table>
+        </div>
+    </div>
     <?php
 }
 
@@ -170,7 +221,11 @@ add_action('save_post_li_reseller', function (int $post_id): void {
         }
 
         $value = (string) ($input[$key] ?? '');
-        $value = $key === 'website' ? esc_url_raw($value) : sanitize_text_field($value);
+        $value = match ($key) {
+            'email' => sanitize_email($value),
+            'website' => esc_url_raw($value),
+            default => sanitize_text_field($value),
+        };
 
         if (in_array($key, ['public_notes', 'internal_notes'], true)) {
             $value = sanitize_textarea_field((string) ($input[$key] ?? ''));

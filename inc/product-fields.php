@@ -13,7 +13,7 @@ add_action('woocommerce_product_options_general_product_data', function (): void
     $sds_file_id = $product_id ? li_get_product_sds_file_id($product_id) : 0;
     $sds_file_label = $sds_file_id ? get_the_title($sds_file_id) : __('No SDS file selected', 'lloyds-industrial');
 
-    echo '<div class="options_group">';
+    echo '<div class="options_group li-product-admin-panel">';
 
     woocommerce_wp_textarea_input([
         'id'          => '_li_public_summary',

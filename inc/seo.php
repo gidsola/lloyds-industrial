@@ -18,6 +18,7 @@ add_action('admin_menu', 'li_seo_register_admin_menu');
 add_action('admin_init', 'li_seo_register_settings');
 add_action('admin_init', 'li_seo_handle_admin_actions');
 add_action('admin_init', 'li_seo_maybe_flush_rewrites');
+add_action('init', 'li_seo_register_post_meta', 30);
 add_action('add_meta_boxes', 'li_seo_add_meta_boxes');
 add_action('save_post', 'li_seo_save_post_meta', 10, 2);
 add_action('save_post', 'li_seo_purge_cache_for_post', 20);
@@ -28,6 +29,7 @@ add_action('update_option_' . LI_SEO_SETTINGS_OPTION, 'li_seo_write_cache_config
 add_action('wp_head', 'li_seo_render_head', 1);
 add_action('send_headers', 'li_seo_send_cache_capability_headers');
 add_action('template_redirect', 'li_seo_maybe_serve_cache', 0);
+add_action('enqueue_block_editor_assets', 'li_seo_enqueue_block_editor_panel');
 add_filter('robots_txt', 'li_seo_filter_robots_txt', 10, 2);
 add_filter('document_title_parts', 'li_seo_filter_document_title_parts');
 
@@ -195,6 +197,102 @@ function li_seo_get_supported_public_taxonomies(): array
     return array_values($taxonomies);
 }
 
+function li_seo_register_post_meta(): void
+{
+    $string_meta = [
+        '_li_seo_title'              => 'sanitize_text_field',
+        '_li_seo_description'        => 'sanitize_textarea_field',
+        '_li_seo_canonical'          => 'esc_url_raw',
+        '_li_seo_robots'             => 'li_seo_sanitize_robots_meta',
+        '_li_seo_focus_keyword'      => 'sanitize_text_field',
+        '_li_seo_social_title'       => 'sanitize_text_field',
+        '_li_seo_social_description' => 'sanitize_textarea_field',
+    ];
+
+    foreach (li_seo_get_supported_public_post_types() as $post_type) {
+        foreach ($string_meta as $key => $sanitize_callback) {
+            register_post_meta($post_type, $key, [
+                'type'              => 'string',
+                'single'            => true,
+                'show_in_rest'      => true,
+                'sanitize_callback' => $sanitize_callback,
+                'auth_callback'     => 'li_seo_can_edit_post_meta',
+            ]);
+        }
+
+        register_post_meta($post_type, '_li_seo_social_image_id', [
+            'type'              => 'integer',
+            'single'            => true,
+            'show_in_rest'      => true,
+            'sanitize_callback' => 'absint',
+            'auth_callback'     => 'li_seo_can_edit_post_meta',
+        ]);
+    }
+}
+
+function li_seo_can_edit_post_meta(mixed $allowed, string $meta_key, int $post_id): bool
+{
+    return current_user_can('edit_post', $post_id);
+}
+
+function li_seo_sanitize_robots_meta(mixed $robots): string
+{
+    $robots = is_string($robots) ? $robots : '';
+
+    return in_array($robots, ['', 'index,follow', 'noindex,follow', 'noindex,nofollow'], true) ? $robots : '';
+}
+
+function li_seo_enqueue_block_editor_panel(): void
+{
+    $screen = get_current_screen();
+
+    if (!$screen || !in_array((string) $screen->post_type, li_seo_get_supported_public_post_types(), true)) {
+        return;
+    }
+
+    wp_enqueue_media();
+
+    wp_enqueue_style(
+        'lloyds-settings-admin',
+        get_template_directory_uri() . '/assets/css/settings-admin.css',
+        [],
+        filemtime(get_template_directory() . '/assets/css/settings-admin.css')
+    );
+
+    wp_enqueue_script(
+        'lloyds-seo-editor',
+        get_template_directory_uri() . '/assets/js/seo-editor.js',
+        ['wp-data', 'wp-dom-ready'],
+        filemtime(get_template_directory() . '/assets/js/seo-editor.js'),
+        true
+    );
+
+    wp_localize_script('lloyds-seo-editor', 'lloydsSeoEditor', [
+        'supportedPostTypes' => li_seo_get_supported_public_post_types(),
+        'labels' => [
+            'eyebrow'           => __('Lloyds SEO', 'lloyds-industrial'),
+            'title'             => __('Search and Social Preview', 'lloyds-industrial'),
+            'description'       => __('Tune how this content appears in search results, social cards, and canonical discovery.', 'lloyds-industrial'),
+            'seoTitle'          => __('SEO Title', 'lloyds-industrial'),
+            'seoTitleHelp'      => __('Recommended: 50-60 characters. Leave blank to auto-generate.', 'lloyds-industrial'),
+            'metaDescription'   => __('Meta Description', 'lloyds-industrial'),
+            'metaDescriptionHelp' => __('Recommended: 140-160 characters. Product summaries and excerpts are used as fallback.', 'lloyds-industrial'),
+            'focusKeyword'      => __('Focus Keyword', 'lloyds-industrial'),
+            'canonical'         => __('Canonical URL', 'lloyds-industrial'),
+            'robots'            => __('Robots', 'lloyds-industrial'),
+            'socialTitle'       => __('Social Title', 'lloyds-industrial'),
+            'socialDescription' => __('Social Description', 'lloyds-industrial'),
+            'socialImage'       => __('Social Image', 'lloyds-industrial'),
+            'selectImage'       => __('Select Image', 'lloyds-industrial'),
+            'removeImage'       => __('Remove', 'lloyds-industrial'),
+            'noImage'           => __('No image selected', 'lloyds-industrial'),
+            'selectImageTitle'  => __('Select SEO Social Image', 'lloyds-industrial'),
+            'useImage'          => __('Use This Image', 'lloyds-industrial'),
+            'defaults'          => __('Use global defaults', 'lloyds-industrial'),
+        ],
+    ]);
+}
+
 function li_seo_handle_admin_actions(): void
 {
     if (!current_user_can('manage_options') || empty($_GET['li_seo_action'])) {
@@ -255,6 +353,10 @@ add_action('admin_notices', function (): void {
 function li_seo_add_meta_boxes(): void
 {
     foreach (li_seo_get_supported_public_post_types() as $post_type) {
+        if (use_block_editor_for_post_type($post_type)) {
+            continue;
+        }
+
         add_meta_box(
             'li_seo_meta',
             __('Lloyds SEO', 'lloyds-industrial'),

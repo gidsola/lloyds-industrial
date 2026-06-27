@@ -680,7 +680,16 @@ function li_render_contact_submission_details_metabox(WP_Post $post): void
     $status = (string) get_post_meta($post->ID, '_li_contact_status', true);
     $status = in_array($status, ['new', 'in_progress', 'accepted', 'rejected', 'closed'], true) ? $status : 'new';
     ?>
-    <p>
+    <div class="li-editor-panel li-contact-submission-panel">
+        <div class="li-editor-panel__intro">
+            <span class="dashicons dashicons-email-alt2"></span>
+            <div>
+                <h2><?php esc_html_e('Customer Inquiry Record', 'lloyds-industrial'); ?></h2>
+                <p><?php esc_html_e('Review routing details, update workflow status, and accept reseller applications when the company is approved.', 'lloyds-industrial'); ?></p>
+            </div>
+        </div>
+
+    <p class="li-editor-panel__field">
         <label for="li_contact_status"><strong><?php esc_html_e('Status', 'lloyds-industrial'); ?></strong></label>
         <select id="li_contact_status" name="li_contact_status">
             <option value="new" <?php selected($status, 'new'); ?>><?php esc_html_e('New', 'lloyds-industrial'); ?></option>
@@ -697,7 +706,7 @@ function li_render_contact_submission_details_metabox(WP_Post $post): void
         $created_user_id = (int) get_post_meta($post->ID, '_li_contact_created_user_id', true);
         $created_reseller_id = (int) get_post_meta($post->ID, '_li_contact_created_reseller_id', true);
         ?>
-        <p class="description">
+        <p class="li-editor-panel__notice">
             <?php esc_html_e('Setting this application to Accepted creates or links a Distributor user account and creates a draft reseller directory listing.', 'lloyds-industrial'); ?>
             <?php if ($created_user_id) : ?>
                 <br><?php echo esc_html(sprintf(__('Linked user ID: %d', 'lloyds-industrial'), $created_user_id)); ?>
@@ -707,7 +716,7 @@ function li_render_contact_submission_details_metabox(WP_Post $post): void
             <?php endif; ?>
         </p>
     <?php endif; ?>
-    <table class="widefat striped">
+    <table class="widefat striped li-editor-panel__table">
         <tbody>
             <?php foreach ($fields as $key => $label) : ?>
                 <?php
@@ -735,7 +744,7 @@ function li_render_contact_submission_details_metabox(WP_Post $post): void
 
     <?php if ($submission_type === 'reseller_application') : ?>
         <h3><?php esc_html_e('Reseller Application Details', 'lloyds-industrial'); ?></h3>
-        <table class="widefat striped">
+        <table class="widefat striped li-editor-panel__table">
             <tbody>
                 <?php foreach (li_get_reseller_application_field_labels() as $key => $label) : ?>
                     <?php $value = (string) get_post_meta($post->ID, '_li_reseller_' . $key, true); ?>
@@ -753,6 +762,7 @@ function li_render_contact_submission_details_metabox(WP_Post $post): void
             </tbody>
         </table>
     <?php endif; ?>
+    </div>
     <?php
 }
 

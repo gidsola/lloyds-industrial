@@ -13,6 +13,21 @@ function li_is_quote_mode_enabled(): bool
     return !empty($settings['quote_mode']);
 }
 
+function li_should_show_quote_price_label(): bool
+{
+    if (!is_user_logged_in()) {
+        return false;
+    }
+
+    $user = wp_get_current_user();
+
+    if ($user instanceof WP_User && in_array('li_distributor', (array) $user->roles, true)) {
+        return true;
+    }
+
+    return current_user_can('manage_woocommerce') || current_user_can('manage_options');
+}
+
 add_action('admin_init', function (): void {
     add_settings_field(
         'li_quote_mode',
@@ -43,6 +58,10 @@ function li_render_quote_mode_field(): void
 add_filter('woocommerce_get_price_html', function (string $price): string {
     if (!li_is_quote_mode_enabled()) {
         return $price;
+    }
+
+    if (!li_should_show_quote_price_label()) {
+        return '';
     }
 
     return '<span class="li-quote-price">' . esc_html__('Request Quote', 'lloyds-industrial') . '</span>';
