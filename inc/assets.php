@@ -86,6 +86,7 @@ add_action('admin_enqueue_scripts', function (string $hook_suffix): void {
         || $hook_suffix === 'toplevel_page_lloyds-mailing-list'
         || $hook_suffix === 'mailing-list_page_lloyds-mail-campaigns'
         || $hook_suffix === 'mailing-list_page_lloyds-mail-campaign-builder'
+        || $hook_suffix === 'tools_page_lloyds-product-media-organizer'
         || in_array($admin_page, ['lloyds-mailing-list', 'lloyds-mail-campaigns', 'lloyds-mail-campaign-builder'], true)
         || ($screen && in_array((string) $screen->post_type, $styled_post_types, true))
     ) {

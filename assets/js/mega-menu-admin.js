@@ -37,7 +37,7 @@
         $container.on('click', '.li-mega-menu-item-toggle', function() {
             var $button = $(this);
             var $item = $(this).closest('.li-mega-menu-item-form');
-            var $body = $item.find('.li-mega-menu-item-body');
+            var $body = $item.children('.li-mega-menu-item-body');
             var $icon = $button.find('.dashicons');
             var showLabel = liMegaMenu.labels?.showSettings || 'Show item settings';
             var hideLabel = liMegaMenu.labels?.hideSettings || 'Hide item settings';

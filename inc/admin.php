@@ -287,7 +287,7 @@ add_action('admin_notices', function (): void {
     printf(
         '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
         esc_html(sprintf(
-            __('SDS migration complete. Copied: %1$d. Skipped: %2$d. Failed: %3$d.', 'lloyds-industrial'),
+            __('SDS protection check complete. Secured or organized: %1$d. Skipped: %2$d. Failed: %3$d.', 'lloyds-industrial'),
             (int) ($result['migrated'] ?? 0),
             (int) ($result['skipped'] ?? 0),
             (int) ($result['failed'] ?? 0)
@@ -1707,9 +1707,9 @@ function li_render_settings_page(): void
                 <div class="li-maintenance-card li-maintenance-card--secure">
                     <span class="dashicons dashicons-lock" aria-hidden="true"></span>
                     <h3><?php esc_html_e('Protected SDS storage', 'lloyds-industrial'); ?></h3>
-                    <p><?php esc_html_e('Move existing SDS attachment files into protected storage so they are served only after purchase-history access checks.', 'lloyds-industrial'); ?></p>
+                    <p><?php esc_html_e('Move and organize existing SDS attachment files inside protected storage so they are served only after purchase-history access checks.', 'lloyds-industrial'); ?></p>
                     <a class="button" href="<?php echo esc_url(wp_nonce_url(admin_url('themes.php?page=lloyds-industrial-settings&li_migrate_sds_documents=1'), 'li_migrate_sds_documents')); ?>">
-                        <?php esc_html_e('Migrate SDS Files', 'lloyds-industrial'); ?>
+                        <?php esc_html_e('Protect & Organize SDS Files', 'lloyds-industrial'); ?>
                     </a>
                 </div>
 

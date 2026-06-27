@@ -31,6 +31,10 @@ add_filter('use_block_editor_for_post_type', static function (bool $use_block_ed
     return $post_type === 'lloyds_flipbook' ? false : $use_block_editor;
 }, 10, 2);
 
+add_filter('theme_lloyds_flipbook_templates', static function (array $templates): array {
+    return [];
+});
+
 register_activation_hook(__FILE__, static function (): void {
     lloyds_flipbook_register_post_type();
     flush_rewrite_rules();
@@ -57,7 +61,7 @@ function lloyds_flipbook_register_post_type(): void
         'public'       => true,
         'show_in_rest' => false,
         'menu_icon'    => 'dashicons-book',
-        'supports'     => ['title', 'excerpt', 'thumbnail', 'page-attributes'],
+        'supports'     => ['title', 'excerpt', 'thumbnail'],
         'rewrite'      => [
             'slug' => 'flipbook',
         ],
@@ -103,6 +107,15 @@ function lloyds_flipbook_add_meta_boxes(): void
         'lloyds_flipbook',
         'normal',
         'high'
+    );
+
+    add_meta_box(
+        'lloyds_flipbook_order',
+        __('Catalogue Order', 'lloyds-pdf-flipbook'),
+        'lloyds_flipbook_render_order_meta_box',
+        'lloyds_flipbook',
+        'side',
+        'default'
     );
 }
 
@@ -188,6 +201,23 @@ function lloyds_flipbook_render_pdf_meta_box(WP_Post $post): void
     <?php
 }
 
+function lloyds_flipbook_render_order_meta_box(WP_Post $post): void
+{
+    ?>
+    <div class="lloyds-flipbook-order-field">
+        <label for="lloyds_flipbook_menu_order"><?php esc_html_e('Display Order', 'lloyds-pdf-flipbook'); ?></label>
+        <input
+            type="number"
+            id="lloyds_flipbook_menu_order"
+            name="lloyds_flipbook_menu_order"
+            value="<?php echo esc_attr((string) $post->menu_order); ?>"
+            step="1"
+        >
+        <p><?php esc_html_e('Lower numbers appear first in catalogue lists. Items with the same order fall back to newest first.', 'lloyds-pdf-flipbook'); ?></p>
+    </div>
+    <?php
+}
+
 function lloyds_flipbook_save_meta(int $post_id): void
 {
     if (!isset($_POST['lloyds_flipbook_pdf_nonce'])) {
@@ -214,6 +244,20 @@ function lloyds_flipbook_save_meta(int $post_id): void
 
     update_post_meta($post_id, '_lloyds_flipbook_pdf_id', $pdf_id);
     update_post_meta($post_id, '_lloyds_flipbook_featured', !empty($_POST['lloyds_flipbook_featured']) ? '1' : '0');
+    delete_post_meta($post_id, '_wp_page_template');
+
+    if (isset($_POST['lloyds_flipbook_menu_order'])) {
+        $menu_order = (int) $_POST['lloyds_flipbook_menu_order'];
+
+        if ((int) get_post_field('menu_order', $post_id) !== $menu_order) {
+            remove_action('save_post_lloyds_flipbook', 'lloyds_flipbook_save_meta');
+            wp_update_post([
+                'ID'         => $post_id,
+                'menu_order' => $menu_order,
+            ]);
+            add_action('save_post_lloyds_flipbook', 'lloyds_flipbook_save_meta');
+        }
+    }
 }
 
 function lloyds_flipbook_admin_assets(string $hook): void

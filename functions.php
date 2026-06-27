@@ -22,6 +22,7 @@ require_once get_template_directory() . '/inc/products.php';
 require_once get_template_directory() . '/inc/product-carousel.php';
 require_once get_template_directory() . '/inc/product-fields.php';
 require_once get_template_directory() . '/inc/product-documents.php';
+require_once get_template_directory() . '/inc/media-organization.php';
 
 require_once get_template_directory() . '/inc/documents.php';
 require_once get_template_directory() . '/inc/document-fields.php';

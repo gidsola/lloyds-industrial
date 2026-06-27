@@ -173,6 +173,21 @@
     display: inline-flex;
     font-weight: 700;
     gap: 6px;
+    justify-content: center;
+    line-height: 1.2;
+}
+
+.li-mega-menu-page .button .dashicons,
+.li-mega-menu-page .button-primary .dashicons {
+    align-items: center;
+    display: inline-flex;
+    flex: 0 0 auto;
+    font-size: 18px;
+    height: 18px;
+    justify-content: center;
+    line-height: 1;
+    margin: 0;
+    width: 18px;
 }
 
 .li-mega-menu-page .button-primary {

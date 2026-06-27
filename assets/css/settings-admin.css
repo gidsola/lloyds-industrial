@@ -1084,6 +1084,14 @@
     gap: 8px;
 }
 
+.li-product-media-tool-card {
+    padding: 22px;
+}
+
+.li-product-media-tool-card p {
+    margin: 0;
+}
+
 .post-type-lloyds_flipbook #post-body-content {
     background: #fff;
     border: 1px solid #dde5e2;
@@ -1121,6 +1129,31 @@
 .post-type-lloyds_flipbook #lloyds_flipbook_pdf .inside {
     margin: 0;
     padding: 0;
+}
+
+.lloyds-flipbook-order-field {
+    display: grid;
+    gap: 8px;
+}
+
+.lloyds-flipbook-order-field label {
+    color: #17443b;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.lloyds-flipbook-order-field input {
+    border-color: #cfd9d5;
+    border-radius: 6px;
+    max-width: 120px;
+}
+
+.lloyds-flipbook-order-field p {
+    color: #66736f;
+    line-height: 1.45;
+    margin: 0;
 }
 
 .lloyds-flipbook-builder {
