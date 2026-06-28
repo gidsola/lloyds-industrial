@@ -257,10 +257,7 @@ add_action('admin_notices', function (): void {
         ];
 
         if (isset($messages[$theme_settings_notice])) {
-            printf(
-                '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
-                esc_html($messages[$theme_settings_notice])
-            );
+            li_render_admin_notice($messages[$theme_settings_notice]);
         }
     }
 
@@ -269,10 +266,7 @@ add_action('admin_notices', function (): void {
     if ($brand_reset_notice === 'reset') {
         delete_transient('li_brand_reset_notice');
 
-        printf(
-            '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
-            esc_html__('Brand colors reset to the theme defaults.', 'lloyds-industrial')
-        );
+        li_render_admin_notice(__('Brand colors reset to the theme defaults.', 'lloyds-industrial'));
     }
 
     $reseed_notice = get_transient('li_reseed_site_notice');
@@ -280,10 +274,7 @@ add_action('admin_notices', function (): void {
     if ($reseed_notice === 'missing_nonce') {
         delete_transient('li_reseed_site_notice');
 
-        printf(
-            '<div class="notice notice-error is-dismissible"><p>%s</p></div>',
-            esc_html__('Use the reseed button from this settings page. Direct reseed links require a security nonce.', 'lloyds-industrial')
-        );
+        li_render_admin_notice(__('Use the reseed button from this settings page. Direct reseed links require a security nonce.', 'lloyds-industrial'), 'error');
     }
 
     $result = get_transient('li_sds_migration_result');
@@ -294,16 +285,26 @@ add_action('admin_notices', function (): void {
 
     delete_transient('li_sds_migration_result');
 
-    printf(
-        '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
-        esc_html(sprintf(
+    li_render_admin_notice(
+        sprintf(
             __('SDS protection check complete. Secured or organized: %1$d. Skipped: %2$d. Failed: %3$d.', 'lloyds-industrial'),
             (int) ($result['migrated'] ?? 0),
             (int) ($result['skipped'] ?? 0),
             (int) ($result['failed'] ?? 0)
-        ))
+        )
     );
 });
+
+function li_render_admin_notice(string $message, string $type = 'success', bool $auto_dismiss = true): void
+{
+    $class = $type === 'error' ? 'li-admin-notice--error' : 'li-admin-notice--success';
+    ?>
+    <div class="li-admin-notice <?php echo esc_attr($class); ?>" <?php echo $auto_dismiss ? 'data-li-auto-dismiss-notice' : ''; ?>>
+        <p><?php echo esc_html($message); ?></p>
+        <button type="button" class="li-admin-notice__dismiss" data-li-dismiss-notice aria-label="<?php esc_attr_e('Dismiss notice', 'lloyds-industrial'); ?>">&times;</button>
+    </div>
+    <?php
+}
 
 function li_sanitize_theme_settings(array $settings): array
 {
@@ -1661,16 +1662,26 @@ function li_render_settings_page(): void
             </div>
         </div>
 
-        <form class="li-settings-form" method="post" action="options.php">
+        <nav class="li-admin-tabs" data-li-admin-tabs=".li-settings-page" data-li-tabs-key="li-theme-settings-tab" aria-label="<?php esc_attr_e('Lloyds settings sections', 'lloyds-industrial'); ?>">
+            <button class="li-admin-tab" type="button" data-li-tab-target="theme-access"><?php esc_html_e('Access', 'lloyds-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="theme-brand"><?php esc_html_e('Brand', 'lloyds-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="theme-layout"><?php esc_html_e('Layout', 'lloyds-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="theme-header-footer"><?php esc_html_e('Header & Footer', 'lloyds-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="theme-operations"><?php esc_html_e('Operations', 'lloyds-industrial'); ?></button>
+        </nav>
+
+        <form class="li-settings-form li-admin-tab-panels" method="post" action="options.php">
             <input type="hidden" name="li_theme_settings[_settings_context]" value="global">
             <?php
             settings_fields('li_theme_settings');
-            do_settings_sections('lloyds');
-            submit_button(__('Save Theme Settings', 'lloyds-industrial'));
+            li_render_settings_section_panel('lloyds', 'li_site_behavior_section', 'theme-access');
+            li_render_settings_section_panel('lloyds', 'li_brand_section', 'theme-brand');
+            li_render_settings_section_panel('lloyds', 'li_layout_display_section', 'theme-layout');
+            li_render_settings_section_panel('lloyds', 'li_global_layout_section', 'theme-header-footer');
             ?>
         </form>
 
-        <section class="li-settings-maintenance" aria-labelledby="li-settings-maintenance-title">
+        <section class="li-settings-maintenance li-admin-tab-panel" data-li-tab-panel="theme-operations" aria-labelledby="li-settings-maintenance-title">
             <div class="li-settings-section-heading">
                 <p class="li-settings-kicker"><?php esc_html_e('Operations', 'lloyds-industrial'); ?></p>
                 <h2 id="li-settings-maintenance-title"><?php esc_html_e('Theme Maintenance', 'lloyds-industrial'); ?></h2>
@@ -1734,6 +1745,41 @@ function li_render_settings_page(): void
             </div>
         </section>
     </div>
+    <?php
+}
+
+function li_render_settings_section_panel(string $page, string $section_id, string $tab_id): void
+{
+    global $wp_settings_sections, $wp_settings_fields;
+
+    if (empty($wp_settings_sections[$page][$section_id])) {
+        return;
+    }
+
+    $section = $wp_settings_sections[$page][$section_id];
+    $has_fields = !empty($wp_settings_fields[$page][$section_id]);
+    ?>
+    <section class="li-admin-tab-panel" data-li-tab-panel="<?php echo esc_attr($tab_id); ?>">
+        <?php if (!empty($section['title'])) : ?>
+            <h2><?php echo esc_html((string) $section['title']); ?></h2>
+        <?php endif; ?>
+
+        <?php
+        if (!empty($section['callback']) && is_callable($section['callback'])) {
+            call_user_func($section['callback'], $section);
+        }
+        ?>
+
+        <?php if ($has_fields) : ?>
+            <table class="form-table" role="presentation">
+                <tbody>
+                    <?php do_settings_fields($page, $section_id); ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
+
+        <?php submit_button(__('Save Theme Settings', 'lloyds-industrial')); ?>
+    </section>
     <?php
 }
 

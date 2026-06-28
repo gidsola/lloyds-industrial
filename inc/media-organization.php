@@ -64,33 +64,25 @@ function li_media_render_product_media_tools_page(): void
         </div>
 
         <?php if (is_array($product_result)): ?>
-            <div class="notice notice-success">
-                <p>
-                    <?php
-                    printf(
-                        esc_html__('Checked %1$d products and moved %2$d image attachment files. %3$d images were already organized or skipped.', 'lloyds-industrial'),
-                        (int) $product_result['products'],
-                        (int) $product_result['moved'],
-                        (int) $product_result['skipped']
-                    );
-                    ?>
-                </p>
-            </div>
+            <?php
+            li_render_admin_notice(sprintf(
+                __('Checked %1$d products and moved %2$d image attachment files. %3$d images were already organized or skipped.', 'lloyds-industrial'),
+                (int) $product_result['products'],
+                (int) $product_result['moved'],
+                (int) $product_result['skipped']
+            ));
+            ?>
         <?php endif; ?>
 
         <?php if (is_array($flipbook_result)): ?>
-            <div class="notice notice-success">
-                <p>
-                    <?php
-                    printf(
-                        esc_html__('Checked %1$d flipbooks and moved %2$d PDF attachment files. %3$d PDFs were already organized or skipped.', 'lloyds-industrial'),
-                        (int) $flipbook_result['flipbooks'],
-                        (int) $flipbook_result['moved'],
-                        (int) $flipbook_result['skipped']
-                    );
-                    ?>
-                </p>
-            </div>
+            <?php
+            li_render_admin_notice(sprintf(
+                __('Checked %1$d flipbooks and moved %2$d PDF attachment files. %3$d PDFs were already organized or skipped.', 'lloyds-industrial'),
+                (int) $flipbook_result['flipbooks'],
+                (int) $flipbook_result['moved'],
+                (int) $flipbook_result['skipped']
+            ));
+            ?>
         <?php endif; ?>
 
         <form method="post" class="li-settings-form">

@@ -170,17 +170,27 @@ function li_chatbot_maybe_install(): void
 
 function li_chatbot_register_admin_menu(): void
 {
+    add_menu_page(
+        __('Lloyds Intelligence', 'lloyds-industrial'),
+        __('Intelligence', 'lloyds-industrial'),
+        'manage_options',
+        'lloyds-intelligence',
+        'li_chatbot_render_overview_page',
+        'dashicons-chart-line',
+        59
+    );
+
     add_submenu_page(
-        'lloyds',
+        'lloyds-intelligence',
         __('Lloyds AI Overview', 'lloyds-industrial'),
         __('AI Overview', 'lloyds-industrial'),
         'manage_options',
-        'lloyds-ai-overview',
+        'lloyds-intelligence',
         'li_chatbot_render_overview_page'
     );
 
     add_submenu_page(
-        'lloyds',
+        'lloyds-intelligence',
         __('Lloyds AI Chatbot', 'lloyds-industrial'),
         __('AI Chatbot', 'lloyds-industrial'),
         'manage_options',
@@ -1039,7 +1049,7 @@ function li_chatbot_render_overview_page(): void
         </div>
 
         <form class="li-analytics-filter" method="get">
-            <input type="hidden" name="page" value="lloyds-ai-overview">
+            <input type="hidden" name="page" value="lloyds-intelligence">
             <label>
                 <span><?php esc_html_e('Usage range', 'lloyds-industrial'); ?></span>
                 <select name="range">
@@ -1455,18 +1465,29 @@ function li_chatbot_render_admin_page(): void
             </div>
         <?php endif; ?>
 
-        <form class="li-settings-form" method="post" action="options.php">
+        <nav class="li-admin-tabs" data-li-admin-tabs=".li-chatbot-admin" data-li-tabs-key="li-chatbot-admin-tab" aria-label="<?php esc_attr_e('Chatbot settings sections', 'lloyds-industrial'); ?>">
+            <button class="li-admin-tab" type="button" data-li-tab-target="chatbot-general"><?php esc_html_e('General', 'lloyds-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="chatbot-endpoint"><?php esc_html_e('Model Endpoint', 'lloyds-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="chatbot-context"><?php esc_html_e('Context Sources', 'lloyds-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="chatbot-appearance"><?php esc_html_e('Appearance', 'lloyds-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="chatbot-index"><?php esc_html_e('Knowledge Index', 'lloyds-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="chatbot-manual"><?php esc_html_e('Manual Context', 'lloyds-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="chatbot-testing"><?php esc_html_e('Testing', 'lloyds-industrial'); ?></button>
+        </nav>
+
+        <form class="li-settings-form li-admin-tab-panels" method="post" action="options.php">
             <?php settings_fields('li_chatbot_settings'); ?>
 
-            <section class="li-admin-panel">
+            <section class="li-admin-panel li-admin-tab-panel" data-li-tab-panel="chatbot-general">
                 <h2><?php esc_html_e('General', 'lloyds-industrial'); ?></h2>
                 <?php li_chatbot_render_checkbox('enabled', __('Enable chatbot on the public site', 'lloyds-industrial'), $settings); ?>
                 <?php li_chatbot_render_text('widget_title', __('Widget title', 'lloyds-industrial'), $settings); ?>
                 <?php li_chatbot_render_textarea('greeting', __('Greeting', 'lloyds-industrial'), $settings, 3); ?>
                 <?php li_chatbot_render_text('placeholder', __('Input placeholder', 'lloyds-industrial'), $settings); ?>
+                <?php submit_button(__('Save Chatbot Settings', 'lloyds-industrial'), 'primary', 'submit', false); ?>
             </section>
 
-            <section class="li-admin-panel">
+            <section class="li-admin-panel li-admin-tab-panel" data-li-tab-panel="chatbot-endpoint">
                 <h2><?php esc_html_e('Model Endpoint', 'lloyds-industrial'); ?></h2>
                 <?php li_chatbot_render_text('endpoint_url', __('Endpoint URL', 'lloyds-industrial'), $settings, 'https://example.com/chat'); ?>
                 <?php li_chatbot_render_select('endpoint_mode', __('Endpoint format', 'lloyds-industrial'), $settings, ['custom' => __('Custom Lloyds payload', 'lloyds-industrial'), 'openai' => __('OpenAI-compatible chat completions', 'lloyds-industrial')]); ?>
@@ -1477,29 +1498,30 @@ function li_chatbot_render_admin_page(): void
                 <?php li_chatbot_render_number('timeout', __('Timeout seconds', 'lloyds-industrial'), $settings, 5, 60); ?>
                 <?php li_chatbot_render_number('max_context_chunks', __('Max context chunks', 'lloyds-industrial'), $settings, 1, 12); ?>
                 <?php li_chatbot_render_textarea('system_prompt', __('System/tone prompt', 'lloyds-industrial'), $settings, 5); ?>
+                <?php submit_button(__('Save Chatbot Settings', 'lloyds-industrial'), 'primary', 'submit', false); ?>
             </section>
 
-            <section class="li-admin-panel">
+            <section class="li-admin-panel li-admin-tab-panel" data-li-tab-panel="chatbot-context">
                 <h2><?php esc_html_e('Context Sources', 'lloyds-industrial'); ?></h2>
                 <?php foreach (['source_pages' => __('Pages', 'lloyds-industrial'), 'source_products' => __('Products', 'lloyds-industrial'), 'source_documents' => __('Documents and SDS metadata', 'lloyds-industrial'), 'source_resellers' => __('Resellers', 'lloyds-industrial'), 'source_flipbooks' => __('PDF Flipbooks', 'lloyds-industrial'), 'source_media_metadata' => __('Media metadata', 'lloyds-industrial')] as $key => $label) : ?>
                     <?php li_chatbot_render_checkbox($key, $label, $settings); ?>
                 <?php endforeach; ?>
                 <?php li_chatbot_render_checkbox('log_conversations', __('Log conversations for admin review', 'lloyds-industrial'), $settings); ?>
+                <?php submit_button(__('Save Chatbot Settings', 'lloyds-industrial'), 'primary', 'submit', false); ?>
             </section>
 
-            <section class="li-admin-panel">
+            <section class="li-admin-panel li-admin-tab-panel" data-li-tab-panel="chatbot-appearance">
                 <h2><?php esc_html_e('Widget Appearance', 'lloyds-industrial'); ?></h2>
                 <?php li_chatbot_render_select('widget_position', __('Icon position', 'lloyds-industrial'), $settings, ['bottom-right' => __('Bottom right', 'lloyds-industrial'), 'bottom-left' => __('Bottom left', 'lloyds-industrial'), 'top-right' => __('Top right', 'lloyds-industrial'), 'top-left' => __('Top left', 'lloyds-industrial')]); ?>
                 <?php li_chatbot_render_text('button_label', __('Button label', 'lloyds-industrial'), $settings); ?>
                 <?php li_chatbot_render_text('avatar_text', __('Avatar text', 'lloyds-industrial'), $settings); ?>
                 <?php li_chatbot_render_text('accent_color', __('Accent color', 'lloyds-industrial'), $settings, '#17443b'); ?>
+                <?php submit_button(__('Save Chatbot Settings', 'lloyds-industrial'), 'primary', 'submit', false); ?>
             </section>
-
-            <?php submit_button(__('Save Chatbot Settings', 'lloyds-industrial')); ?>
         </form>
 
-        <div class="li-settings-maintenance li-chatbot-tools">
-            <section class="li-admin-panel">
+        <div class="li-settings-maintenance li-chatbot-tools li-admin-tab-panels">
+            <section class="li-admin-panel li-admin-tab-panel" data-li-tab-panel="chatbot-index">
                 <h2><?php esc_html_e('Knowledge Index', 'lloyds-industrial'); ?></h2>
                 <p><?php esc_html_e('Rebuild the local retrieval index from the selected source toggles. Protected SDS files are not indexed as readable text; only safe metadata is stored.', 'lloyds-industrial'); ?></p>
                 <form method="post">
@@ -1508,7 +1530,7 @@ function li_chatbot_render_admin_page(): void
                 </form>
             </section>
 
-            <section class="li-admin-panel">
+            <section class="li-admin-panel li-admin-tab-panel" data-li-tab-panel="chatbot-manual">
                 <h2><?php esc_html_e('Manual Context', 'lloyds-industrial'); ?></h2>
                 <p><?php esc_html_e('Add controlled knowledge that does not live in normal WordPress content. Text, Markdown, CSV, and JSON uploads are accepted.', 'lloyds-industrial'); ?></p>
                 <form method="post" enctype="multipart/form-data">
@@ -1529,7 +1551,7 @@ function li_chatbot_render_admin_page(): void
                 </form>
             </section>
 
-            <section class="li-admin-panel li-chatbot-test-console">
+            <section class="li-admin-panel li-chatbot-test-console li-admin-tab-panel" data-li-tab-panel="chatbot-testing">
                 <h2><?php esc_html_e('Testing Console', 'lloyds-industrial'); ?></h2>
                 <p><?php esc_html_e('Send a test prompt through the same retrieval and endpoint layer used by the public widget.', 'lloyds-industrial'); ?></p>
                 <form method="post">

@@ -40,6 +40,7 @@ require_once get_template_directory() . '/inc/customer-roles.php';
 require_once get_template_directory() . '/inc/multisite.php';
 
 require_once get_template_directory() . '/inc/admin.php';
+require_once get_template_directory() . '/inc/admin-menu-state.php';
 require_once get_template_directory() . '/inc/quote-mode.php';
 require_once get_template_directory() . '/inc/admin-columns.php';
 

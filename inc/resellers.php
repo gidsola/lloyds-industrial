@@ -27,16 +27,26 @@ add_action('init', function (): void {
 });
 
 add_action('admin_menu', function (): void {
+    add_menu_page(
+        __('Lloyds Channels', 'lloyds-industrial'),
+        __('Channels', 'lloyds-industrial'),
+        'edit_posts',
+        'lloyds-channels',
+        'li_render_reseller_admin_overview',
+        'dashicons-store',
+        61
+    );
+
     add_submenu_page(
-        'lloyds',
+        'lloyds-channels',
         __('Lloyds Resellers', 'lloyds-industrial'),
         __('Resellers', 'lloyds-industrial'),
         'edit_posts',
-        'lloyds-resellers',
+        'lloyds-channels',
         'li_render_reseller_admin_overview'
     );
 
-}, 20);
+}, 1);
 
 function li_render_reseller_admin_overview(): void
 {

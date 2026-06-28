@@ -79,33 +79,30 @@ add_action('admin_enqueue_scripts', function (string $hook_suffix): void {
 
     if (
         $hook_suffix === 'toplevel_page_lloyds'
-        || $hook_suffix === 'lloyds_page_lloyds-contact-forms'
+        || $hook_suffix === 'toplevel_page_lloyds-intelligence'
+        || $hook_suffix === 'toplevel_page_lloyds-documents'
+        || $hook_suffix === 'toplevel_page_lloyds-channels'
+        || $hook_suffix === 'toplevel_page_lloyds-campaigns'
         || $hook_suffix === 'lloyds_page_lloyds-product-carousel'
-        || $hook_suffix === 'lloyds_page_lloyds-analytics'
-        || $hook_suffix === 'lloyds_page_lloyds-seo'
-        || $hook_suffix === 'lloyds_page_lloyds-mailing-list'
-        || $hook_suffix === 'lloyds_page_lloyds-mail-campaigns'
-        || $hook_suffix === 'lloyds_page_lloyds-mail-campaign-builder'
-        || $hook_suffix === 'lloyds_page_lloyds-ai-overview'
-        || $hook_suffix === 'lloyds_page_lloyds-ai-chatbot'
         || $hook_suffix === 'lloyds_page_lloyds-product-media-organizer'
         || $hook_suffix === 'lloyds_page_lloyds-mega-menu'
         || $hook_suffix === 'upload.php'
         || $hook_suffix === 'media-new.php'
         || in_array($admin_page, [
             'lloyds',
+            'lloyds-intelligence',
+            'lloyds-documents',
+            'lloyds-channels',
+            'lloyds-campaigns',
             'lloyds-mega-menu',
             'lloyds-contact-forms',
             'lloyds-product-carousel',
             'lloyds-analytics',
             'lloyds-seo',
-            'lloyds-mailing-list',
             'lloyds-mail-campaigns',
             'lloyds-mail-campaign-builder',
-            'lloyds-ai-overview',
             'lloyds-ai-chatbot',
             'lloyds-product-media-organizer',
-            'lloyds-resellers',
         ], true)
         || ($screen && in_array((string) $screen->post_type, $styled_post_types, true))
     ) {
@@ -167,21 +164,7 @@ add_action('admin_enqueue_scripts', function (string $hook_suffix): void {
         ? li_seo_get_supported_public_post_types()
         : [];
 
-    if ($hook_suffix === 'lloyds_page_lloyds-seo') {
-        wp_enqueue_media();
-
-        wp_enqueue_script(
-            'lloyds-admin',
-            get_template_directory_uri() . '/assets/js/admin.js',
-            ['jquery'],
-            filemtime(get_template_directory() . '/assets/js/admin.js'),
-            true
-        );
-
-        return;
-    }
-
-    if (in_array($admin_page, ['lloyds-ai-chatbot', 'lloyds-ai-overview'], true)) {
+    if (in_array($admin_page, ['lloyds', 'lloyds-seo', 'lloyds-ai-chatbot', 'lloyds-intelligence'], true)) {
         wp_enqueue_script(
             'lloyds-admin',
             get_template_directory_uri() . '/assets/js/admin.js',
@@ -189,6 +172,12 @@ add_action('admin_enqueue_scripts', function (string $hook_suffix): void {
             filemtime(get_template_directory() . '/assets/js/admin.js'),
             true
         );
+    }
+
+    if ($admin_page === 'lloyds-seo') {
+        wp_enqueue_media();
+
+        return;
     }
 
     if (!$screen || !in_array($screen->post_type, array_merge(['product', 'li_document'], $seo_supported_post_types), true)) {

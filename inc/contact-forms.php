@@ -71,7 +71,7 @@ add_action('init', function (): void {
 
 add_action('admin_menu', function (): void {
     add_submenu_page(
-        'lloyds',
+        'lloyds-channels',
         __('Contact Submissions', 'lloyds-industrial'),
         __('Contact Submissions', 'lloyds-industrial'),
         'edit_posts',
@@ -79,7 +79,7 @@ add_action('admin_menu', function (): void {
     );
 
     add_submenu_page(
-        'lloyds',
+        'lloyds-channels',
         __('Lloyds Contact Forms', 'lloyds-industrial'),
         __('Contact Forms', 'lloyds-industrial'),
         'manage_options',

@@ -140,8 +140,27 @@ function li_mail_maybe_flush_rewrite_rules(): void
 
 function li_mail_register_admin_menu(): void
 {
+    add_menu_page(
+        __('Lloyds Campaigns', 'lloyds-industrial'),
+        __('Campaigns', 'lloyds-industrial'),
+        'manage_options',
+        'lloyds-campaigns',
+        'li_mail_render_settings_page',
+        'dashicons-megaphone',
+        62
+    );
+
     add_submenu_page(
-        'lloyds',
+        'lloyds-campaigns',
+        __('Lloyds Mailing List', 'lloyds-industrial'),
+        __('Mailing List', 'lloyds-industrial'),
+        'manage_options',
+        'lloyds-campaigns',
+        'li_mail_render_settings_page'
+    );
+
+    add_submenu_page(
+        'lloyds-campaigns',
         __('Mail Subscribers', 'lloyds-industrial'),
         __('Mail Subscribers', 'lloyds-industrial'),
         'edit_posts',
@@ -149,7 +168,7 @@ function li_mail_register_admin_menu(): void
     );
 
     add_submenu_page(
-        'lloyds',
+        'lloyds-campaigns',
         __('Mailing Tags', 'lloyds-industrial'),
         __('Mailing Tags', 'lloyds-industrial'),
         'manage_categories',
@@ -157,16 +176,7 @@ function li_mail_register_admin_menu(): void
     );
 
     add_submenu_page(
-        'lloyds',
-        __('Lloyds Mailing List', 'lloyds-industrial'),
-        __('Mailing List', 'lloyds-industrial'),
-        'manage_options',
-        'lloyds-mailing-list',
-        'li_mail_render_settings_page'
-    );
-
-    add_submenu_page(
-        'lloyds',
+        'lloyds-campaigns',
         __('Campaign Studio', 'lloyds-industrial'),
         __('Mail Campaigns', 'lloyds-industrial'),
         'manage_options',
@@ -272,7 +282,7 @@ function li_mail_handle_admin_actions(): void
         ], MINUTE_IN_SECONDS);
     }
 
-    wp_safe_redirect(wp_get_referer() ?: admin_url('admin.php?page=lloyds-mailing-list'));
+    wp_safe_redirect(wp_get_referer() ?: admin_url('admin.php?page=lloyds-campaigns'));
     exit;
 }
 
@@ -311,7 +321,7 @@ add_action('admin_notices', function (): void {
         $class = 'notice-error';
     }
 
-    printf('<div class="notice %1$s is-dismissible"><p>%2$s</p></div>', esc_attr($class), esc_html($message));
+    li_render_admin_notice($message, $class === 'notice-error' ? 'error' : 'success');
 });
 
 function li_mail_find_subscriber_by_email(string $email): ?WP_Post
@@ -758,9 +768,9 @@ function li_mail_render_campaign_send_metabox(WP_Post $post): void
     $failed = (int) get_post_meta($post->ID, '_li_mail_failed_count', true);
     $last_sent = (string) get_post_meta($post->ID, '_li_mail_last_sent_at', true);
     $queued = count(li_mail_get_campaign_queue((int) $post->ID));
-    $send_url = wp_nonce_url(admin_url('admin.php?page=lloyds-mailing-list&li_mail_action=send_campaign&campaign_id=' . $post->ID), 'li_mail_send_campaign');
-    $process_url = wp_nonce_url(admin_url('admin.php?page=lloyds-mailing-list&li_mail_action=process_queue&campaign_id=' . $post->ID), 'li_mail_process_queue');
-    $test_url = wp_nonce_url(admin_url('admin.php?page=lloyds-mailing-list&li_mail_action=send_test_campaign&campaign_id=' . $post->ID), 'li_mail_send_test_campaign');
+    $send_url = wp_nonce_url(admin_url('admin.php?page=lloyds-campaigns&li_mail_action=send_campaign&campaign_id=' . $post->ID), 'li_mail_send_campaign');
+    $process_url = wp_nonce_url(admin_url('admin.php?page=lloyds-campaigns&li_mail_action=process_queue&campaign_id=' . $post->ID), 'li_mail_process_queue');
+    $test_url = wp_nonce_url(admin_url('admin.php?page=lloyds-campaigns&li_mail_action=send_test_campaign&campaign_id=' . $post->ID), 'li_mail_send_test_campaign');
     ?>
     <div class="li-editor-panel li-editor-panel--compact">
         <dl class="li-editor-panel__stats">
@@ -1056,7 +1066,7 @@ function li_mail_render_settings_page(): void
     $campaign_count = wp_count_posts('li_mail_campaign');
     $campaigns_url = admin_url('admin.php?page=lloyds-mail-campaigns');
     $subscribers_url = admin_url('edit.php?post_type=li_mail_subscriber');
-    $export_url = wp_nonce_url(admin_url('admin.php?page=lloyds-mailing-list&li_mail_action=export_subscribers'), 'li_mail_export_subscribers');
+    $export_url = wp_nonce_url(admin_url('admin.php?page=lloyds-campaigns&li_mail_action=export_subscribers'), 'li_mail_export_subscribers');
     ?>
     <div class="wrap li-settings-page li-mail-page">
         <div class="li-settings-hero">
@@ -1273,7 +1283,7 @@ function li_mail_render_campaigns_page(): void
 
         <p class="li-seo-actions">
             <a class="button button-primary" href="<?php echo esc_url(admin_url('admin.php?page=lloyds-mail-campaign-builder')); ?>"><?php esc_html_e('New Campaign', 'lloyds-industrial'); ?></a>
-            <a class="button button-secondary" href="<?php echo esc_url(admin_url('admin.php?page=lloyds-mailing-list')); ?>"><?php esc_html_e('Mail Settings', 'lloyds-industrial'); ?></a>
+            <a class="button button-secondary" href="<?php echo esc_url(admin_url('admin.php?page=lloyds-campaigns')); ?>"><?php esc_html_e('Mail Settings', 'lloyds-industrial'); ?></a>
         </p>
 
         <div class="li-mail-campaign-list">
@@ -1332,9 +1342,9 @@ function li_mail_render_campaign_builder_page(): void
     $sent = $campaign_id ? (int) get_post_meta($campaign_id, '_li_mail_sent_count', true) : 0;
     $failed = $campaign_id ? (int) get_post_meta($campaign_id, '_li_mail_failed_count', true) : 0;
     $queued = $campaign_id ? count(li_mail_get_campaign_queue($campaign_id)) : 0;
-    $send_url = $campaign_id ? wp_nonce_url(admin_url('admin.php?page=lloyds-mailing-list&li_mail_action=send_campaign&campaign_id=' . $campaign_id), 'li_mail_send_campaign') : '';
-    $process_url = $campaign_id ? wp_nonce_url(admin_url('admin.php?page=lloyds-mailing-list&li_mail_action=process_queue&campaign_id=' . $campaign_id), 'li_mail_process_queue') : '';
-    $test_url = $campaign_id ? wp_nonce_url(admin_url('admin.php?page=lloyds-mailing-list&li_mail_action=send_test_campaign&campaign_id=' . $campaign_id), 'li_mail_send_test_campaign') : '';
+    $send_url = $campaign_id ? wp_nonce_url(admin_url('admin.php?page=lloyds-campaigns&li_mail_action=send_campaign&campaign_id=' . $campaign_id), 'li_mail_send_campaign') : '';
+    $process_url = $campaign_id ? wp_nonce_url(admin_url('admin.php?page=lloyds-campaigns&li_mail_action=process_queue&campaign_id=' . $campaign_id), 'li_mail_process_queue') : '';
+    $test_url = $campaign_id ? wp_nonce_url(admin_url('admin.php?page=lloyds-campaigns&li_mail_action=send_test_campaign&campaign_id=' . $campaign_id), 'li_mail_send_test_campaign') : '';
     ?>
     <div class="wrap li-settings-page li-mail-builder-page">
         <div class="li-settings-hero">
@@ -1351,7 +1361,7 @@ function li_mail_render_campaign_builder_page(): void
         </div>
 
         <?php if (isset($_GET['li_mail_saved'])) : ?>
-            <div class="notice notice-success is-dismissible"><p><?php esc_html_e('Campaign saved.', 'lloyds-industrial'); ?></p></div>
+            <?php li_render_admin_notice(__('Campaign saved.', 'lloyds-industrial')); ?>
         <?php endif; ?>
 
         <form class="li-mail-builder" method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">

@@ -225,6 +225,75 @@
     document.querySelectorAll('[data-li-media-picker]').forEach(bindMediaPicker);
     document.querySelectorAll('[data-li-product-finder]').forEach(bindProductFinder);
 
+    document.querySelectorAll('[data-li-admin-tabs]').forEach((tabs) => {
+        const tabButtons = Array.from(tabs.querySelectorAll('[data-li-tab-target]'));
+        const scopeSelector = tabs.dataset.liAdminTabs || '';
+        const scope = scopeSelector ? document.querySelector(scopeSelector) : tabs.parentElement;
+        const panels = scope ? Array.from(scope.querySelectorAll('[data-li-tab-panel]')) : [];
+
+        if (!tabButtons.length || !panels.length) {
+            return;
+        }
+
+        const storageKey = tabs.dataset.liTabsKey || '';
+        const panelIds = panels.map((panel) => panel.dataset.liTabPanel).filter(Boolean);
+        const getInitialTab = () => {
+            const hash = window.location.hash.replace('#', '');
+
+            if (hash && panelIds.includes(hash)) {
+                return hash;
+            }
+
+            if (storageKey) {
+                const stored = window.sessionStorage.getItem(storageKey);
+
+                if (stored && panelIds.includes(stored)) {
+                    return stored;
+                }
+            }
+
+            return tabButtons[0].dataset.liTabTarget;
+        };
+
+        const activateTab = (target, updateHash = true) => {
+            if (!panelIds.includes(target)) {
+                target = tabButtons[0].dataset.liTabTarget;
+            }
+
+            tabButtons.forEach((button) => {
+                const isActive = button.dataset.liTabTarget === target;
+                button.classList.toggle('is-active', isActive);
+                button.setAttribute('aria-selected', isActive ? 'true' : 'false');
+            });
+
+            panels.forEach((panel) => {
+                panel.hidden = panel.dataset.liTabPanel !== target;
+            });
+
+            if (storageKey) {
+                window.sessionStorage.setItem(storageKey, target);
+            }
+
+            if (updateHash && window.history?.replaceState) {
+                window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}#${target}`);
+            }
+        };
+
+        tabButtons.forEach((button) => {
+            button.addEventListener('click', () => activateTab(button.dataset.liTabTarget));
+        });
+
+        window.addEventListener('hashchange', () => {
+            const hash = window.location.hash.replace('#', '');
+
+            if (panelIds.includes(hash)) {
+                activateTab(hash, false);
+            }
+        });
+
+        activateTab(getInitialTab(), false);
+    });
+
     document.querySelectorAll('[data-li-auto-dismiss-notice]').forEach((notice) => {
         const dismiss = () => {
             notice.classList.add('is-dismissing');
