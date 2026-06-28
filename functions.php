@@ -34,6 +34,7 @@ require_once get_template_directory() . '/inc/contact-forms.php';
 require_once get_template_directory() . '/inc/analytics.php';
 require_once get_template_directory() . '/inc/seo.php';
 require_once get_template_directory() . '/inc/mailing-list.php';
+require_once get_template_directory() . '/inc/ai-chatbot.php';
 
 require_once get_template_directory() . '/inc/customer-roles.php';
 require_once get_template_directory() . '/inc/multisite.php';

@@ -590,6 +590,13 @@ function li_render_analytics_page(): void
     $contact_submissions = li_analytics_count_events($range, 'contact_submission', true);
     $document_downloads = li_analytics_count_events($range, 'document_download', true);
     $cart_adds = li_analytics_count_events($range, 'add_to_cart', true);
+    $chatbot_messages = li_analytics_count_events($range, 'chatbot_message', true);
+    $chatbot_sds_events = li_analytics_count_events($range, 'chatbot_sds_login_prompt', true)
+        + li_analytics_count_events($range, 'chatbot_sds_available', true)
+        + li_analytics_count_events($range, 'chatbot_sds_denied', true);
+    $chatbot_logins = li_analytics_count_events($range, 'chatbot_login_success', true);
+    $chatbot_action_clicks = li_analytics_count_events($range, 'chatbot_action_click', true)
+        + li_analytics_count_events($range, 'chatbot_download_click', true);
     $bot_events = li_analytics_count_events($range, '', false) - $views;
     $daily_rows = li_analytics_get_daily_rows($range);
     $top_pages = li_analytics_get_top_rows($range, 'path', '', 12);
@@ -600,6 +607,7 @@ function li_render_analytics_page(): void
     $devices = li_analytics_get_top_rows($range, 'device', '', 6);
     $browsers = li_analytics_get_top_rows($range, 'browser', '', 6);
     $event_mix = li_analytics_get_top_rows($range, 'event_type', '', 10);
+    $chatbot_prompt_rows = li_analytics_get_top_rows($range, 'search_term', 'chatbot_message', 8);
     $currency = function_exists('get_woocommerce_currency_symbol') ? get_woocommerce_currency_symbol() : '$';
     ?>
     <div class="wrap li-settings-page li-analytics-page">
@@ -656,6 +664,10 @@ function li_render_analytics_page(): void
             li_render_analytics_kpi(__('Cart Adds', 'lloyds-industrial'), number_format_i18n($cart_adds), __('Products added to cart.', 'lloyds-industrial'));
             li_render_analytics_kpi(__('Documents', 'lloyds-industrial'), number_format_i18n($document_downloads), __('Secure and public document downloads.', 'lloyds-industrial'));
             li_render_analytics_kpi(__('Inquiries', 'lloyds-industrial'), number_format_i18n($contact_submissions), __('Native contact form submissions.', 'lloyds-industrial'));
+            li_render_analytics_kpi(__('Chat Messages', 'lloyds-industrial'), number_format_i18n($chatbot_messages), __('AI assistant prompts from visitors and signed-in users.', 'lloyds-industrial'));
+            li_render_analytics_kpi(__('Chat SDS Events', 'lloyds-industrial'), number_format_i18n($chatbot_sds_events), __('SDS login prompts, access checks, and availability responses.', 'lloyds-industrial'));
+            li_render_analytics_kpi(__('Chat Logins', 'lloyds-industrial'), number_format_i18n($chatbot_logins), __('Successful in-chat login events.', 'lloyds-industrial'));
+            li_render_analytics_kpi(__('Chat Clicks', 'lloyds-industrial'), number_format_i18n($chatbot_action_clicks), __('Links and document actions clicked inside chat.', 'lloyds-industrial'));
             li_render_analytics_kpi(__('Items Sold', 'lloyds-industrial'), number_format_i18n((int) $sales['items']), __('Line item quantity from tracked orders.', 'lloyds-industrial'));
             li_render_analytics_kpi(__('Bot Events', 'lloyds-industrial'), number_format_i18n(max(0, $bot_events)), __('Recorded but excluded from primary metrics.', 'lloyds-industrial'));
             ?>
@@ -678,6 +690,7 @@ function li_render_analytics_page(): void
             li_render_analytics_table(__('Document Downloads', 'lloyds-industrial'), $top_documents, __('Document', 'lloyds-industrial'));
             li_render_analytics_table(__('Search Terms', 'lloyds-industrial'), $top_searches, __('Term', 'lloyds-industrial'));
             li_render_analytics_table(__('Event Mix', 'lloyds-industrial'), $event_mix, __('Event', 'lloyds-industrial'));
+            li_render_analytics_table(__('Chatbot Prompts', 'lloyds-industrial'), $chatbot_prompt_rows, __('Prompt', 'lloyds-industrial'));
             li_render_analytics_table(__('Devices', 'lloyds-industrial'), $devices, __('Device', 'lloyds-industrial'));
             li_render_analytics_table(__('Browsers', 'lloyds-industrial'), $browsers, __('Browser', 'lloyds-industrial'));
             ?>

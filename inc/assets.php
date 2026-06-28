@@ -86,6 +86,8 @@ add_action('admin_enqueue_scripts', function (string $hook_suffix): void {
         || $hook_suffix === 'lloyds_page_lloyds-mailing-list'
         || $hook_suffix === 'lloyds_page_lloyds-mail-campaigns'
         || $hook_suffix === 'lloyds_page_lloyds-mail-campaign-builder'
+        || $hook_suffix === 'lloyds_page_lloyds-ai-overview'
+        || $hook_suffix === 'lloyds_page_lloyds-ai-chatbot'
         || $hook_suffix === 'lloyds_page_lloyds-product-media-organizer'
         || $hook_suffix === 'lloyds_page_lloyds-mega-menu'
         || $hook_suffix === 'upload.php'
@@ -100,6 +102,8 @@ add_action('admin_enqueue_scripts', function (string $hook_suffix): void {
             'lloyds-mailing-list',
             'lloyds-mail-campaigns',
             'lloyds-mail-campaign-builder',
+            'lloyds-ai-overview',
+            'lloyds-ai-chatbot',
             'lloyds-product-media-organizer',
             'lloyds-resellers',
         ], true)
@@ -175,6 +179,16 @@ add_action('admin_enqueue_scripts', function (string $hook_suffix): void {
         );
 
         return;
+    }
+
+    if (in_array($admin_page, ['lloyds-ai-chatbot', 'lloyds-ai-overview'], true)) {
+        wp_enqueue_script(
+            'lloyds-admin',
+            get_template_directory_uri() . '/assets/js/admin.js',
+            [],
+            filemtime(get_template_directory() . '/assets/js/admin.js'),
+            true
+        );
     }
 
     if (!$screen || !in_array($screen->post_type, array_merge(['product', 'li_document'], $seo_supported_post_types), true)) {

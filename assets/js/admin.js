@@ -225,6 +225,20 @@
     document.querySelectorAll('[data-li-media-picker]').forEach(bindMediaPicker);
     document.querySelectorAll('[data-li-product-finder]').forEach(bindProductFinder);
 
+    document.querySelectorAll('[data-li-auto-dismiss-notice]').forEach((notice) => {
+        const dismiss = () => {
+            notice.classList.add('is-dismissing');
+            window.setTimeout(() => notice.remove(), 220);
+        };
+        const dismissButton = notice.querySelector('[data-li-dismiss-notice]');
+
+        if (dismissButton) {
+            dismissButton.addEventListener('click', dismiss);
+        }
+
+        window.setTimeout(dismiss, 5200);
+    });
+
     if (window.lloydsAdmin?.mediaLibrary?.enabled) {
         const settings = window.lloydsAdmin.mediaLibrary;
         const heading = document.querySelector('.wrap h1');
