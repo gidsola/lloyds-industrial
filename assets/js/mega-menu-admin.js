@@ -92,6 +92,13 @@
             }
         });
 
+        $container.on('click', '.li-mega-menu-inner-tab', function() {
+            var $button = $(this);
+            var $fields = $button.closest('.li-mega-menu-item-fields');
+
+            activateMegaMenuItemTab($fields, $button.data('megaMenuInnerTab'));
+        });
+
         // Reset to defaults
         $('.li-mega-menu-reset').on('click', function() {
             if (confirm(liMegaMenu.confirmations.reset)) {
@@ -111,6 +118,9 @@
 
         // Initialize color pickers for dynamic content
         initDynamicColorPickers();
+
+        // Initialize inner tabs for expanded item settings
+        initMegaMenuItemTabs($container);
 
         // Initial form to JSON sync
         updateJsonFromForm();
@@ -138,6 +148,7 @@
         // Initialize media pickers for this item
         initMediaPickerForElement($item);
         initColorPickersForElement($item);
+        initMegaMenuItemTabs($item);
         
         // Initialize children if they exist
         if (itemData && itemData.children && itemData.children.length > 0) {
@@ -165,6 +176,7 @@
             $childrenContainer = $('<div class="li-mega-menu-children" data-parent-index="' + parentIndex + '"></div>');
             var $group = $('<div class="li-mega-menu-field-group"><h5>Child Items</h5></div>');
             $group.append($childrenContainer).appendTo($parent.find('.li-mega-menu-item-fields'));
+            initMegaMenuItemTabs($parent);
         }
         
         var $child = $(childHtml).appendTo($childrenContainer);
@@ -188,8 +200,65 @@
         // Initialize media pickers for this child
         initMediaPickerForElement($child);
         initColorPickersForElement($child);
+        initMegaMenuItemTabs($child);
         
         updateJsonFromForm();
+    }
+
+    function initMegaMenuItemTabs($context) {
+        $context.find('.li-mega-menu-item-fields').addBack('.li-mega-menu-item-fields').each(function() {
+            var $fields = $(this);
+            var $groups = $fields.children('.li-mega-menu-field-group');
+
+            if (!$groups.length) {
+                return;
+            }
+
+            var $existingTabs = $fields.children('.li-mega-menu-inner-tabs');
+            var activeSlug = $existingTabs.find('.is-active').data('megaMenuInnerTab') || $groups.first().data('megaMenuInnerPanel');
+
+            $existingTabs.remove();
+            $groups.each(function(index) {
+                var $group = $(this);
+                var label = $.trim($group.children('h5').first().text()) || 'Section ' + (index + 1);
+                var slug = label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'section-' + index;
+
+                $group.attr('data-mega-menu-inner-panel', slug);
+            });
+
+            if (!activeSlug || !$groups.filter('[data-mega-menu-inner-panel="' + activeSlug + '"]').length) {
+                activeSlug = $groups.first().data('megaMenuInnerPanel');
+            }
+
+            var $tabs = $('<div class="li-mega-menu-inner-tabs" role="tablist"></div>');
+
+            $groups.each(function(index) {
+                var $group = $(this);
+                var slug = $group.data('megaMenuInnerPanel');
+                var label = $.trim($group.children('h5').first().text()) || 'Section ' + (index + 1);
+                var $button = $('<button type="button" class="li-mega-menu-inner-tab" role="tab"></button>');
+
+                $button.text(label).attr('data-mega-menu-inner-tab', slug);
+                $tabs.append($button);
+            });
+
+            $fields.prepend($tabs);
+            activateMegaMenuItemTab($fields, activeSlug);
+        });
+    }
+
+    function activateMegaMenuItemTab($fields, slug) {
+        $fields.children('.li-mega-menu-inner-tabs').find('.li-mega-menu-inner-tab').each(function() {
+            var $button = $(this);
+            var isActive = $button.data('megaMenuInnerTab') === slug;
+
+            $button.toggleClass('is-active', isActive).attr('aria-selected', isActive ? 'true' : 'false');
+        });
+
+        $fields.children('.li-mega-menu-field-group').each(function() {
+            var $group = $(this);
+            $group.toggle($group.data('megaMenuInnerPanel') === slug);
+        });
     }
 
     // Get the next available index

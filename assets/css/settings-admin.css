@@ -422,6 +422,87 @@
     margin: 0 0 0 18px;
 }
 
+.li-carousel-settings-form label {
+    display: grid;
+    gap: 7px;
+    max-width: 760px;
+}
+
+.li-carousel-settings-form .li-carousel-check {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+    font-weight: 700;
+}
+
+.li-carousel-settings-form label > span {
+    color: #17443b;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.li-carousel-settings-form input[type="text"],
+.li-carousel-settings-form input[type="number"],
+.li-carousel-settings-form textarea,
+.li-carousel-settings-form select {
+    border-color: #cfd9d5;
+    border-radius: 6px;
+    max-width: 520px;
+}
+
+.li-carousel-settings-form textarea {
+    max-width: 760px;
+}
+
+.li-carousel-usage-grid {
+    display: grid;
+    gap: 18px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+}
+
+.li-carousel-usage-grid h3 {
+    color: #17443b;
+    font-size: 15px;
+    margin: 0 0 10px;
+}
+
+.li-carousel-usage-grid code {
+    background: #f3f6f5;
+    border: 1px solid #dbe5e1;
+    border-radius: 6px;
+    display: inline-block;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    padding: 6px 8px;
+}
+
+.li-carousel-override-list {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+}
+
+.li-carousel-override-list > div {
+    background: #f6f8f7;
+    border: 1px solid #dbe5e1;
+    border-radius: 8px;
+    display: grid;
+    gap: 8px;
+    grid-template-columns: 140px minmax(0, 1fr);
+    padding: 12px;
+}
+
+.li-carousel-override-list dt,
+.li-carousel-override-list dd {
+    margin: 0;
+}
+
+.li-carousel-override-list dd {
+    color: #52615d;
+}
+
 .li-ai-overview-grid {
     display: grid;
     gap: 18px;
@@ -1805,6 +1886,7 @@
 
     .li-mail-campaign-card,
     .li-mail-builder,
+    .li-carousel-usage-grid,
     .li-editor-panel__grid,
     .lloyds-flipbook-builder__grid,
     .li-reseller-builder__grid,

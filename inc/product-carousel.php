@@ -98,26 +98,34 @@ function li_render_product_carousel_admin_page(): void
         'hide_empty' => false,
     ]) : [];
     ?>
-    <div class="wrap li-settings-page">
+    <div class="wrap li-settings-page li-product-carousel-admin">
         <div class="li-settings-hero">
             <div>
                 <p class="li-settings-kicker"><?php esc_html_e('Product Discovery', 'lloyds-industrial'); ?></p>
                 <h1><?php esc_html_e('Lloyds Product Carousel', 'lloyds-industrial'); ?></h1>
-                <p><?php esc_html_e('Configure a reusable product carousel for home pages, landing pages, product libraries, or partner sites.', 'lloyds-industrial'); ?></p>
+                <p><?php esc_html_e('Configure the global carousel defaults used by the base shortcode. Individual shortcode attributes can override selected defaults for one placement.', 'lloyds-industrial'); ?></p>
             </div>
-            <div class="li-settings-hero__meta">
-                <span><?php echo esc_html($settings['enabled'] ? __('Enabled', 'lloyds-industrial') : __('Disabled', 'lloyds-industrial')); ?></span>
-                <span><?php echo esc_html(sprintf(__('Mode: %s', 'lloyds-industrial'), ucfirst((string) $settings['display_mode']))); ?></span>
-                <span><code>[li_product_carousel]</code></span>
+            <div class="li-settings-summary">
+                <div><span><?php esc_html_e('Status', 'lloyds-industrial'); ?></span><strong><?php echo esc_html($settings['enabled'] ? __('Enabled', 'lloyds-industrial') : __('Disabled', 'lloyds-industrial')); ?></strong></div>
+                <div><span><?php esc_html_e('Default Mode', 'lloyds-industrial'); ?></span><strong><?php echo esc_html(ucfirst((string) $settings['display_mode'])); ?></strong></div>
+                <div><span><?php esc_html_e('Base Shortcode', 'lloyds-industrial'); ?></span><strong><code>[li_product_carousel]</code></strong></div>
             </div>
         </div>
 
-        <form method="post" action="options.php" class="li-settings-grid">
+        <nav class="li-admin-tabs" data-li-admin-tabs=".li-product-carousel-admin" data-li-tabs-key="li-product-carousel-tab" aria-label="<?php esc_attr_e('Carousel settings sections', 'lloyds-industrial'); ?>">
+            <button class="li-admin-tab" type="button" data-li-tab-target="carousel-content"><?php esc_html_e('Content Defaults', 'lloyds-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="carousel-slides"><?php esc_html_e('Slide Defaults', 'lloyds-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="carousel-display"><?php esc_html_e('Display', 'lloyds-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="carousel-usage"><?php esc_html_e('Shortcode Usage', 'lloyds-industrial'); ?></button>
+        </nav>
+
+        <form method="post" action="options.php" class="li-settings-form li-admin-tab-panels li-carousel-settings-form">
             <?php settings_fields('li_product_carousel_settings'); ?>
 
-            <section class="li-settings-card">
-                <h2><?php esc_html_e('Content', 'lloyds-industrial'); ?></h2>
-                <label>
+            <section class="li-admin-panel li-admin-tab-panel" data-li-tab-panel="carousel-content">
+                <h2><?php esc_html_e('Content Defaults', 'lloyds-industrial'); ?></h2>
+                <p><?php esc_html_e('These values appear whenever the shortcode does not provide its own title-related attributes.', 'lloyds-industrial'); ?></p>
+                <label class="li-carousel-check">
                     <input type="checkbox" name="li_product_carousel_settings[enabled]" value="1" <?php checked(!empty($settings['enabled'])); ?>>
                     <?php esc_html_e('Enable carousel output.', 'lloyds-industrial'); ?>
                 </label>
@@ -136,10 +144,12 @@ function li_render_product_carousel_admin_page(): void
                     <span><?php esc_html_e('Description', 'lloyds-industrial'); ?></span>
                     <textarea name="li_product_carousel_settings[description]" rows="4"><?php echo esc_textarea((string) $settings['description']); ?></textarea>
                 </label>
+                <?php submit_button(__('Save Carousel Settings', 'lloyds-industrial'), 'primary', 'submit', false); ?>
             </section>
 
-            <section class="li-settings-card">
-                <h2><?php esc_html_e('Slides', 'lloyds-industrial'); ?></h2>
+            <section class="li-admin-panel li-admin-tab-panel" data-li-tab-panel="carousel-slides">
+                <h2><?php esc_html_e('Slide Defaults', 'lloyds-industrial'); ?></h2>
+                <p><?php esc_html_e('These defaults decide which slides appear for the base shortcode. Placement-specific shortcodes can override mode, source, category, category slugs, and limit.', 'lloyds-industrial'); ?></p>
                 <label>
                     <span><?php esc_html_e('Display mode', 'lloyds-industrial'); ?></span>
                     <select name="li_product_carousel_settings[display_mode]">
@@ -188,11 +198,13 @@ function li_render_product_carousel_admin_page(): void
                     <span><?php esc_html_e('Product limit', 'lloyds-industrial'); ?></span>
                     <input type="number" min="1" max="24" name="li_product_carousel_settings[limit]" value="<?php echo esc_attr((string) $settings['limit']); ?>">
                 </label>
+                <?php submit_button(__('Save Carousel Settings', 'lloyds-industrial'), 'primary', 'submit', false); ?>
             </section>
 
-            <section class="li-settings-card">
+            <section class="li-admin-panel li-admin-tab-panel" data-li-tab-panel="carousel-display">
                 <h2><?php esc_html_e('Behavior and Display', 'lloyds-industrial'); ?></h2>
-                <label>
+                <p><?php esc_html_e('These display controls are global defaults for every carousel placement.', 'lloyds-industrial'); ?></p>
+                <label class="li-carousel-check">
                     <input type="checkbox" name="li_product_carousel_settings[autoplay]" value="1" <?php checked(!empty($settings['autoplay'])); ?>>
                     <?php esc_html_e('Autoplay carousel.', 'lloyds-industrial'); ?>
                 </label>
@@ -202,25 +214,38 @@ function li_render_product_carousel_admin_page(): void
                     <input type="number" min="2500" max="12000" step="100" name="li_product_carousel_settings[interval]" value="<?php echo esc_attr((string) $settings['interval']); ?>">
                 </label>
 
-                <label><input type="checkbox" name="li_product_carousel_settings[show_price]" value="1" <?php checked(!empty($settings['show_price'])); ?>> <?php esc_html_e('Show price or quote label.', 'lloyds-industrial'); ?></label>
-                <label><input type="checkbox" name="li_product_carousel_settings[show_summary]" value="1" <?php checked(!empty($settings['show_summary'])); ?>> <?php esc_html_e('Show product summary.', 'lloyds-industrial'); ?></label>
-                <label><input type="checkbox" name="li_product_carousel_settings[show_meta]" value="1" <?php checked(!empty($settings['show_meta'])); ?>> <?php esc_html_e('Show categories and document cues.', 'lloyds-industrial'); ?></label>
-                <label><input type="checkbox" name="li_product_carousel_settings[show_cta]" value="1" <?php checked(!empty($settings['show_cta'])); ?>> <?php esc_html_e('Show action buttons.', 'lloyds-industrial'); ?></label>
-            </section>
-
-            <section class="li-settings-card">
-                <h2><?php esc_html_e('Usage', 'lloyds-industrial'); ?></h2>
-                <p><?php esc_html_e('Place the carousel anywhere shortcodes are supported.', 'lloyds-industrial'); ?></p>
-                <p><code>[li_product_carousel]</code></p>
-                <p><code>[li_product_carousel source="latest" limit="6"]</code></p>
-                <p><code>[li_product_carousel source="category" category="cleaner-degreasers"]</code></p>
-                <p><code>[li_product_carousel mode="categories" limit="6"]</code></p>
-                <p><code>[li_product_carousel mode="categories" category_slugs="cleaner-degreasers,automotive-fleet-maintenance"]</code></p>
-            </section>
-
-            <p class="submit li-settings-submit">
+                <label class="li-carousel-check"><input type="checkbox" name="li_product_carousel_settings[show_price]" value="1" <?php checked(!empty($settings['show_price'])); ?>> <?php esc_html_e('Show price or quote label.', 'lloyds-industrial'); ?></label>
+                <label class="li-carousel-check"><input type="checkbox" name="li_product_carousel_settings[show_summary]" value="1" <?php checked(!empty($settings['show_summary'])); ?>> <?php esc_html_e('Show product summary.', 'lloyds-industrial'); ?></label>
+                <label class="li-carousel-check"><input type="checkbox" name="li_product_carousel_settings[show_meta]" value="1" <?php checked(!empty($settings['show_meta'])); ?>> <?php esc_html_e('Show categories and document cues.', 'lloyds-industrial'); ?></label>
+                <label class="li-carousel-check"><input type="checkbox" name="li_product_carousel_settings[show_cta]" value="1" <?php checked(!empty($settings['show_cta'])); ?>> <?php esc_html_e('Show action buttons.', 'lloyds-industrial'); ?></label>
                 <?php submit_button(__('Save Carousel Settings', 'lloyds-industrial'), 'primary', 'submit', false); ?>
-            </p>
+            </section>
+
+            <section class="li-admin-panel li-admin-tab-panel" data-li-tab-panel="carousel-usage">
+                <h2><?php esc_html_e('Shortcode Usage', 'lloyds-industrial'); ?></h2>
+                <p><?php esc_html_e('The base shortcode uses every saved default on this page. Attribute values override only the matching default for that one carousel.', 'lloyds-industrial'); ?></p>
+                <div class="li-carousel-usage-grid">
+                    <div>
+                        <h3><?php esc_html_e('Examples', 'lloyds-industrial'); ?></h3>
+                        <p><code>[li_product_carousel]</code></p>
+                        <p><code>[li_product_carousel source="latest" limit="6"]</code></p>
+                        <p><code>[li_product_carousel source="category" category="cleaner-degreasers"]</code></p>
+                        <p><code>[li_product_carousel mode="categories" limit="6"]</code></p>
+                        <p><code>[li_product_carousel mode="categories" category_slugs="cleaner-degreasers,automotive-fleet-maintenance"]</code></p>
+                    </div>
+                    <div>
+                        <h3><?php esc_html_e('Override Map', 'lloyds-industrial'); ?></h3>
+                        <dl class="li-carousel-override-list">
+                            <div><dt><code>mode</code></dt><dd><?php esc_html_e('Overrides display mode: products or categories.', 'lloyds-industrial'); ?></dd></div>
+                            <div><dt><code>source</code></dt><dd><?php esc_html_e('Overrides product source: featured, latest, category, or manual.', 'lloyds-industrial'); ?></dd></div>
+                            <div><dt><code>category</code></dt><dd><?php esc_html_e('Overrides the product category when source is category.', 'lloyds-industrial'); ?></dd></div>
+                            <div><dt><code>category_slugs</code></dt><dd><?php esc_html_e('Overrides the category list when mode is categories.', 'lloyds-industrial'); ?></dd></div>
+                            <div><dt><code>limit</code></dt><dd><?php esc_html_e('Overrides the number of products or categories shown.', 'lloyds-industrial'); ?></dd></div>
+                            <div><dt><code>title</code></dt><dd><?php esc_html_e('Overrides the carousel heading only.', 'lloyds-industrial'); ?></dd></div>
+                        </dl>
+                    </div>
+                </div>
+            </section>
         </form>
     </div>
     <?php

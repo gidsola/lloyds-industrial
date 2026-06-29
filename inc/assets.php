@@ -164,7 +164,7 @@ add_action('admin_enqueue_scripts', function (string $hook_suffix): void {
         ? li_seo_get_supported_public_post_types()
         : [];
 
-    if (in_array($admin_page, ['lloyds', 'lloyds-seo', 'lloyds-ai-chatbot', 'lloyds-intelligence'], true)) {
+    if (in_array($admin_page, ['lloyds', 'lloyds-product-carousel', 'lloyds-seo', 'lloyds-ai-chatbot', 'lloyds-intelligence'], true)) {
         wp_enqueue_script(
             'lloyds-admin',
             get_template_directory_uri() . '/assets/js/admin.js',
