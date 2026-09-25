@@ -18,7 +18,7 @@
 
 (() => {
     const forms = document.querySelectorAll('[data-li-mail-signup]');
-    const config = window.lloydsTheme || {};
+    const config = window.b2bTheme || {};
 
     if (!forms.length || !config.ajaxUrl) {
         return;
@@ -125,7 +125,7 @@
 
 (() => {
     const containers = document.querySelectorAll('[data-li-product-search]');
-    const config = window.lloydsTheme || {};
+    const config = window.b2bTheme || {};
 
     if (!containers.length || !config.ajaxUrl) {
         return;

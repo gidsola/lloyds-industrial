@@ -50,7 +50,7 @@ function li_render_woocommerce_notices_shortcode(): string
 function li_render_woocommerce_cart_shortcode(): string
 {
     if (!shortcode_exists('woocommerce_cart')) {
-        return '<div class="li-woo-empty-state">' . esc_html__('Cart is available after WooCommerce is active.', 'lloyds-industrial') . '</div>';
+        return '<div class="li-woo-empty-state">' . esc_html__('Cart is available after WooCommerce is active.', 'b2b-industrial') . '</div>';
     }
 
     return do_shortcode('[woocommerce_cart]');
@@ -59,7 +59,7 @@ function li_render_woocommerce_cart_shortcode(): string
 function li_render_woocommerce_checkout_shortcode(): string
 {
     if (!shortcode_exists('woocommerce_checkout')) {
-        return '<div class="li-woo-empty-state">' . esc_html__('Checkout is available after WooCommerce is active.', 'lloyds-industrial') . '</div>';
+        return '<div class="li-woo-empty-state">' . esc_html__('Checkout is available after WooCommerce is active.', 'b2b-industrial') . '</div>';
     }
 
     return do_shortcode('[woocommerce_checkout]');

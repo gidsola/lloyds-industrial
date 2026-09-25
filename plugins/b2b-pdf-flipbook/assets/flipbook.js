@@ -19,7 +19,7 @@
     }
 
     ready(function () {
-        document.querySelectorAll('.lloyds-flipbook').forEach(function (root) {
+        document.querySelectorAll('.b2b-flipbook').forEach(function (root) {
             var endpoint = root.dataset.flipbookEndpoint;
             var id = root.dataset.flipbookId;
             var nonce = root.dataset.flipbookNonce;
@@ -42,11 +42,11 @@
                 var leftIndex = current;
                 var rightIndex = current + 1;
                 var spread = document.createElement('div');
-                spread.className = 'lloyds-flipbook__spread';
+                spread.className = 'b2b-flipbook__spread';
 
                 [leftIndex, rightIndex].forEach(function (pageIndex) {
                     var page = document.createElement('figure');
-                    page.className = 'lloyds-flipbook__page';
+                    page.className = 'b2b-flipbook__page';
 
                     if (pages[pageIndex]) {
                         var img = document.createElement('img');
@@ -82,13 +82,13 @@
 
             function fallback(message) {
                 var wrapper = document.createElement('div');
-                wrapper.className = 'lloyds-flipbook__fallback';
+                wrapper.className = 'b2b-flipbook__fallback';
 
                 var book = document.createElement('div');
-                book.className = 'lloyds-flipbook__fallback-book';
+                book.className = 'b2b-flipbook__fallback-book';
 
                 var page = document.createElement('div');
-                page.className = 'lloyds-flipbook__fallback-page';
+                page.className = 'b2b-flipbook__fallback-page';
 
                 var title = document.createElement('h3');
                 title.textContent = 'Page rendering needs setup';
@@ -158,7 +158,7 @@
                 });
             }
 
-            fetch(endpoint + '?action=lloyds_flipbook_manifest&id=' + encodeURIComponent(id) + '&nonce=' + encodeURIComponent(nonce))
+            fetch(endpoint + '?action=b2b_flipbook_manifest&id=' + encodeURIComponent(id) + '&nonce=' + encodeURIComponent(nonce))
                 .then(function (response) {
                     return response.json();
                 })

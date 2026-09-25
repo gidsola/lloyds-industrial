@@ -9,10 +9,10 @@ if (!defined('ABSPATH')) {
 add_action('init', function (): void {
     register_post_type('li_document', [
         'labels' => [
-            'name'          => __('Documents', 'lloyds-industrial'),
-            'singular_name' => __('Document', 'lloyds-industrial'),
-            'add_new_item'  => __('Add New Document', 'lloyds-industrial'),
-            'edit_item'     => __('Edit Document', 'lloyds-industrial'),
+            'name'          => __('Documents', 'b2b-industrial'),
+            'singular_name' => __('Document', 'b2b-industrial'),
+            'add_new_item'  => __('Add New Document', 'b2b-industrial'),
+            'edit_item'     => __('Edit Document', 'b2b-industrial'),
         ],
         'public'              => false,
         'show_ui'             => true,
@@ -27,8 +27,8 @@ add_action('init', function (): void {
 
     register_taxonomy('li_document_type', ['li_document'], [
         'labels' => [
-            'name'          => __('Document Types', 'lloyds-industrial'),
-            'singular_name' => __('Document Type', 'lloyds-industrial'),
+            'name'          => __('Document Types', 'b2b-industrial'),
+            'singular_name' => __('Document Type', 'b2b-industrial'),
         ],
         'public'       => false,
         'show_ui'      => true,
@@ -73,19 +73,19 @@ add_action('init', function (): void {
 
 add_action('admin_menu', function (): void {
     add_menu_page(
-        __('Lloyds Documents', 'lloyds-industrial'),
-        __('Documents', 'lloyds-industrial'),
+        __('B2B Documents', 'b2b-industrial'),
+        __('Documents', 'b2b-industrial'),
         'edit_posts',
-        'lloyds-documents',
+        'b2b-documents',
         'li_redirect_to_documents_admin',
         'dashicons-media-document',
         60
     );
 
     add_submenu_page(
-        'lloyds-documents',
-        __('Document Types', 'lloyds-industrial'),
-        __('Document Types', 'lloyds-industrial'),
+        'b2b-documents',
+        __('Document Types', 'b2b-industrial'),
+        __('Document Types', 'b2b-industrial'),
         'manage_categories',
         'edit-tags.php?taxonomy=li_document_type&post_type=li_document'
     );

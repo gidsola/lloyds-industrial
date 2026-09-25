@@ -7,13 +7,13 @@ if (!defined('ABSPATH')) {
 }
 
 add_action('rest_api_init', function (): void {
-    register_rest_route('lloyds/v1', '/products', [
+    register_rest_route('b2b/v1', '/products', [
         'methods'             => WP_REST_Server::READABLE,
         'callback'            => 'li_rest_get_products',
         'permission_callback' => '__return_true',
     ]);
 
-    register_rest_route('lloyds/v1', '/products/(?P<id>\d+)/documents', [
+    register_rest_route('b2b/v1', '/products/(?P<id>\d+)/documents', [
         'methods'             => WP_REST_Server::READABLE,
         'callback'            => 'li_rest_get_product_documents',
         'permission_callback' => '__return_true',
@@ -47,7 +47,7 @@ function li_rest_get_products(WP_REST_Request $request): WP_REST_Response
             'certifications' => get_post_meta($product->ID, '_li_certifications', true),
             'documents'      => [
                 'authorization' => 'sds_purchase_history',
-                'endpoint'      => rest_url('lloyds/v1/products/' . $product->ID . '/documents'),
+                'endpoint'      => rest_url('b2b/v1/products/' . $product->ID . '/documents'),
             ],
         ];
     }

@@ -8,30 +8,30 @@ if (!defined('ABSPATH')) {
 
 add_action('admin_menu', function (): void {
     add_menu_page(
-        __('Lloyds Industrial Settings', 'lloyds-industrial'),
-        __('Lloyds', 'lloyds-industrial'),
+        __('B2B Industrial Settings', 'b2b-industrial'),
+        __('B2B', 'b2b-industrial'),
         'manage_options',
-        'lloyds',
+        'b2b',
         'li_render_settings_page',
         'dashicons-shield-alt',
         58
     );
 
     add_submenu_page(
-        'lloyds',
-        __('Lloyds Industrial Settings', 'lloyds-industrial'),
-        __('Settings', 'lloyds-industrial'),
+        'b2b',
+        __('B2B Industrial Settings', 'b2b-industrial'),
+        __('Settings', 'b2b-industrial'),
         'manage_options',
-        'lloyds',
+        'b2b',
         'li_render_settings_page'
     );
 
     add_submenu_page(
-        'lloyds',
-        __('Lloyds Mega Menu', 'lloyds-industrial'),
-        __('Mega Menu', 'lloyds-industrial'),
+        'b2b',
+        __('B2B Mega Menu', 'b2b-industrial'),
+        __('Mega Menu', 'b2b-industrial'),
         'manage_options',
-        'lloyds-mega-menu',
+        'b2b-mega-menu',
         'li_render_mega_menu_page'
     );
 }, 1);
@@ -45,132 +45,132 @@ add_action('admin_init', function (): void {
 
     add_settings_section(
         'li_site_behavior_section',
-        __('Site Behavior', 'lloyds-industrial'),
+        __('Site Behavior', 'b2b-industrial'),
         'li_render_site_behavior_section',
-        'lloyds'
+        'b2b'
     );
 
     add_settings_section(
         'li_brand_section',
-        __('Brand Configuration', 'lloyds-industrial'),
+        __('Brand Configuration', 'b2b-industrial'),
         '__return_null',
-        'lloyds'
+        'b2b'
     );
 
     add_settings_field(
         'li_partner_mode',
-        __('Partner Site Mode', 'lloyds-industrial'),
+        __('Partner Site Mode', 'b2b-industrial'),
         'li_render_partner_mode_field',
-        'lloyds',
+        'b2b',
         'li_site_behavior_section'
     );
 
     add_settings_field(
         'li_document_access_mode',
-        __('Document Access', 'lloyds-industrial'),
+        __('Document Access', 'b2b-industrial'),
         'li_render_document_access_mode_field',
-        'lloyds',
+        'b2b',
         'li_site_behavior_section'
     );
 
     add_settings_field(
         'li_brand_palette',
-        __('Brand Colors', 'lloyds-industrial'),
+        __('Brand Colors', 'b2b-industrial'),
         'li_render_brand_palette_field',
-        'lloyds',
+        'b2b',
         'li_brand_section'
     );
 
     add_settings_section(
         'li_layout_display_section',
-        __('Layout and Display', 'lloyds-industrial'),
+        __('Layout and Display', 'b2b-industrial'),
         'li_render_layout_display_section',
-        'lloyds'
+        'b2b'
     );
 
     add_settings_field(
         'li_header_display',
-        __('Header Display', 'lloyds-industrial'),
+        __('Header Display', 'b2b-industrial'),
         'li_render_header_display_field',
-        'lloyds',
+        'b2b',
         'li_layout_display_section'
     );
 
     add_settings_field(
         'li_site_width',
-        __('Site Width', 'lloyds-industrial'),
+        __('Site Width', 'b2b-industrial'),
         'li_render_site_width_field',
-        'lloyds',
+        'b2b',
         'li_layout_display_section'
     );
 
     add_settings_field(
         'li_footer_density',
-        __('Footer Density', 'lloyds-industrial'),
+        __('Footer Density', 'b2b-industrial'),
         'li_render_footer_density_field',
-        'lloyds',
+        'b2b',
         'li_layout_display_section'
     );
 
     add_settings_section(
         'li_global_layout_section',
-        __('Global Header and Footer', 'lloyds-industrial'),
+        __('Global Header and Footer', 'b2b-industrial'),
         'li_render_global_layout_section',
-        'lloyds'
+        'b2b'
     );
 
     add_settings_section(
         'li_announcement_section',
-        __('Announcement Bar', 'lloyds-industrial'),
+        __('Announcement Bar', 'b2b-industrial'),
         '__return_null',
-        'lloyds'
+        'b2b'
     );
 
     add_settings_field(
         'li_announcement',
-        __('Announcement Bar', 'lloyds-industrial'),
+        __('Announcement Bar', 'b2b-industrial'),
         'li_render_announcement_field',
-        'lloyds',
+        'b2b',
         'li_announcement_section'
     );
 
     add_settings_field(
         'li_header_actions',
-        __('Header Actions', 'lloyds-industrial'),
+        __('Header Actions', 'b2b-industrial'),
         'li_render_header_actions_field',
-        'lloyds',
+        'b2b',
         'li_global_layout_section'
     );
 
     add_settings_field(
         'li_footer_content',
-        __('Footer Content', 'lloyds-industrial'),
+        __('Footer Content', 'b2b-industrial'),
         'li_render_footer_content_field',
-        'lloyds',
+        'b2b',
         'li_global_layout_section'
     );
 
     // Mega Menu Section
     add_settings_section(
         'li_mega_menu_section',
-        __('Mega Menu Builder', 'lloyds-industrial'),
+        __('Mega Menu Builder', 'b2b-industrial'),
         'li_render_mega_menu_section',
-        'lloyds-mega-menu'
+        'b2b-mega-menu'
     );
 
     add_settings_field(
         'li_mega_menu_enabled',
-        __('Enable Mega Menu', 'lloyds-industrial'),
+        __('Enable Mega Menu', 'b2b-industrial'),
         'li_render_mega_menu_enabled_field',
-        'lloyds-mega-menu',
+        'b2b-mega-menu',
         'li_mega_menu_section'
     );
 
     add_settings_field(
         'li_mega_menu_data',
-        __('Menu Configuration', 'lloyds-industrial'),
+        __('Menu Configuration', 'b2b-industrial'),
         'li_render_mega_menu_data_field',
-        'lloyds-mega-menu',
+        'b2b-mega-menu',
         'li_mega_menu_section'
     );
 });
@@ -185,7 +185,7 @@ add_action('admin_init', function (): void {
     delete_option('li_brand_settings');
     set_transient('li_brand_reset_notice', 'reset', MINUTE_IN_SECONDS);
 
-    wp_safe_redirect(admin_url('admin.php?page=lloyds'));
+    wp_safe_redirect(admin_url('admin.php?page=b2b'));
     exit;
 });
 
@@ -206,7 +206,7 @@ add_action('admin_init', function (): void {
     update_option('li_theme_settings', $settings);
     set_transient('li_theme_settings_notice', 'layout_reset', MINUTE_IN_SECONDS);
 
-    wp_safe_redirect(admin_url('admin.php?page=lloyds'));
+    wp_safe_redirect(admin_url('admin.php?page=b2b'));
     exit;
 });
 
@@ -231,7 +231,7 @@ add_action('admin_init', function (): void {
         set_transient('li_theme_settings_notice', 'terms_ensured', MINUTE_IN_SECONDS);
     }
 
-    wp_safe_redirect(admin_url('admin.php?page=lloyds'));
+    wp_safe_redirect(admin_url('admin.php?page=b2b'));
     exit;
 });
 
@@ -246,7 +246,7 @@ add_action('admin_init', function (): void {
 
     set_transient('li_sds_migration_result', $result, MINUTE_IN_SECONDS);
 
-    wp_safe_redirect(admin_url('admin.php?page=lloyds'));
+    wp_safe_redirect(admin_url('admin.php?page=b2b'));
     exit;
 });
 
@@ -257,10 +257,10 @@ add_action('admin_notices', function (): void {
         delete_transient('li_theme_settings_notice');
 
         $messages = [
-            'layout_reset'        => __('Theme layout settings reset to defaults.', 'lloyds-industrial'),
-            'catalogue_refreshed' => __('Catalogue page content refreshed.', 'lloyds-industrial'),
-            'navigation_rebuilt'  => __('Primary navigation rebuilt from starter pages.', 'lloyds-industrial'),
-            'terms_ensured'       => __('Product and industry terms checked.', 'lloyds-industrial'),
+            'layout_reset'        => __('Theme layout settings reset to defaults.', 'b2b-industrial'),
+            'catalogue_refreshed' => __('Catalogue page content refreshed.', 'b2b-industrial'),
+            'navigation_rebuilt'  => __('Primary navigation rebuilt from starter pages.', 'b2b-industrial'),
+            'terms_ensured'       => __('Product and industry terms checked.', 'b2b-industrial'),
         ];
 
         if (isset($messages[$theme_settings_notice])) {
@@ -273,7 +273,7 @@ add_action('admin_notices', function (): void {
     if ($brand_reset_notice === 'reset') {
         delete_transient('li_brand_reset_notice');
 
-        li_render_admin_notice(__('Brand colors reset to the theme defaults.', 'lloyds-industrial'));
+        li_render_admin_notice(__('Brand colors reset to the theme defaults.', 'b2b-industrial'));
     }
 
     $reseed_notice = get_transient('li_reseed_site_notice');
@@ -281,7 +281,7 @@ add_action('admin_notices', function (): void {
     if ($reseed_notice === 'missing_nonce') {
         delete_transient('li_reseed_site_notice');
 
-        li_render_admin_notice(__('Use the reseed button from this settings page. Direct reseed links require a security nonce.', 'lloyds-industrial'), 'error');
+        li_render_admin_notice(__('Use the reseed button from this settings page. Direct reseed links require a security nonce.', 'b2b-industrial'), 'error');
     }
 
     $result = get_transient('li_sds_migration_result');
@@ -294,7 +294,7 @@ add_action('admin_notices', function (): void {
 
     li_render_admin_notice(
         sprintf(
-            __('SDS protection check complete. Secured or organized: %1$d. Skipped: %2$d. Failed: %3$d.', 'lloyds-industrial'),
+            __('SDS protection check complete. Secured or organized: %1$d. Skipped: %2$d. Failed: %3$d.', 'b2b-industrial'),
             (int) ($result['migrated'] ?? 0),
             (int) ($result['skipped'] ?? 0),
             (int) ($result['failed'] ?? 0)
@@ -308,7 +308,7 @@ function li_render_admin_notice(string $message, string $type = 'success', bool 
     ?>
     <div class="li-admin-notice <?php echo esc_attr($class); ?>" <?php echo $auto_dismiss ? 'data-li-auto-dismiss-notice' : ''; ?>>
         <p><?php echo esc_html($message); ?></p>
-        <button type="button" class="li-admin-notice__dismiss" data-li-dismiss-notice aria-label="<?php esc_attr_e('Dismiss notice', 'lloyds-industrial'); ?>">&times;</button>
+        <button type="button" class="li-admin-notice__dismiss" data-li-dismiss-notice aria-label="<?php esc_attr_e('Dismiss notice', 'b2b-industrial'); ?>">&times;</button>
     </div>
     <?php
 }
@@ -419,7 +419,7 @@ function li_sanitize_footer_links(string $links): string
 function li_render_site_behavior_section(): void
 {
     ?>
-    <p><?php esc_html_e('Control storefront posture, customer access, and document availability from one place.', 'lloyds-industrial'); ?></p>
+    <p><?php esc_html_e('Control storefront posture, customer access, and document availability from one place.', 'b2b-industrial'); ?></p>
     <?php
 }
 
@@ -435,7 +435,7 @@ function li_render_partner_mode_field(): void
             value="1"
             <?php checked($checked); ?>
         >
-        <?php esc_html_e('Enable partner-domain behavior for this site.', 'lloyds-industrial'); ?>
+        <?php esc_html_e('Enable partner-domain behavior for this site.', 'b2b-industrial'); ?>
     </label>
     <?php
 }
@@ -452,7 +452,7 @@ function li_render_document_access_mode_field(): void
                 value="controlled"
                 <?php checked($mode, 'controlled'); ?>
             >
-            <?php esc_html_e('Controlled: public technical documents remain available; SDS documents require login and related product purchase.', 'lloyds-industrial'); ?>
+            <?php esc_html_e('Controlled: public technical documents remain available; SDS documents require login and related product purchase.', 'b2b-industrial'); ?>
         </label>
         <br>
         <label>
@@ -462,10 +462,10 @@ function li_render_document_access_mode_field(): void
                 value="private"
                 <?php checked($mode, 'private'); ?>
             >
-            <?php esc_html_e('Private: hide customer-facing document listings and downloads from non-staff users.', 'lloyds-industrial'); ?>
+            <?php esc_html_e('Private: hide customer-facing document listings and downloads from non-staff users.', 'b2b-industrial'); ?>
         </label>
         <p class="description">
-            <?php esc_html_e('SDS files are never public in controlled mode; they are streamed only after the purchase-history check passes.', 'lloyds-industrial'); ?>
+            <?php esc_html_e('SDS files are never public in controlled mode; they are streamed only after the purchase-history check passes.', 'b2b-industrial'); ?>
         </p>
     </fieldset>
     <?php
@@ -474,7 +474,7 @@ function li_render_document_access_mode_field(): void
 function li_render_layout_display_section(): void
 {
     ?>
-    <p><?php esc_html_e('Tune global layout behavior without editing template files.', 'lloyds-industrial'); ?></p>
+    <p><?php esc_html_e('Tune global layout behavior without editing template files.', 'b2b-industrial'); ?></p>
     <?php
 }
 
@@ -491,7 +491,7 @@ function li_render_header_display_field(): void
                     value="1"
                     <?php checked(li_theme_setting_checkbox_value($settings, 'sticky_header')); ?>
                 >
-                <?php esc_html_e('Keep the header sticky on desktop.', 'lloyds-industrial'); ?>
+                <?php esc_html_e('Keep the header sticky on desktop.', 'b2b-industrial'); ?>
             </label>
         </p>
         <p>
@@ -502,7 +502,7 @@ function li_render_header_display_field(): void
                     value="1"
                     <?php checked(!empty($settings['compact_header'])); ?>
                 >
-                <?php esc_html_e('Use a compact header height.', 'lloyds-industrial'); ?>
+                <?php esc_html_e('Use a compact header height.', 'b2b-industrial'); ?>
             </label>
         </p>
         <p>
@@ -513,7 +513,7 @@ function li_render_header_display_field(): void
                     value="1"
                     <?php checked(li_theme_setting_checkbox_value($settings, 'show_site_title')); ?>
                 >
-                <?php esc_html_e('Show the site title beside the logo.', 'lloyds-industrial'); ?>
+                <?php esc_html_e('Show the site title beside the logo.', 'b2b-industrial'); ?>
             </label>
         </p>
         <p>
@@ -524,7 +524,7 @@ function li_render_header_display_field(): void
                     value="1"
                     <?php checked(!empty($settings['show_header_actions_mobile'])); ?>
                 >
-                <?php esc_html_e('Show header action links on mobile.', 'lloyds-industrial'); ?>
+                <?php esc_html_e('Show header action links on mobile.', 'b2b-industrial'); ?>
             </label>
         </p>
     </fieldset>
@@ -547,9 +547,9 @@ function li_render_site_width_field(): void
             max="1800"
             step="20"
         >
-        <?php esc_html_e('px wide content container', 'lloyds-industrial'); ?>
+        <?php esc_html_e('px wide content container', 'b2b-industrial'); ?>
     </label>
-    <p class="description"><?php esc_html_e('Controls the wide layout variable used by the header, footer, and wide content sections.', 'lloyds-industrial'); ?></p>
+    <p class="description"><?php esc_html_e('Controls the wide layout variable used by the header, footer, and wide content sections.', 'b2b-industrial'); ?></p>
     <?php
 }
 
@@ -566,7 +566,7 @@ function li_render_footer_density_field(): void
                 value="comfortable"
                 <?php checked($density, 'comfortable'); ?>
             >
-            <?php esc_html_e('Comfortable', 'lloyds-industrial'); ?>
+            <?php esc_html_e('Comfortable', 'b2b-industrial'); ?>
         </label>
         <br>
         <label>
@@ -576,7 +576,7 @@ function li_render_footer_density_field(): void
                 value="compact"
                 <?php checked($density, 'compact'); ?>
             >
-            <?php esc_html_e('Compact', 'lloyds-industrial'); ?>
+            <?php esc_html_e('Compact', 'b2b-industrial'); ?>
         </label>
     </fieldset>
     <?php
@@ -585,7 +585,7 @@ function li_render_footer_density_field(): void
 function li_render_global_layout_section(): void
 {
     ?>
-    <p><?php esc_html_e('Control common header and footer copy without editing the global template parts.', 'lloyds-industrial'); ?></p>
+    <p><?php esc_html_e('Control common header and footer copy without editing the global template parts.', 'b2b-industrial'); ?></p>
     <?php
 }
 
@@ -601,13 +601,13 @@ function li_render_brand_palette_field(): void
         admin_url('customize.php')
     );
     $reset_url = wp_nonce_url(
-        admin_url('admin.php?page=lloyds&li_reset_brand_settings=1'),
+        admin_url('admin.php?page=b2b&li_reset_brand_settings=1'),
         'li_reset_brand_settings'
     );
     ?>
     <div class="li-brand-palette-admin">
         <p class="description">
-            <?php esc_html_e('Current brand colors are managed in the Customizer. Resetting removes saved color overrides and uses the theme defaults.', 'lloyds-industrial'); ?>
+            <?php esc_html_e('Current brand colors are managed in the Customizer. Resetting removes saved color overrides and uses the theme defaults.', 'b2b-industrial'); ?>
         </p>
 
         <div class="li-brand-palette-grid">
@@ -627,7 +627,7 @@ function li_render_brand_palette_field(): void
                         <strong><?php echo esc_html($label); ?></strong>
                         <code><?php echo esc_html(strtoupper($color)); ?></code>
                         <?php if (!$is_default) : ?>
-                            <span class="li-brand-custom-badge"><?php esc_html_e('Custom', 'lloyds-industrial'); ?></span>
+                            <span class="li-brand-custom-badge"><?php esc_html_e('Custom', 'b2b-industrial'); ?></span>
                         <?php endif; ?>
                     </span>
                 </div>
@@ -636,14 +636,14 @@ function li_render_brand_palette_field(): void
 
         <p>
             <a class="button button-secondary" href="<?php echo esc_url($customize_url); ?>">
-                <?php esc_html_e('Edit Brand Colors', 'lloyds-industrial'); ?>
+                <?php esc_html_e('Edit Brand Colors', 'b2b-industrial'); ?>
             </a>
             <a
                 class="button button-link-delete"
                 href="<?php echo esc_url($reset_url); ?>"
-                onclick="return confirm('<?php echo esc_js(__('Reset brand colors to the theme defaults?', 'lloyds-industrial')); ?>');"
+                onclick="return confirm('<?php echo esc_js(__('Reset brand colors to the theme defaults?', 'b2b-industrial')); ?>');"
             >
-                <?php esc_html_e('Reset Colors to Defaults', 'lloyds-industrial'); ?>
+                <?php esc_html_e('Reset Colors to Defaults', 'b2b-industrial'); ?>
             </a>
         </p>
     </div>
@@ -656,60 +656,60 @@ function li_render_announcement_field(): void
     ?>
     <div class="li-announcement-settings">
         <div class="li-settings-section-heading">
-            <p class="li-settings-kicker"><?php esc_html_e('Announcement Bar', 'lloyds-industrial'); ?></p>
-            <h3><?php esc_html_e('Top-of-site message', 'lloyds-industrial'); ?></h3>
-            <p><?php esc_html_e('Control the shortcode-powered announcement bar used in the header template.', 'lloyds-industrial'); ?></p>
+            <p class="li-settings-kicker"><?php esc_html_e('Announcement Bar', 'b2b-industrial'); ?></p>
+            <h3><?php esc_html_e('Top-of-site message', 'b2b-industrial'); ?></h3>
+            <p><?php esc_html_e('Control the shortcode-powered announcement bar used in the header template.', 'b2b-industrial'); ?></p>
         </div>
 
         <div class="li-admin-field-grid">
             <label class="li-admin-check-card">
                 <input type="checkbox" name="li_theme_settings[announcement_enabled]" value="1" <?php checked(li_theme_setting_checkbox_value($settings, 'announcement_enabled')); ?>>
-                <span><?php esc_html_e('Show announcement bar', 'lloyds-industrial'); ?></span>
+                <span><?php esc_html_e('Show announcement bar', 'b2b-industrial'); ?></span>
             </label>
             <label class="li-admin-check-card">
                 <input type="checkbox" name="li_theme_settings[announcement_show_message]" value="1" <?php checked(li_theme_setting_checkbox_value($settings, 'announcement_show_message')); ?>>
-                <span><?php esc_html_e('Show message text', 'lloyds-industrial'); ?></span>
+                <span><?php esc_html_e('Show message text', 'b2b-industrial'); ?></span>
             </label>
             <label class="li-admin-check-card">
                 <input type="checkbox" name="li_theme_settings[announcement_show_link]" value="1" <?php checked(li_theme_setting_checkbox_value($settings, 'announcement_show_link')); ?>>
-                <span><?php esc_html_e('Show link item', 'lloyds-industrial'); ?></span>
+                <span><?php esc_html_e('Show link item', 'b2b-industrial'); ?></span>
             </label>
         </div>
 
         <div class="li-admin-field-grid li-admin-field-grid--two">
             <label>
-                <span><?php esc_html_e('Message', 'lloyds-industrial'); ?></span>
+                <span><?php esc_html_e('Message', 'b2b-industrial'); ?></span>
                 <input class="regular-text" type="text" name="li_theme_settings[announcement_text]" value="<?php echo esc_attr((string) $settings['announcement_text']); ?>">
             </label>
             <label>
-                <span><?php esc_html_e('Link label', 'lloyds-industrial'); ?></span>
+                <span><?php esc_html_e('Link label', 'b2b-industrial'); ?></span>
                 <input class="regular-text" type="text" name="li_theme_settings[announcement_link_label]" value="<?php echo esc_attr((string) $settings['announcement_link_label']); ?>">
             </label>
             <label>
-                <span><?php esc_html_e('Link URL', 'lloyds-industrial'); ?></span>
+                <span><?php esc_html_e('Link URL', 'b2b-industrial'); ?></span>
                 <input class="regular-text code" type="text" name="li_theme_settings[announcement_link_url]" value="<?php echo esc_attr((string) $settings['announcement_link_url']); ?>">
             </label>
         </div>
 
         <div class="li-admin-field-grid li-admin-field-grid--three">
             <label>
-                <span><?php esc_html_e('Background', 'lloyds-industrial'); ?></span>
+                <span><?php esc_html_e('Background', 'b2b-industrial'); ?></span>
                 <input type="color" name="li_theme_settings[announcement_bg_color]" value="<?php echo esc_attr((string) $settings['announcement_bg_color']); ?>">
             </label>
             <label>
-                <span><?php esc_html_e('Text color', 'lloyds-industrial'); ?></span>
+                <span><?php esc_html_e('Text color', 'b2b-industrial'); ?></span>
                 <input type="color" name="li_theme_settings[announcement_text_color]" value="<?php echo esc_attr((string) $settings['announcement_text_color']); ?>">
             </label>
             <label>
-                <span><?php esc_html_e('Link color', 'lloyds-industrial'); ?></span>
+                <span><?php esc_html_e('Link color', 'b2b-industrial'); ?></span>
                 <input type="color" name="li_theme_settings[announcement_link_color]" value="<?php echo esc_attr((string) $settings['announcement_link_color']); ?>">
             </label>
             <label>
-                <span><?php esc_html_e('Font size', 'lloyds-industrial'); ?></span>
+                <span><?php esc_html_e('Font size', 'b2b-industrial'); ?></span>
                 <input type="number" min="11" max="24" name="li_theme_settings[announcement_font_size]" value="<?php echo esc_attr((string) absint($settings['announcement_font_size'])); ?>">
             </label>
             <label>
-                <span><?php esc_html_e('Font weight', 'lloyds-industrial'); ?></span>
+                <span><?php esc_html_e('Font weight', 'b2b-industrial'); ?></span>
                 <select name="li_theme_settings[announcement_font_weight]">
                     <?php foreach (['500', '600', '700', '800', '900'] as $weight) : ?>
                         <option value="<?php echo esc_attr($weight); ?>" <?php selected((string) $settings['announcement_font_weight'], $weight); ?>><?php echo esc_html($weight); ?></option>
@@ -717,10 +717,10 @@ function li_render_announcement_field(): void
                 </select>
             </label>
             <label>
-                <span><?php esc_html_e('Text case', 'lloyds-industrial'); ?></span>
+                <span><?php esc_html_e('Text case', 'b2b-industrial'); ?></span>
                 <select name="li_theme_settings[announcement_text_transform]">
-                    <option value="none" <?php selected((string) $settings['announcement_text_transform'], 'none'); ?>><?php esc_html_e('Normal', 'lloyds-industrial'); ?></option>
-                    <option value="uppercase" <?php selected((string) $settings['announcement_text_transform'], 'uppercase'); ?>><?php esc_html_e('Uppercase', 'lloyds-industrial'); ?></option>
+                    <option value="none" <?php selected((string) $settings['announcement_text_transform'], 'none'); ?>><?php esc_html_e('Normal', 'b2b-industrial'); ?></option>
+                    <option value="uppercase" <?php selected((string) $settings['announcement_text_transform'], 'uppercase'); ?>><?php esc_html_e('Uppercase', 'b2b-industrial'); ?></option>
                 </select>
             </label>
         </div>
@@ -734,7 +734,7 @@ function li_render_header_actions_field(): void
     ?>
     <fieldset>
         <p>
-            <label for="li_header_primary_label"><?php esc_html_e('Primary Link Label', 'lloyds-industrial'); ?></label><br>
+            <label for="li_header_primary_label"><?php esc_html_e('Primary Link Label', 'b2b-industrial'); ?></label><br>
             <input
                 class="regular-text"
                 id="li_header_primary_label"
@@ -745,7 +745,7 @@ function li_render_header_actions_field(): void
         </p>
 
         <p>
-            <label for="li_header_primary_url"><?php esc_html_e('Primary Link URL', 'lloyds-industrial'); ?></label><br>
+            <label for="li_header_primary_url"><?php esc_html_e('Primary Link URL', 'b2b-industrial'); ?></label><br>
             <input
                 class="regular-text code"
                 id="li_header_primary_url"
@@ -756,7 +756,7 @@ function li_render_header_actions_field(): void
         </p>
 
         <p>
-            <label for="li_header_secondary_label"><?php esc_html_e('Button Label', 'lloyds-industrial'); ?></label><br>
+            <label for="li_header_secondary_label"><?php esc_html_e('Button Label', 'b2b-industrial'); ?></label><br>
             <input
                 class="regular-text"
                 id="li_header_secondary_label"
@@ -767,7 +767,7 @@ function li_render_header_actions_field(): void
         </p>
 
         <p>
-            <label for="li_header_secondary_url"><?php esc_html_e('Button URL', 'lloyds-industrial'); ?></label><br>
+            <label for="li_header_secondary_url"><?php esc_html_e('Button URL', 'b2b-industrial'); ?></label><br>
             <input
                 class="regular-text code"
                 id="li_header_secondary_url"
@@ -785,7 +785,7 @@ function li_render_header_actions_field(): void
                     value="1"
                     <?php checked(li_theme_setting_checkbox_value($settings, 'show_account_link')); ?>
                 >
-                <?php esc_html_e('Show account link.', 'lloyds-industrial'); ?>
+                <?php esc_html_e('Show account link.', 'b2b-industrial'); ?>
             </label>
         </p>
 
@@ -797,7 +797,7 @@ function li_render_header_actions_field(): void
                     value="1"
                     <?php checked(li_theme_setting_checkbox_value($settings, 'show_cart_link')); ?>
                 >
-                <?php esc_html_e('Show cart link when WooCommerce is active.', 'lloyds-industrial'); ?>
+                <?php esc_html_e('Show cart link when WooCommerce is active.', 'b2b-industrial'); ?>
             </label>
         </p>
     </fieldset>
@@ -810,7 +810,7 @@ function li_render_footer_content_field(): void
     ?>
     <fieldset>
         <p>
-            <label for="li_footer_tagline"><?php esc_html_e('Tagline', 'lloyds-industrial'); ?></label><br>
+            <label for="li_footer_tagline"><?php esc_html_e('Tagline', 'b2b-industrial'); ?></label><br>
             <textarea
                 class="large-text"
                 id="li_footer_tagline"
@@ -820,7 +820,7 @@ function li_render_footer_content_field(): void
         </p>
 
         <p>
-            <label for="li_footer_legal_text"><?php esc_html_e('Legal Text', 'lloyds-industrial'); ?></label><br>
+            <label for="li_footer_legal_text"><?php esc_html_e('Legal Text', 'b2b-industrial'); ?></label><br>
             <input
                 class="large-text"
                 id="li_footer_legal_text"
@@ -828,7 +828,7 @@ function li_render_footer_content_field(): void
                 name="li_theme_settings[footer_legal_text]"
                 value="<?php echo esc_attr((string) $settings['footer_legal_text']); ?>"
             >
-            <span class="description"><?php esc_html_e('Available tokens: {year}, {site}.', 'lloyds-industrial'); ?></span>
+            <span class="description"><?php esc_html_e('Available tokens: {year}, {site}.', 'b2b-industrial'); ?></span>
         </p>
 
         <p>
@@ -839,12 +839,12 @@ function li_render_footer_content_field(): void
                     value="1"
                     <?php checked(li_theme_setting_checkbox_value($settings, 'footer_note_enabled')); ?>
                 >
-                <?php esc_html_e('Show footer note.', 'lloyds-industrial'); ?>
+                <?php esc_html_e('Show footer note.', 'b2b-industrial'); ?>
             </label>
         </p>
 
         <p>
-            <label for="li_footer_note_text"><?php esc_html_e('Footer Note', 'lloyds-industrial'); ?></label><br>
+            <label for="li_footer_note_text"><?php esc_html_e('Footer Note', 'b2b-industrial'); ?></label><br>
             <input
                 class="large-text"
                 id="li_footer_note_text"
@@ -852,7 +852,7 @@ function li_render_footer_content_field(): void
                 name="li_theme_settings[footer_note_text]"
                 value="<?php echo esc_attr((string) $settings['footer_note_text']); ?>"
             >
-            <span class="description"><?php esc_html_e('Available tokens: {year}, {site}.', 'lloyds-industrial'); ?></span>
+            <span class="description"><?php esc_html_e('Available tokens: {year}, {site}.', 'b2b-industrial'); ?></span>
         </p>
 
         <hr>
@@ -863,7 +863,7 @@ function li_render_footer_content_field(): void
                     <?php
                     echo esc_html(sprintf(
                         /* translators: %d: footer column number */
-                        __('Footer Column %d', 'lloyds-industrial'),
+                        __('Footer Column %d', 'b2b-industrial'),
                         $index
                     ));
                     ?>
@@ -877,12 +877,12 @@ function li_render_footer_content_field(): void
                             value="1"
                             <?php checked(li_theme_setting_checkbox_value($settings, 'footer_column_' . $index . '_enabled')); ?>
                         >
-                        <?php esc_html_e('Show this column.', 'lloyds-industrial'); ?>
+                        <?php esc_html_e('Show this column.', 'b2b-industrial'); ?>
                     </label>
                 </p>
 
                 <p>
-                    <label for="li_footer_column_<?php echo esc_attr((string) $index); ?>_heading"><?php esc_html_e('Heading', 'lloyds-industrial'); ?></label><br>
+                    <label for="li_footer_column_<?php echo esc_attr((string) $index); ?>_heading"><?php esc_html_e('Heading', 'b2b-industrial'); ?></label><br>
                     <input
                         class="regular-text"
                         id="li_footer_column_<?php echo esc_attr((string) $index); ?>_heading"
@@ -893,14 +893,14 @@ function li_render_footer_content_field(): void
                 </p>
 
                 <p>
-                    <label for="li_footer_column_<?php echo esc_attr((string) $index); ?>_links"><?php esc_html_e('Links', 'lloyds-industrial'); ?></label><br>
+                    <label for="li_footer_column_<?php echo esc_attr((string) $index); ?>_links"><?php esc_html_e('Links', 'b2b-industrial'); ?></label><br>
                     <textarea
                         class="large-text code"
                         id="li_footer_column_<?php echo esc_attr((string) $index); ?>_links"
                         name="li_theme_settings[footer_column_<?php echo esc_attr((string) $index); ?>_links]"
                         rows="5"
                     ><?php echo esc_textarea((string) $settings['footer_column_' . $index . '_links']); ?></textarea>
-                    <span class="description"><?php esc_html_e('One link per line using Label|URL.', 'lloyds-industrial'); ?></span>
+                    <span class="description"><?php esc_html_e('One link per line using Label|URL.', 'b2b-industrial'); ?></span>
                 </p>
             </div>
         <?php endforeach; ?>
@@ -911,7 +911,7 @@ function li_render_footer_content_field(): void
 function li_render_mega_menu_section(): void
 {
     ?>
-    <p><?php esc_html_e('Configure the custom mega menu for your site. The mega menu supports rich content including icons, badges, multi-column layouts, and featured promo panels.', 'lloyds-industrial'); ?></p>
+    <p><?php esc_html_e('Configure the custom mega menu for your site. The mega menu supports rich content including icons, badges, multi-column layouts, and featured promo panels.', 'b2b-industrial'); ?></p>
     <?php
 }
 
@@ -927,7 +927,7 @@ function li_render_mega_menu_enabled_field(): void
             value="1"
             <?php checked($checked); ?>
         >
-        <?php esc_html_e('Enable the custom mega menu (replaces the default navigation).', 'lloyds-industrial'); ?>
+        <?php esc_html_e('Enable the custom mega menu (replaces the default navigation).', 'b2b-industrial'); ?>
     </label>
     <?php
 }
@@ -953,7 +953,7 @@ function li_render_mega_menu_data_field(): void
     
     // Get available pages for dropdown selection
     $pages = get_pages();
-    $page_options = ['' => __('-- Select Page --', 'lloyds-industrial')];
+    $page_options = ['' => __('-- Select Page --', 'b2b-industrial')];
     foreach ($pages as $page) {
         $page_options[$page->ID] = $page->post_title;
     }
@@ -963,7 +963,7 @@ function li_render_mega_menu_data_field(): void
         'taxonomy' => 'product_cat',
         'hide_empty' => false,
     ]);
-    $category_options = ['' => __('-- Select Category --', 'lloyds-industrial')];
+    $category_options = ['' => __('-- Select Category --', 'b2b-industrial')];
     if (!is_wp_error($product_categories)) {
         foreach ($product_categories as $category) {
             if (!$category instanceof WP_Term) {
@@ -978,7 +978,7 @@ function li_render_mega_menu_data_field(): void
 
     // Enqueue the admin script (for media picker functionality)
     wp_enqueue_script(
-        'lloyds-admin',
+        'b2b-admin',
         get_template_directory_uri() . '/assets/js/admin.js',
         ['media-editor', 'media-views'],
         wp_get_theme()->get('Version'),
@@ -1024,15 +1024,15 @@ function li_render_mega_menu_data_field(): void
             'children' => [],
         ],
         'confirmations' => [
-            'reset' => __('Are you sure you want to reset the mega menu to defaults? This cannot be undone.', 'lloyds-industrial'),
-            'removeItem' => __('Are you sure you want to remove this menu item?', 'lloyds-industrial'),
-            'removeChild' => __('Are you sure you want to remove this child item?', 'lloyds-industrial'),
+            'reset' => __('Are you sure you want to reset the mega menu to defaults? This cannot be undone.', 'b2b-industrial'),
+            'removeItem' => __('Are you sure you want to remove this menu item?', 'b2b-industrial'),
+            'removeChild' => __('Are you sure you want to remove this child item?', 'b2b-industrial'),
         ],
-        'mediaTitle' => __('Select Image', 'lloyds-industrial'),
-        'mediaButton' => __('Use This Image', 'lloyds-industrial'),
+        'mediaTitle' => __('Select Image', 'b2b-industrial'),
+        'mediaButton' => __('Use This Image', 'b2b-industrial'),
         'labels' => [
-            'showSettings' => __('Show item settings', 'lloyds-industrial'),
-            'hideSettings' => __('Hide item settings', 'lloyds-industrial'),
+            'showSettings' => __('Show item settings', 'b2b-industrial'),
+            'hideSettings' => __('Hide item settings', 'b2b-industrial'),
         ],
     ]);
     
@@ -1048,25 +1048,25 @@ function li_render_mega_menu_data_field(): void
     <div class="li-mega-menu-admin-container">
         <div class="li-mega-menu-admin-header">
             <div>
-                <p class="li-mega-menu-kicker"><?php esc_html_e('Builder', 'lloyds-industrial'); ?></p>
-                <h2><?php esc_html_e('Menu Structure', 'lloyds-industrial'); ?></h2>
-                <p><?php esc_html_e('Drag items to reorder them, then expand a row to edit links, badges, icons, colors, and mobile behavior.', 'lloyds-industrial'); ?></p>
+                <p class="li-mega-menu-kicker"><?php esc_html_e('Builder', 'b2b-industrial'); ?></p>
+                <h2><?php esc_html_e('Menu Structure', 'b2b-industrial'); ?></h2>
+                <p><?php esc_html_e('Drag items to reorder them, then expand a row to edit links, badges, icons, colors, and mobile behavior.', 'b2b-industrial'); ?></p>
             </div>
             <div class="li-mega-menu-admin-actions">
                 <button type="button" class="button button-secondary li-mega-menu-add-item">
                     <span class="dashicons dashicons-plus-alt2" aria-hidden="true"></span>
-                    <?php esc_html_e('Add Top Level Item', 'lloyds-industrial'); ?>
+                    <?php esc_html_e('Add Top Level Item', 'b2b-industrial'); ?>
                 </button>
                 <button type="button" class="button button-secondary li-mega-menu-reset">
                     <span class="dashicons dashicons-image-rotate" aria-hidden="true"></span>
-                    <?php esc_html_e('Reset to Defaults', 'lloyds-industrial'); ?>
+                    <?php esc_html_e('Reset to Defaults', 'b2b-industrial'); ?>
                 </button>
             </div>
         </div>
         
         <div class="li-mega-menu-admin-help">
             <span class="dashicons dashicons-info-outline" aria-hidden="true"></span>
-            <p><?php esc_html_e('Top-level items become menu columns or dropdown triggers. Child items appear inside the opened panel.', 'lloyds-industrial'); ?></p>
+            <p><?php esc_html_e('Top-level items become menu columns or dropdown triggers. Child items appear inside the opened panel.', 'b2b-industrial'); ?></p>
         </div>
         
         <!-- Hidden textarea to store the JSON data (for form submission) -->
@@ -1213,15 +1213,15 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
             <div class="li-mega-menu-item-handle">
                 <span class="dashicons dashicons-menu"></span>
                 <span class="li-mega-menu-item-title">
-                    <?php echo esc_html($item['label'] ?: __('New Menu Item', 'lloyds-industrial')); ?>
+                    <?php echo esc_html($item['label'] ?: __('New Menu Item', 'b2b-industrial')); ?>
                 </span>
             </div>
             <div class="li-mega-menu-item-actions">
                 <button
                     type="button"
                     class="li-mega-menu-action li-mega-menu-action--toggle li-mega-menu-item-toggle"
-                    aria-label="<?php esc_attr_e('Show item settings', 'lloyds-industrial'); ?>"
-                    title="<?php esc_attr_e('Show item settings', 'lloyds-industrial'); ?>"
+                    aria-label="<?php esc_attr_e('Show item settings', 'b2b-industrial'); ?>"
+                    title="<?php esc_attr_e('Show item settings', 'b2b-industrial'); ?>"
                 >
                     <span class="dashicons dashicons-arrow-down"></span>
                 </button>
@@ -1229,18 +1229,18 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                     <button
                         type="button"
                         class="li-mega-menu-action li-mega-menu-action--add li-mega-menu-add-child"
-                        aria-label="<?php esc_attr_e('Add child item', 'lloyds-industrial'); ?>"
-                        title="<?php esc_attr_e('Add child item', 'lloyds-industrial'); ?>"
+                        aria-label="<?php esc_attr_e('Add child item', 'b2b-industrial'); ?>"
+                        title="<?php esc_attr_e('Add child item', 'b2b-industrial'); ?>"
                     >
                         <span class="dashicons dashicons-plus"></span>
-                        <span><?php esc_html_e('Child', 'lloyds-industrial'); ?></span>
+                        <span><?php esc_html_e('Child', 'b2b-industrial'); ?></span>
                     </button>
                 <?php endif; ?>
                 <button
                     type="button"
                     class="li-mega-menu-action li-mega-menu-action--remove li-mega-menu-item-remove"
-                    aria-label="<?php esc_attr_e('Remove item', 'lloyds-industrial'); ?>"
-                    title="<?php esc_attr_e('Remove item', 'lloyds-industrial'); ?>"
+                    aria-label="<?php esc_attr_e('Remove item', 'b2b-industrial'); ?>"
+                    title="<?php esc_attr_e('Remove item', 'b2b-industrial'); ?>"
                 >
                     <span class="dashicons dashicons-trash"></span>
                 </button>
@@ -1251,11 +1251,11 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
             <div class="li-mega-menu-item-fields">
                 <!-- Basic Settings -->
                 <div class="li-mega-menu-field-group">
-                    <h5><?php esc_html_e('Basic Settings', 'lloyds-industrial'); ?></h5>
+                    <h5><?php esc_html_e('Basic Settings', 'b2b-industrial'); ?></h5>
                     
                     <p class="li-mega-menu-field">
                         <label for="li_mega_menu_label_<?php echo esc_attr((string) $index); ?>">
-                            <strong><?php esc_html_e('Label', 'lloyds-industrial'); ?></strong>
+                            <strong><?php esc_html_e('Label', 'b2b-industrial'); ?></strong>
                         </label>
                         <input 
                             type="text" 
@@ -1263,13 +1263,13 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                             data-field="label"
                             value="<?php echo esc_attr($item['label']); ?>"
                             class="widefat"
-                            placeholder="<?php esc_attr_e('Enter menu item label', 'lloyds-industrial'); ?>"
+                            placeholder="<?php esc_attr_e('Enter menu item label', 'b2b-industrial'); ?>"
                         >
                     </p>
                     
                     <p class="li-mega-menu-field">
                         <label for="li_mega_menu_url_<?php echo esc_attr((string) $index); ?>">
-                            <strong><?php esc_html_e('URL', 'lloyds-industrial'); ?></strong>
+                            <strong><?php esc_html_e('URL', 'b2b-industrial'); ?></strong>
                         </label>
                         <input
                             type="text"
@@ -1278,16 +1278,16 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                             data-field="url"
                             value="<?php echo esc_attr($item['url']); ?>"
                             class="widefat"
-                            placeholder="<?php esc_attr_e('https://example.com or /page-slug', 'lloyds-industrial'); ?>"
+                            placeholder="<?php esc_attr_e('https://example.com or /page-slug', 'b2b-industrial'); ?>"
                         >
                         <span class="description">
-                            <?php esc_html_e('Enter URL or select from page dropdown', 'lloyds-industrial'); ?>
+                            <?php esc_html_e('Enter URL or select from page dropdown', 'b2b-industrial'); ?>
                         </span>
                     </p>
                     
                     <p class="li-mega-menu-field">
                         <label for="li_mega_menu_icon_<?php echo esc_attr((string) $index); ?>">
-                            <?php esc_html_e('Icon (Emoji)', 'lloyds-industrial'); ?>
+                            <?php esc_html_e('Icon (Emoji)', 'b2b-industrial'); ?>
                         </label>
                         <input 
                             type="text" 
@@ -1295,33 +1295,33 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                             data-field="icon"
                             value="<?php echo esc_attr($item['icon']); ?>"
                             class="regular-text"
-                            placeholder="<?php esc_attr_e('🛢️', 'lloyds-industrial'); ?>"
+                            placeholder="<?php esc_attr_e('🛢️', 'b2b-industrial'); ?>"
                             maxlength="2"
                         >
                     </p>
                     
                     <p class="li-mega-menu-field">
                         <label for="li_mega_menu_description_<?php echo esc_attr((string) $index); ?>">
-                            <?php esc_html_e('Description', 'lloyds-industrial'); ?>
+                            <?php esc_html_e('Description', 'b2b-industrial'); ?>
                         </label>
                         <textarea 
                             id="li_mega_menu_description_<?php echo esc_attr((string) $index); ?>"
                             data-field="description"
                             class="widefat"
                             rows="2"
-                            placeholder="<?php esc_attr_e('Optional subtext for this menu item', 'lloyds-industrial'); ?>"
+                            placeholder="<?php esc_attr_e('Optional subtext for this menu item', 'b2b-industrial'); ?>"
                         ><?php echo esc_textarea($item['description']); ?></textarea>
                     </p>
                 </div>
                 
                 <!-- Appearance Settings -->
                 <div class="li-mega-menu-field-group">
-                    <h5><?php esc_html_e('Appearance', 'lloyds-industrial'); ?></h5>
+                    <h5><?php esc_html_e('Appearance', 'b2b-industrial'); ?></h5>
                     
                     <div class="li-mega-menu-field-row">
                         <p class="li-mega-menu-field li-mega-menu-field--half">
                             <label for="li_mega_menu_bg_color_<?php echo esc_attr((string) $index); ?>">
-                                <?php esc_html_e('Background Color', 'lloyds-industrial'); ?>
+                                <?php esc_html_e('Background Color', 'b2b-industrial'); ?>
                             </label>
                             <input 
                                 type="text" 
@@ -1329,14 +1329,14 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                                 data-field="bg_color"
                                 value="<?php echo esc_attr($item['bg_color']); ?>"
                                 class="regular-text li-color-picker"
-                                placeholder="<?php esc_attr_e('#rrggbb or color name', 'lloyds-industrial'); ?>"
+                                placeholder="<?php esc_attr_e('#rrggbb or color name', 'b2b-industrial'); ?>"
                                 data-default-color=""
                             >
                         </p>
                         
                         <p class="li-mega-menu-field li-mega-menu-field--half">
                             <label for="li_mega_menu_text_color_<?php echo esc_attr((string) $index); ?>">
-                                <?php esc_html_e('Text Color', 'lloyds-industrial'); ?>
+                                <?php esc_html_e('Text Color', 'b2b-industrial'); ?>
                             </label>
                             <input 
                                 type="text" 
@@ -1344,7 +1344,7 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                                 data-field="text_color"
                                 value="<?php echo esc_attr($item['text_color']); ?>"
                                 class="regular-text li-color-picker"
-                                placeholder="<?php esc_attr_e('#rrggbb', 'lloyds-industrial'); ?>"
+                                placeholder="<?php esc_attr_e('#rrggbb', 'b2b-industrial'); ?>"
                                 data-default-color=""
                             >
                         </p>
@@ -1352,7 +1352,7 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                     
                     <p class="li-mega-menu-field">
                         <label for="li_mega_menu_hover_color_<?php echo esc_attr((string) $index); ?>">
-                            <?php esc_html_e('Hover Color', 'lloyds-industrial'); ?>
+                            <?php esc_html_e('Hover Color', 'b2b-industrial'); ?>
                         </label>
                         <input 
                             type="text" 
@@ -1360,7 +1360,7 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                             data-field="hover_color"
                             value="<?php echo esc_attr($item['hover_color']); ?>"
                             class="regular-text li-color-picker"
-                            placeholder="<?php esc_attr_e('#rrggbb', 'lloyds-industrial'); ?>"
+                            placeholder="<?php esc_attr_e('#rrggbb', 'b2b-industrial'); ?>"
                             data-default-color=""
                         >
                     </p>
@@ -1368,12 +1368,12 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                 
                 <!-- Badge Settings -->
                 <div class="li-mega-menu-field-group">
-                    <h5><?php esc_html_e('Badge', 'lloyds-industrial'); ?></h5>
+                    <h5><?php esc_html_e('Badge', 'b2b-industrial'); ?></h5>
                     
                     <div class="li-mega-menu-field-row">
                         <p class="li-mega-menu-field li-mega-menu-field--half">
                             <label for="li_mega_menu_badge_<?php echo esc_attr((string) $index); ?>">
-                                <?php esc_html_e('Badge Text', 'lloyds-industrial'); ?>
+                                <?php esc_html_e('Badge Text', 'b2b-industrial'); ?>
                             </label>
                             <input 
                                 type="text" 
@@ -1381,13 +1381,13 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                                 name="<?php echo esc_attr($name_prefix); ?>[badge]"
                                 value="<?php echo esc_attr($item['badge']); ?>"
                                 class="regular-text"
-                                placeholder="<?php esc_attr_e('New, Hot, etc.', 'lloyds-industrial'); ?>"
+                                placeholder="<?php esc_attr_e('New, Hot, etc.', 'b2b-industrial'); ?>"
                             >
                         </p>
                         
                         <p class="li-mega-menu-field li-mega-menu-field--half">
                             <label for="li_mega_menu_badge_color_<?php echo esc_attr((string) $index); ?>">
-                                <?php esc_html_e('Badge Background', 'lloyds-industrial'); ?>
+                                <?php esc_html_e('Badge Background', 'b2b-industrial'); ?>
                             </label>
                             <input 
                                 type="text" 
@@ -1395,7 +1395,7 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                                 name="<?php echo esc_attr($name_prefix); ?>[badge_color]"
                                 value="<?php echo esc_attr($item['badge_color']); ?>"
                                 class="regular-text li-color-picker"
-                                placeholder="<?php esc_attr_e('#rrggbb', 'lloyds-industrial'); ?>"
+                                placeholder="<?php esc_attr_e('#rrggbb', 'b2b-industrial'); ?>"
                                 data-default-color="#0066cc"
                             >
                         </p>
@@ -1403,7 +1403,7 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                     
                     <p class="li-mega-menu-field">
                         <label for="li_mega_menu_badge_text_color_<?php echo esc_attr((string) $index); ?>">
-                            <?php esc_html_e('Badge Text Color', 'lloyds-industrial'); ?>
+                            <?php esc_html_e('Badge Text Color', 'b2b-industrial'); ?>
                         </label>
                         <input 
                             type="text" 
@@ -1411,7 +1411,7 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                             name="<?php echo esc_attr($name_prefix); ?>[badge_text_color]"
                             value="<?php echo esc_attr($item['badge_text_color']); ?>"
                             class="regular-text li-color-picker"
-                            placeholder="<?php esc_attr_e('#ffffff', 'lloyds-industrial'); ?>"
+                            placeholder="<?php esc_attr_e('#ffffff', 'b2b-industrial'); ?>"
                             data-default-color="#ffffff"
                         >
                     </p>
@@ -1419,7 +1419,7 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                 
                 <!-- Layout & Behavior -->
                 <div class="li-mega-menu-field-group">
-                    <h5><?php esc_html_e('Layout & Behavior', 'lloyds-industrial'); ?></h5>
+                    <h5><?php esc_html_e('Layout & Behavior', 'b2b-industrial'); ?></h5>
                     
                     <div class="li-mega-menu-field-row">
                         <p class="li-mega-menu-field li-mega-menu-field--half">
@@ -1430,7 +1430,7 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                                     value="1"
                                     <?php checked($item['enabled']); ?>
                                 >
-                                <?php esc_html_e('Enabled', 'lloyds-industrial'); ?>
+                                <?php esc_html_e('Enabled', 'b2b-industrial'); ?>
                             </label>
                         </p>
                         
@@ -1442,7 +1442,7 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                                     value="1"
                                     <?php checked($item['new_tab']); ?>
                                 >
-                                <?php esc_html_e('Open in New Tab', 'lloyds-industrial'); ?>
+                                <?php esc_html_e('Open in New Tab', 'b2b-industrial'); ?>
                             </label>
                         </p>
                     </div>
@@ -1456,13 +1456,13 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                                     value="1"
                                     <?php checked($item['mobile_visible']); ?>
                                 >
-                                <?php esc_html_e('Visible on Mobile', 'lloyds-industrial'); ?>
+                                <?php esc_html_e('Visible on Mobile', 'b2b-industrial'); ?>
                             </label>
                         </p>
                         
                         <p class="li-mega-menu-field li-mega-menu-field--half">
                             <label for="li_mega_menu_mobile_order_<?php echo esc_attr((string) $index); ?>">
-                                <?php esc_html_e('Mobile Order', 'lloyds-industrial'); ?>
+                                <?php esc_html_e('Mobile Order', 'b2b-industrial'); ?>
                             </label>
                             <input 
                                 type="number" 
@@ -1478,7 +1478,7 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                     <?php if (!$is_child): ?>
                         <p class="li-mega-menu-field">
                             <label for="li_mega_menu_column_<?php echo esc_attr((string) $index); ?>">
-                                <?php esc_html_e('Default Column for Children', 'lloyds-industrial'); ?>
+                                <?php esc_html_e('Default Column for Children', 'b2b-industrial'); ?>
                             </label>
                             <select 
                                 id="li_mega_menu_column_<?php echo esc_attr((string) $index); ?>"
@@ -1490,7 +1490,7 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                                         value="<?php echo esc_attr((string) $col); ?>" 
                                         <?php selected($item['column'], $col); ?>
                                     >
-                                        <?php echo esc_html(sprintf(__('Column %d', 'lloyds-industrial'), $col)); ?>
+                                        <?php echo esc_html(sprintf(__('Column %d', 'b2b-industrial'), $col)); ?>
                                     </option>
                                 <?php endfor; ?>
                             </select>
@@ -1498,7 +1498,7 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                     <?php else: ?>
                         <p class="li-mega-menu-field">
                             <label for="li_mega_menu_column_<?php echo esc_attr((string) $index); ?>">
-                                <?php esc_html_e('Column Position', 'lloyds-industrial'); ?>
+                                <?php esc_html_e('Column Position', 'b2b-industrial'); ?>
                             </label>
                             <select 
                                 id="li_mega_menu_column_<?php echo esc_attr((string) $index); ?>"
@@ -1510,7 +1510,7 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                                         value="<?php echo esc_attr((string) $col); ?>" 
                                         <?php selected($item['column'], $col); ?>
                                     >
-                                        <?php echo esc_html(sprintf(__('Column %d', 'lloyds-industrial'), $col)); ?>
+                                        <?php echo esc_html(sprintf(__('Column %d', 'b2b-industrial'), $col)); ?>
                                     </option>
                                 <?php endfor; ?>
                             </select>
@@ -1521,7 +1521,7 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                 <!-- Featured Panel Settings (for top-level items) -->
                 <?php if (!$is_child): ?>
                     <div class="li-mega-menu-field-group">
-                        <h5><?php esc_html_e('Featured Panel', 'lloyds-industrial'); ?></h5>
+                        <h5><?php esc_html_e('Featured Panel', 'b2b-industrial'); ?></h5>
                         
                         <p class="li-mega-menu-field">
                             <label>
@@ -1534,14 +1534,14 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                                     <?php checked($featured['enabled']); ?>
                                     data-target="li-featured-panel-<?php echo esc_attr((string) $index); ?>"
                                 >
-                                <?php esc_html_e('Enable Featured Panel', 'lloyds-industrial'); ?>
+                                <?php esc_html_e('Enable Featured Panel', 'b2b-industrial'); ?>
                             </label>
                         </p>
                         
                         <div class="li-featured-panel-settings" id="li-featured-panel-<?php echo esc_attr((string) $index); ?>" style="<?php echo $featured['enabled'] ? '' : 'display:none;'; ?>">
                             <p class="li-mega-menu-field">
                                 <label for="li_mega_menu_featured_title_<?php echo esc_attr((string) $index); ?>">
-                                    <?php esc_html_e('Title', 'lloyds-industrial'); ?>
+                                    <?php esc_html_e('Title', 'b2b-industrial'); ?>
                                 </label>
                                 <input 
                                     type="text" 
@@ -1550,13 +1550,13 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                                     data-field="featured_title"
                                     value="<?php echo esc_attr($featured['title']); ?>"
                                     class="widefat"
-                                    placeholder="<?php esc_attr_e('Featured panel title', 'lloyds-industrial'); ?>"
+                                    placeholder="<?php esc_attr_e('Featured panel title', 'b2b-industrial'); ?>"
                                 >
                             </p>
                             
                             <p class="li-mega-menu-field">
                                 <label for="li_mega_menu_featured_text_<?php echo esc_attr((string) $index); ?>">
-                                    <?php esc_html_e('Text', 'lloyds-industrial'); ?>
+                                    <?php esc_html_e('Text', 'b2b-industrial'); ?>
                                 </label>
                                 <textarea 
                                     id="li_mega_menu_featured_text_<?php echo esc_attr((string) $index); ?>"
@@ -1564,13 +1564,13 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                                     data-field="featured_text"
                                     class="widefat"
                                     rows="3"
-                                    placeholder="<?php esc_attr_e('Featured panel description', 'lloyds-industrial'); ?>"
+                                    placeholder="<?php esc_attr_e('Featured panel description', 'b2b-industrial'); ?>"
                                 ><?php echo esc_textarea($featured['text']); ?></textarea>
                             </p>
                             
                             <p class="li-mega-menu-field">
                                 <label for="li_mega_menu_featured_url_<?php echo esc_attr((string) $index); ?>">
-                                    <?php esc_html_e('URL', 'lloyds-industrial'); ?>
+                                    <?php esc_html_e('URL', 'b2b-industrial'); ?>
                                 </label>
                                 <input
                                     type="text"
@@ -1580,13 +1580,13 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                                     data-field="featured_url"
                                     value="<?php echo esc_attr($featured['url']); ?>"
                                     class="widefat"
-                                    placeholder="<?php esc_attr_e('https://example.com or /page-slug', 'lloyds-industrial'); ?>"
+                                    placeholder="<?php esc_attr_e('https://example.com or /page-slug', 'b2b-industrial'); ?>"
                                 >
                             </p>
                             
                             <p class="li-mega-menu-field">
                                 <label for="li_mega_menu_featured_button_<?php echo esc_attr((string) $index); ?>">
-                                    <?php esc_html_e('Button Label', 'lloyds-industrial'); ?>
+                                    <?php esc_html_e('Button Label', 'b2b-industrial'); ?>
                                 </label>
                                 <input 
                                     type="text" 
@@ -1595,13 +1595,13 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                                     data-field="featured_button_label"
                                     value="<?php echo esc_attr($featured['button_label']); ?>"
                                     class="regular-text"
-                                    placeholder="<?php esc_attr_e('Learn More', 'lloyds-industrial'); ?>"
+                                    placeholder="<?php esc_attr_e('Learn More', 'b2b-industrial'); ?>"
                                 >
                             </p>
                             
                             <p class="li-mega-menu-field">
                                 <label for="li_mega_menu_featured_image_<?php echo esc_attr((string) $index); ?>">
-                                    <?php esc_html_e('Image', 'lloyds-industrial'); ?>
+                                    <?php esc_html_e('Image', 'b2b-industrial'); ?>
                                 </label>
                                 <span data-li-media-picker>
                                     <input
@@ -1616,9 +1616,9 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                                         <?php 
                                         if ($featured['image'] && is_numeric($featured['image'])) {
                                             $image_url = wp_get_attachment_url((int) $featured['image']);
-                                            echo $image_url ? esc_html(basename($image_url)) : esc_html__('No image selected', 'lloyds-industrial');
+                                            echo $image_url ? esc_html(basename($image_url)) : esc_html__('No image selected', 'b2b-industrial');
                                         } else {
-                                            esc_html_e('No image selected', 'lloyds-industrial');
+                                            esc_html_e('No image selected', 'b2b-industrial');
                                         }
                                         ?>
                                     </span>
@@ -1627,14 +1627,14 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                                         type="button"
                                         class="button"
                                         data-li-media-select
-                                        data-li-media-title="<?php esc_attr_e('Select Featured Image', 'lloyds-industrial'); ?>"
-                                        data-li-media-button="<?php esc_attr_e('Use This Image', 'lloyds-industrial'); ?>"
+                                        data-li-media-title="<?php esc_attr_e('Select Featured Image', 'b2b-industrial'); ?>"
+                                        data-li-media-button="<?php esc_attr_e('Use This Image', 'b2b-industrial'); ?>"
                                         data-li-media-type="image"
                                     >
-                                        <?php esc_html_e('Select Image', 'lloyds-industrial'); ?>
+                                        <?php esc_html_e('Select Image', 'b2b-industrial'); ?>
                                     </button>
                                     <button type="button" class="button" data-li-media-remove <?php echo $featured['image'] ? '' : 'hidden'; ?>>
-                                        <?php esc_html_e('Remove', 'lloyds-industrial'); ?>
+                                        <?php esc_html_e('Remove', 'b2b-industrial'); ?>
                                     </button>
                                 </span>
                             </p>
@@ -1645,7 +1645,7 @@ function li_render_mega_menu_item_form(array $item, int|string $index, array $pa
                 <!-- Child Items (for top-level items) -->
                 <?php if (!$is_child && !empty($item['children'])): ?>
                     <div class="li-mega-menu-field-group">
-                        <h5><?php esc_html_e('Child Items', 'lloyds-industrial'); ?></h5>
+                        <h5><?php esc_html_e('Child Items', 'b2b-industrial'); ?></h5>
                         <div class="li-mega-menu-children" data-parent-index="<?php echo esc_attr((string) $index); ?>">
                             <?php 
                             $child_index = 0;
@@ -1669,131 +1669,131 @@ function li_render_settings_page(): void
     $document_mode = li_get_document_access_mode();
     $site_width = absint($layout_settings['site_width'] ?? 1400) ?: 1400;
     $header_style = !empty($layout_settings['compact_header'])
-        ? __('Compact', 'lloyds-industrial')
-        : __('Comfortable', 'lloyds-industrial');
+        ? __('Compact', 'b2b-industrial')
+        : __('Comfortable', 'b2b-industrial');
     $document_label = $document_mode === 'private'
-        ? __('Private', 'lloyds-industrial')
-        : __('Controlled', 'lloyds-industrial');
+        ? __('Private', 'b2b-industrial')
+        : __('Controlled', 'b2b-industrial');
     $reset_layout_url = wp_nonce_url(
-        admin_url('admin.php?page=lloyds&li_reset_layout_settings=1'),
+        admin_url('admin.php?page=b2b&li_reset_layout_settings=1'),
         'li_reset_layout_settings'
     );
     $refresh_catalogue_url = wp_nonce_url(
-        admin_url('admin.php?page=lloyds&li_theme_maintenance_action=refresh_catalogue'),
+        admin_url('admin.php?page=b2b&li_theme_maintenance_action=refresh_catalogue'),
         'li_theme_maintenance_refresh_catalogue'
     );
     $rebuild_navigation_url = wp_nonce_url(
-        admin_url('admin.php?page=lloyds&li_theme_maintenance_action=rebuild_navigation'),
+        admin_url('admin.php?page=b2b&li_theme_maintenance_action=rebuild_navigation'),
         'li_theme_maintenance_rebuild_navigation'
     );
     $ensure_terms_url = wp_nonce_url(
-        admin_url('admin.php?page=lloyds&li_theme_maintenance_action=ensure_terms'),
+        admin_url('admin.php?page=b2b&li_theme_maintenance_action=ensure_terms'),
         'li_theme_maintenance_ensure_terms'
     );
     ?>
     <div class="wrap li-settings-page">
         <div class="li-settings-hero">
             <div>
-                <p class="li-settings-kicker"><?php esc_html_e('Theme Control Center', 'lloyds-industrial'); ?></p>
-                <h1><?php esc_html_e('Lloyds Industrial Settings', 'lloyds-industrial'); ?></h1>
-                <p><?php esc_html_e('Manage brand defaults, customer access, header behavior, footer content, and starter-site maintenance from one focused screen.', 'lloyds-industrial'); ?></p>
+                <p class="li-settings-kicker"><?php esc_html_e('Theme Control Center', 'b2b-industrial'); ?></p>
+                <h1><?php esc_html_e('B2B Industrial Settings', 'b2b-industrial'); ?></h1>
+                <p><?php esc_html_e('Manage brand defaults, customer access, header behavior, footer content, and starter-site maintenance from one focused screen.', 'b2b-industrial'); ?></p>
             </div>
-            <div class="li-settings-summary" aria-label="<?php esc_attr_e('Current theme settings summary', 'lloyds-industrial'); ?>">
+            <div class="li-settings-summary" aria-label="<?php esc_attr_e('Current theme settings summary', 'b2b-industrial'); ?>">
                 <div>
-                    <span><?php esc_html_e('Documents', 'lloyds-industrial'); ?></span>
+                    <span><?php esc_html_e('Documents', 'b2b-industrial'); ?></span>
                     <strong><?php echo esc_html($document_label); ?></strong>
                 </div>
                 <div>
-                    <span><?php esc_html_e('Header', 'lloyds-industrial'); ?></span>
+                    <span><?php esc_html_e('Header', 'b2b-industrial'); ?></span>
                     <strong><?php echo esc_html($header_style); ?></strong>
                 </div>
                 <div>
-                    <span><?php esc_html_e('Width', 'lloyds-industrial'); ?></span>
+                    <span><?php esc_html_e('Width', 'b2b-industrial'); ?></span>
                     <strong><?php echo esc_html((string) $site_width); ?>px</strong>
                 </div>
             </div>
         </div>
 
-        <nav class="li-admin-tabs" data-li-admin-tabs=".li-settings-page" data-li-tabs-key="li-theme-settings-tab" aria-label="<?php esc_attr_e('Lloyds settings sections', 'lloyds-industrial'); ?>">
-            <button class="li-admin-tab" type="button" data-li-tab-target="theme-access"><?php esc_html_e('Access', 'lloyds-industrial'); ?></button>
-            <button class="li-admin-tab" type="button" data-li-tab-target="theme-brand"><?php esc_html_e('Brand', 'lloyds-industrial'); ?></button>
-            <button class="li-admin-tab" type="button" data-li-tab-target="theme-layout"><?php esc_html_e('Layout', 'lloyds-industrial'); ?></button>
-            <button class="li-admin-tab" type="button" data-li-tab-target="theme-announcement"><?php esc_html_e('Announcement', 'lloyds-industrial'); ?></button>
-            <button class="li-admin-tab" type="button" data-li-tab-target="theme-header-footer"><?php esc_html_e('Header & Footer', 'lloyds-industrial'); ?></button>
-            <button class="li-admin-tab" type="button" data-li-tab-target="theme-operations"><?php esc_html_e('Operations', 'lloyds-industrial'); ?></button>
+        <nav class="li-admin-tabs" data-li-admin-tabs=".li-settings-page" data-li-tabs-key="li-theme-settings-tab" aria-label="<?php esc_attr_e('B2B settings sections', 'b2b-industrial'); ?>">
+            <button class="li-admin-tab" type="button" data-li-tab-target="theme-access"><?php esc_html_e('Access', 'b2b-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="theme-brand"><?php esc_html_e('Brand', 'b2b-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="theme-layout"><?php esc_html_e('Layout', 'b2b-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="theme-announcement"><?php esc_html_e('Announcement', 'b2b-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="theme-header-footer"><?php esc_html_e('Header & Footer', 'b2b-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="theme-operations"><?php esc_html_e('Operations', 'b2b-industrial'); ?></button>
         </nav>
 
         <form class="li-settings-form li-admin-tab-panels" method="post" action="options.php">
             <input type="hidden" name="li_theme_settings[_settings_context]" value="global">
             <?php
             settings_fields('li_theme_settings');
-            li_render_settings_section_panel('lloyds', 'li_site_behavior_section', 'theme-access');
-            li_render_settings_section_panel('lloyds', 'li_brand_section', 'theme-brand');
-            li_render_settings_section_panel('lloyds', 'li_layout_display_section', 'theme-layout');
-            li_render_settings_section_panel('lloyds', 'li_announcement_section', 'theme-announcement');
-            li_render_settings_section_panel('lloyds', 'li_global_layout_section', 'theme-header-footer');
+            li_render_settings_section_panel('b2b', 'li_site_behavior_section', 'theme-access');
+            li_render_settings_section_panel('b2b', 'li_brand_section', 'theme-brand');
+            li_render_settings_section_panel('b2b', 'li_layout_display_section', 'theme-layout');
+            li_render_settings_section_panel('b2b', 'li_announcement_section', 'theme-announcement');
+            li_render_settings_section_panel('b2b', 'li_global_layout_section', 'theme-header-footer');
             ?>
         </form>
 
         <section class="li-settings-maintenance li-admin-tab-panel" data-li-tab-panel="theme-operations" aria-labelledby="li-settings-maintenance-title">
             <div class="li-settings-section-heading">
-                <p class="li-settings-kicker"><?php esc_html_e('Operations', 'lloyds-industrial'); ?></p>
-                <h2 id="li-settings-maintenance-title"><?php esc_html_e('Theme Maintenance', 'lloyds-industrial'); ?></h2>
-                <p><?php esc_html_e('Run focused maintenance actions without doing a full reseed.', 'lloyds-industrial'); ?></p>
+                <p class="li-settings-kicker"><?php esc_html_e('Operations', 'b2b-industrial'); ?></p>
+                <h2 id="li-settings-maintenance-title"><?php esc_html_e('Theme Maintenance', 'b2b-industrial'); ?></h2>
+                <p><?php esc_html_e('Run focused maintenance actions without doing a full reseed.', 'b2b-industrial'); ?></p>
             </div>
 
             <div class="li-maintenance-grid">
                 <div class="li-maintenance-card">
                     <span class="dashicons dashicons-admin-settings" aria-hidden="true"></span>
-                    <h3><?php esc_html_e('Reset layout settings', 'lloyds-industrial'); ?></h3>
-                    <p><?php esc_html_e('Restore site behavior, header, footer, and layout settings to defaults while preserving mega menu data.', 'lloyds-industrial'); ?></p>
-                    <a class="button" href="<?php echo esc_url($reset_layout_url); ?>" onclick="return confirm('<?php echo esc_js(__('Reset theme layout settings to defaults?', 'lloyds-industrial')); ?>');">
-                        <?php esc_html_e('Reset Layout', 'lloyds-industrial'); ?>
+                    <h3><?php esc_html_e('Reset layout settings', 'b2b-industrial'); ?></h3>
+                    <p><?php esc_html_e('Restore site behavior, header, footer, and layout settings to defaults while preserving mega menu data.', 'b2b-industrial'); ?></p>
+                    <a class="button" href="<?php echo esc_url($reset_layout_url); ?>" onclick="return confirm('<?php echo esc_js(__('Reset theme layout settings to defaults?', 'b2b-industrial')); ?>');">
+                        <?php esc_html_e('Reset Layout', 'b2b-industrial'); ?>
                     </a>
                 </div>
 
                 <div class="li-maintenance-card">
                     <span class="dashicons dashicons-book" aria-hidden="true"></span>
-                    <h3><?php esc_html_e('Refresh catalogue page', 'lloyds-industrial'); ?></h3>
-                    <p><?php esc_html_e('Replace the Catalogue page body with the current starter catalogue content and library shortcode.', 'lloyds-industrial'); ?></p>
-                    <a class="button" href="<?php echo esc_url($refresh_catalogue_url); ?>" onclick="return confirm('<?php echo esc_js(__('Refresh the Catalogue page content?', 'lloyds-industrial')); ?>');">
-                        <?php esc_html_e('Refresh Catalogue', 'lloyds-industrial'); ?>
+                    <h3><?php esc_html_e('Refresh catalogue page', 'b2b-industrial'); ?></h3>
+                    <p><?php esc_html_e('Replace the Catalogue page body with the current starter catalogue content and library shortcode.', 'b2b-industrial'); ?></p>
+                    <a class="button" href="<?php echo esc_url($refresh_catalogue_url); ?>" onclick="return confirm('<?php echo esc_js(__('Refresh the Catalogue page content?', 'b2b-industrial')); ?>');">
+                        <?php esc_html_e('Refresh Catalogue', 'b2b-industrial'); ?>
                     </a>
                 </div>
 
                 <div class="li-maintenance-card">
                     <span class="dashicons dashicons-menu-alt3" aria-hidden="true"></span>
-                    <h3><?php esc_html_e('Rebuild navigation', 'lloyds-industrial'); ?></h3>
-                    <p><?php esc_html_e('Recreate the block navigation from the starter page structure.', 'lloyds-industrial'); ?></p>
+                    <h3><?php esc_html_e('Rebuild navigation', 'b2b-industrial'); ?></h3>
+                    <p><?php esc_html_e('Recreate the block navigation from the starter page structure.', 'b2b-industrial'); ?></p>
                     <a class="button" href="<?php echo esc_url($rebuild_navigation_url); ?>">
-                        <?php esc_html_e('Rebuild Navigation', 'lloyds-industrial'); ?>
+                        <?php esc_html_e('Rebuild Navigation', 'b2b-industrial'); ?>
                     </a>
                 </div>
 
                 <div class="li-maintenance-card">
                     <span class="dashicons dashicons-category" aria-hidden="true"></span>
-                    <h3><?php esc_html_e('Ensure product terms', 'lloyds-industrial'); ?></h3>
-                    <p><?php esc_html_e('Create any missing product categories and industry terms used by starter content.', 'lloyds-industrial'); ?></p>
+                    <h3><?php esc_html_e('Ensure product terms', 'b2b-industrial'); ?></h3>
+                    <p><?php esc_html_e('Create any missing product categories and industry terms used by starter content.', 'b2b-industrial'); ?></p>
                     <a class="button" href="<?php echo esc_url($ensure_terms_url); ?>">
-                        <?php esc_html_e('Ensure Terms', 'lloyds-industrial'); ?>
+                        <?php esc_html_e('Ensure Terms', 'b2b-industrial'); ?>
                     </a>
                 </div>
 
                 <div class="li-maintenance-card li-maintenance-card--secure">
                     <span class="dashicons dashicons-lock" aria-hidden="true"></span>
-                    <h3><?php esc_html_e('Protected SDS storage', 'lloyds-industrial'); ?></h3>
-                    <p><?php esc_html_e('Move and organize existing SDS attachment files inside protected storage so they are served only after purchase-history access checks.', 'lloyds-industrial'); ?></p>
-                    <a class="button" href="<?php echo esc_url(wp_nonce_url(admin_url('admin.php?page=lloyds&li_migrate_sds_documents=1'), 'li_migrate_sds_documents')); ?>">
-                        <?php esc_html_e('Protect & Organize SDS Files', 'lloyds-industrial'); ?>
+                    <h3><?php esc_html_e('Protected SDS storage', 'b2b-industrial'); ?></h3>
+                    <p><?php esc_html_e('Move and organize existing SDS attachment files inside protected storage so they are served only after purchase-history access checks.', 'b2b-industrial'); ?></p>
+                    <a class="button" href="<?php echo esc_url(wp_nonce_url(admin_url('admin.php?page=b2b&li_migrate_sds_documents=1'), 'li_migrate_sds_documents')); ?>">
+                        <?php esc_html_e('Protect & Organize SDS Files', 'b2b-industrial'); ?>
                     </a>
                 </div>
 
                 <div class="li-maintenance-card li-maintenance-card--caution">
                     <span class="dashicons dashicons-update" aria-hidden="true"></span>
-                    <h3><?php esc_html_e('Full starter reseed', 'lloyds-industrial'); ?></h3>
-                    <p><?php esc_html_e('Recreate starter pages, navigation, WooCommerce page assignments, product terms, and catalogue page content.', 'lloyds-industrial'); ?></p>
-                    <a class="button button-secondary" href="<?php echo esc_url(wp_nonce_url(admin_url('index.php?li_reseed_site=1'), 'li_reseed_site')); ?>" onclick="return confirm('<?php echo esc_js(__('Run a full starter content reseed?', 'lloyds-industrial')); ?>');">
-                        <?php esc_html_e('Reseed Site Content', 'lloyds-industrial'); ?>
+                    <h3><?php esc_html_e('Full starter reseed', 'b2b-industrial'); ?></h3>
+                    <p><?php esc_html_e('Recreate starter pages, navigation, WooCommerce page assignments, product terms, and catalogue page content.', 'b2b-industrial'); ?></p>
+                    <a class="button button-secondary" href="<?php echo esc_url(wp_nonce_url(admin_url('index.php?li_reseed_site=1'), 'li_reseed_site')); ?>" onclick="return confirm('<?php echo esc_js(__('Run a full starter content reseed?', 'b2b-industrial')); ?>');">
+                        <?php esc_html_e('Reseed Site Content', 'b2b-industrial'); ?>
                     </a>
                 </div>
             </div>
@@ -1832,7 +1832,7 @@ function li_render_settings_section_panel(string $page, string $section_id, stri
             </table>
         <?php endif; ?>
 
-        <?php submit_button(__('Save Theme Settings', 'lloyds-industrial')); ?>
+        <?php submit_button(__('Save Theme Settings', 'b2b-industrial')); ?>
     </section>
     <?php
 }
@@ -1879,25 +1879,25 @@ function li_render_mega_menu_page(): void
     <div class="wrap li-mega-menu-page">
         <div class="li-mega-menu-page-hero">
             <div>
-                <p class="li-mega-menu-kicker"><?php esc_html_e('Navigation Builder', 'lloyds-industrial'); ?></p>
-                <h1><?php esc_html_e('Lloyds Mega Menu', 'lloyds-industrial'); ?></h1>
-                <p><?php esc_html_e('Build the customer-facing navigation with product paths, document links, badges, icons, and featured panels.', 'lloyds-industrial'); ?></p>
+                <p class="li-mega-menu-kicker"><?php esc_html_e('Navigation Builder', 'b2b-industrial'); ?></p>
+                <h1><?php esc_html_e('B2B Mega Menu', 'b2b-industrial'); ?></h1>
+                <p><?php esc_html_e('Build the customer-facing navigation with product paths, document links, badges, icons, and featured panels.', 'b2b-industrial'); ?></p>
             </div>
-            <div class="li-mega-menu-summary" aria-label="<?php esc_attr_e('Mega menu summary', 'lloyds-industrial'); ?>">
+            <div class="li-mega-menu-summary" aria-label="<?php esc_attr_e('Mega menu summary', 'b2b-industrial'); ?>">
                 <div>
-                    <span><?php esc_html_e('Status', 'lloyds-industrial'); ?></span>
-                    <strong><?php echo esc_html($enabled ? __('Enabled', 'lloyds-industrial') : __('Disabled', 'lloyds-industrial')); ?></strong>
+                    <span><?php esc_html_e('Status', 'b2b-industrial'); ?></span>
+                    <strong><?php echo esc_html($enabled ? __('Enabled', 'b2b-industrial') : __('Disabled', 'b2b-industrial')); ?></strong>
                 </div>
                 <div>
-                    <span><?php esc_html_e('Top Level', 'lloyds-industrial'); ?></span>
+                    <span><?php esc_html_e('Top Level', 'b2b-industrial'); ?></span>
                     <strong><?php echo esc_html((string) $top_level_count); ?></strong>
                 </div>
                 <div>
-                    <span><?php esc_html_e('Children', 'lloyds-industrial'); ?></span>
+                    <span><?php esc_html_e('Children', 'b2b-industrial'); ?></span>
                     <strong><?php echo esc_html((string) $child_count); ?></strong>
                 </div>
                 <div>
-                    <span><?php esc_html_e('Featured', 'lloyds-industrial'); ?></span>
+                    <span><?php esc_html_e('Featured', 'b2b-industrial'); ?></span>
                     <strong><?php echo esc_html((string) $featured_count); ?></strong>
                 </div>
             </div>
@@ -1907,8 +1907,8 @@ function li_render_mega_menu_page(): void
             <input type="hidden" name="li_theme_settings[_settings_context]" value="mega_menu">
             <?php
             settings_fields('li_theme_settings');
-            do_settings_sections('lloyds-mega-menu');
-            submit_button(__('Save Mega Menu', 'lloyds-industrial'));
+            do_settings_sections('b2b-mega-menu');
+            submit_button(__('Save Mega Menu', 'b2b-industrial'));
             ?>
         </form>
     </div>

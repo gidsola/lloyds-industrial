@@ -1,8 +1,8 @@
 <?php
 /**
  * Title: Request Quote
- * Slug: lloyds-industrial/request-quote
- * Categories: lloyds-industrial
+ * Slug: b2b-industrial/request-quote
+ * Categories: b2b-industrial
  */
 ?>
 
@@ -24,7 +24,7 @@
             <!-- /wp:heading -->
 
             <!-- wp:paragraph -->
-            <p>For industrial customers, distributors and partner organizations, Lloyds can support quote-based purchasing, volume requirements and application-specific recommendations.</p>
+            <p>For industrial customers, distributors and partner organizations, B2B can support quote-based purchasing, volume requirements and application-specific recommendations.</p>
             <!-- /wp:paragraph -->
 
         </div>

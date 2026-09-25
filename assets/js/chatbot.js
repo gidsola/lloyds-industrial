@@ -1,7 +1,7 @@
 (() => {
-    const config = window.lloydsChatbot || {};
+    const config = window.b2bChatbot || {};
     const settings = config.settings || {};
-    const root = document.getElementById('lloyds-chatbot-root');
+    const root = document.getElementById('b2b-chatbot-root');
 
     if (!root || !config.ajaxUrl) {
         return;
@@ -17,7 +17,7 @@
 
     const isLoggedIn = () => Boolean(config.user?.loggedIn && config.user?.id);
     const userScope = isLoggedIn() ? `user-${config.user.id}` : 'guest';
-    const sessionKey = `lloydsChatbotSession:${userScope}`;
+    const sessionKey = `b2bChatbotSession:${userScope}`;
     let sessionId = isLoggedIn()
         ? (window.sessionStorage.getItem(sessionKey) || `li-chat-${Date.now()}-${Math.random().toString(16).slice(2)}`)
         : `li-chat-${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -27,38 +27,38 @@
         window.sessionStorage.setItem(sessionKey, sessionId);
     }
 
-    root.style.setProperty('--lloyds-chatbot-accent', settings.accentColor || '#17443b');
-    root.classList.add(`lloyds-chatbot-root--${settings.position || 'bottom-right'}`);
+    root.style.setProperty('--b2b-chatbot-accent', settings.accentColor || '#17443b');
+    root.classList.add(`b2b-chatbot-root--${settings.position || 'bottom-right'}`);
     root.innerHTML = `
-        <button class="lloyds-chatbot-launcher" type="button" aria-expanded="false">
-            <span class="lloyds-chatbot-launcher__avatar">${escapeText(settings.avatarText || 'L')}</span>
+        <button class="b2b-chatbot-launcher" type="button" aria-expanded="false">
+            <span class="b2b-chatbot-launcher__avatar">${escapeText(settings.avatarText || 'L')}</span>
             <span>${escapeText(settings.buttonLabel || 'Chat')}</span>
         </button>
-        <section class="lloyds-chatbot" hidden>
-            <header class="lloyds-chatbot__header">
+        <section class="b2b-chatbot" hidden>
+            <header class="b2b-chatbot__header">
                 <div>
-                    <span class="lloyds-chatbot__avatar">${escapeText(settings.avatarText || 'L')}</span>
-                    <strong>${escapeText(settings.title || 'Lloyds Assistant')}</strong>
+                    <span class="b2b-chatbot__avatar">${escapeText(settings.avatarText || 'L')}</span>
+                    <strong>${escapeText(settings.title || 'B2B Assistant')}</strong>
                 </div>
-                <div class="lloyds-chatbot__header-actions">
-                    <button type="button" class="lloyds-chatbot__new" aria-label="${escapeText(config.i18n?.newChat || 'New chat')}">${escapeText(config.i18n?.newChat || 'New')}</button>
-                    <button type="button" class="lloyds-chatbot__close" aria-label="${escapeText(config.i18n?.close || 'Close chat')}">&times;</button>
+                <div class="b2b-chatbot__header-actions">
+                    <button type="button" class="b2b-chatbot__new" aria-label="${escapeText(config.i18n?.newChat || 'New chat')}">${escapeText(config.i18n?.newChat || 'New')}</button>
+                    <button type="button" class="b2b-chatbot__close" aria-label="${escapeText(config.i18n?.close || 'Close chat')}">&times;</button>
                 </div>
             </header>
-            <div class="lloyds-chatbot__messages" role="log" aria-live="polite"></div>
-            <form class="lloyds-chatbot__form">
+            <div class="b2b-chatbot__messages" role="log" aria-live="polite"></div>
+            <form class="b2b-chatbot__form">
                 <textarea rows="1" placeholder="${escapeText(settings.placeholder || '')}"></textarea>
                 <button type="submit">${escapeText(config.i18n?.send || 'Send')}</button>
             </form>
         </section>
     `;
 
-    const launcher = root.querySelector('.lloyds-chatbot-launcher');
-    const panel = root.querySelector('.lloyds-chatbot');
-    const newChatButton = root.querySelector('.lloyds-chatbot__new');
-    const closeButton = root.querySelector('.lloyds-chatbot__close');
-    const messages = root.querySelector('.lloyds-chatbot__messages');
-    const form = root.querySelector('.lloyds-chatbot__form');
+    const launcher = root.querySelector('.b2b-chatbot-launcher');
+    const panel = root.querySelector('.b2b-chatbot');
+    const newChatButton = root.querySelector('.b2b-chatbot__new');
+    const closeButton = root.querySelector('.b2b-chatbot__close');
+    const messages = root.querySelector('.b2b-chatbot__messages');
+    const form = root.querySelector('.b2b-chatbot__form');
     const input = form.querySelector('textarea');
 
     const persistHistory = () => {
@@ -90,7 +90,7 @@
             return;
         }
 
-        window.sessionStorage.setItem(`lloydsChatbotSession:user-${config.user.id}`, sessionId);
+        window.sessionStorage.setItem(`b2bChatbotSession:user-${config.user.id}`, sessionId);
     };
 
     const clearServerHistory = () => {
@@ -120,17 +120,17 @@
 
     const appendMessage = (role, text, actions = [], persist = true, sources = []) => {
         const item = document.createElement('div');
-        item.className = `lloyds-chatbot-message lloyds-chatbot-message--${role}`;
-        item.innerHTML = `<div class="lloyds-chatbot-message__bubble">${escapeText(text).replace(/\n/g, '<br>')}</div>`;
+        item.className = `b2b-chatbot-message b2b-chatbot-message--${role}`;
+        item.innerHTML = `<div class="b2b-chatbot-message__bubble">${escapeText(text).replace(/\n/g, '<br>')}</div>`;
 
         if (actions.length) {
             const actionList = document.createElement('div');
-            actionList.className = 'lloyds-chatbot-actions';
+            actionList.className = 'b2b-chatbot-actions';
 
             actions.forEach((action) => {
                 if (action.type === 'login') {
                     const login = document.createElement('form');
-                    login.className = 'lloyds-chatbot-login';
+                    login.className = 'b2b-chatbot-login';
                     login.innerHTML = `
                         <input type="text" name="username" placeholder="${escapeText(config.i18n?.username || 'Username or email')}" autocomplete="username">
                         <input type="password" name="password" placeholder="${escapeText(config.i18n?.password || 'Password')}" autocomplete="current-password">
@@ -144,7 +144,7 @@
                 if (action.url) {
                     const link = document.createElement('a');
                     link.href = action.url;
-                    link.className = 'lloyds-chatbot-action';
+                    link.className = 'b2b-chatbot-action';
                     link.textContent = action.label || 'Open';
                     link.target = '_self';
                     link.addEventListener('click', () => {
@@ -300,8 +300,8 @@
         setBusy(true);
 
         const thinking = document.createElement('div');
-        thinking.className = 'lloyds-chatbot-message lloyds-chatbot-message--assistant lloyds-chatbot-message--thinking';
-        thinking.innerHTML = `<div class="lloyds-chatbot-message__bubble">${escapeText(config.i18n?.thinking || 'Checking...')}</div>`;
+        thinking.className = 'b2b-chatbot-message b2b-chatbot-message--assistant b2b-chatbot-message--thinking';
+        thinking.innerHTML = `<div class="b2b-chatbot-message__bubble">${escapeText(config.i18n?.thinking || 'Checking...')}</div>`;
         messages.append(thinking);
         scrollMessages();
 

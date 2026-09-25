@@ -1,8 +1,8 @@
 <?php
 /**
  * Title: Product Search
- * Slug: lloyds-industrial/product-search
- * Categories: lloyds-industrial
+ * Slug: b2b-industrial/product-search
+ * Categories: b2b-industrial
  */
 ?>
 

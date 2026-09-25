@@ -9,12 +9,12 @@
     }
 
     ready(function () {
-        var selectButton = document.querySelector('[data-lloyds-flipbook-select-pdf]');
-        var removeButton = document.querySelector('[data-lloyds-flipbook-remove-pdf]');
-        var input = document.querySelector('[data-lloyds-flipbook-pdf-id]');
-        var label = document.querySelector('[data-lloyds-flipbook-pdf-label]');
-        var status = document.querySelector('[data-lloyds-flipbook-pdf-status]');
-        var openLink = document.querySelector('[data-lloyds-flipbook-pdf-open]');
+        var selectButton = document.querySelector('[data-b2b-flipbook-select-pdf]');
+        var removeButton = document.querySelector('[data-b2b-flipbook-remove-pdf]');
+        var input = document.querySelector('[data-b2b-flipbook-pdf-id]');
+        var label = document.querySelector('[data-b2b-flipbook-pdf-label]');
+        var status = document.querySelector('[data-b2b-flipbook-pdf-status]');
+        var openLink = document.querySelector('[data-b2b-flipbook-pdf-open]');
 
         if (!selectButton || !input) {
             return;

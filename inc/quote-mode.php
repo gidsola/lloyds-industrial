@@ -31,9 +31,9 @@ function li_should_show_quote_price_label(): bool
 add_action('admin_init', function (): void {
     add_settings_field(
         'li_quote_mode',
-        __('Quote Mode', 'lloyds-industrial'),
+        __('Quote Mode', 'b2b-industrial'),
         'li_render_quote_mode_field',
-        'lloyds',
+        'b2b',
         'li_site_behavior_section'
     );
 });
@@ -50,7 +50,7 @@ function li_render_quote_mode_field(): void
             value="1"
             <?php checked($checked); ?>
         >
-        <?php esc_html_e('Replace standard ecommerce emphasis with request-quote workflows.', 'lloyds-industrial'); ?>
+        <?php esc_html_e('Replace standard ecommerce emphasis with request-quote workflows.', 'b2b-industrial'); ?>
     </label>
     <?php
 }
@@ -64,18 +64,18 @@ add_filter('woocommerce_get_price_html', function (string $price): string {
         return '';
     }
 
-    return '<span class="li-quote-price">' . esc_html__('Request Quote', 'lloyds-industrial') . '</span>';
+    return '<span class="li-quote-price">' . esc_html__('Request Quote', 'b2b-industrial') . '</span>';
 });
 
 add_filter('woocommerce_product_single_add_to_cart_text', function (string $text): string {
     return li_is_quote_mode_enabled()
-        ? __('Request Quote', 'lloyds-industrial')
+        ? __('Request Quote', 'b2b-industrial')
         : $text;
 });
 
 add_filter('woocommerce_product_add_to_cart_text', function (string $text): string {
     return li_is_quote_mode_enabled()
-        ? __('Request Quote', 'lloyds-industrial')
+        ? __('Request Quote', 'b2b-industrial')
         : $text;
 });
 

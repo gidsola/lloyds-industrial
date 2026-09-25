@@ -15,11 +15,11 @@ add_action('admin_init', 'li_analytics_maybe_install');
 
 add_action('admin_menu', function (): void {
     add_submenu_page(
-        'lloyds',
-        __('Lloyds Analytics', 'lloyds-industrial'),
-        __('Analytics', 'lloyds-industrial'),
+        'b2b',
+        __('B2B Analytics', 'b2b-industrial'),
+        __('Analytics', 'b2b-industrial'),
         'manage_options',
-        'lloyds-analytics',
+        'b2b-analytics',
         'li_render_analytics_page'
     );
 });
@@ -613,86 +613,86 @@ function li_render_analytics_page(): void
     <div class="wrap li-settings-page li-analytics-page">
         <div class="li-settings-hero">
             <div>
-                <p class="li-settings-kicker"><?php esc_html_e('Performance Intelligence', 'lloyds-industrial'); ?></p>
-                <h1><?php esc_html_e('Lloyds Analytics', 'lloyds-industrial'); ?></h1>
-                <p><?php esc_html_e('Track sales, site traffic, product discovery, document engagement, campaigns, devices, referrers, search behavior, and inquiry volume from one native dashboard.', 'lloyds-industrial'); ?></p>
+                <p class="li-settings-kicker"><?php esc_html_e('Performance Intelligence', 'b2b-industrial'); ?></p>
+                <h1><?php esc_html_e('B2B Analytics', 'b2b-industrial'); ?></h1>
+                <p><?php esc_html_e('Track sales, site traffic, product discovery, document engagement, campaigns, devices, referrers, search behavior, and inquiry volume from one native dashboard.', 'b2b-industrial'); ?></p>
             </div>
             <div class="li-settings-summary">
                 <div>
-                    <span><?php esc_html_e('Revenue', 'lloyds-industrial'); ?></span>
+                    <span><?php esc_html_e('Revenue', 'b2b-industrial'); ?></span>
                     <strong><?php echo esc_html($currency . number_format_i18n((float) $sales['revenue'], 2)); ?></strong>
                 </div>
                 <div>
-                    <span><?php esc_html_e('Visitors', 'lloyds-industrial'); ?></span>
+                    <span><?php esc_html_e('Visitors', 'b2b-industrial'); ?></span>
                     <strong><?php echo esc_html(number_format_i18n($visitors)); ?></strong>
                 </div>
                 <div>
-                    <span><?php esc_html_e('Page Views', 'lloyds-industrial'); ?></span>
+                    <span><?php esc_html_e('Page Views', 'b2b-industrial'); ?></span>
                     <strong><?php echo esc_html(number_format_i18n($page_views)); ?></strong>
                 </div>
             </div>
         </div>
 
         <form class="li-analytics-filter" method="get">
-            <input type="hidden" name="page" value="lloyds-analytics">
+            <input type="hidden" name="page" value="b2b-analytics">
             <label>
-                <span><?php esc_html_e('Range', 'lloyds-industrial'); ?></span>
+                <span><?php esc_html_e('Range', 'b2b-industrial'); ?></span>
                 <select name="range">
-                    <option value="7" <?php selected($range['preset'], '7'); ?>><?php esc_html_e('Last 7 days', 'lloyds-industrial'); ?></option>
-                    <option value="30" <?php selected($range['preset'], '30'); ?>><?php esc_html_e('Last 30 days', 'lloyds-industrial'); ?></option>
-                    <option value="90" <?php selected($range['preset'], '90'); ?>><?php esc_html_e('Last 90 days', 'lloyds-industrial'); ?></option>
-                    <option value="365" <?php selected($range['preset'], '365'); ?>><?php esc_html_e('Last 12 months', 'lloyds-industrial'); ?></option>
-                    <option value="custom" <?php selected($range['preset'], 'custom'); ?>><?php esc_html_e('Custom', 'lloyds-industrial'); ?></option>
+                    <option value="7" <?php selected($range['preset'], '7'); ?>><?php esc_html_e('Last 7 days', 'b2b-industrial'); ?></option>
+                    <option value="30" <?php selected($range['preset'], '30'); ?>><?php esc_html_e('Last 30 days', 'b2b-industrial'); ?></option>
+                    <option value="90" <?php selected($range['preset'], '90'); ?>><?php esc_html_e('Last 90 days', 'b2b-industrial'); ?></option>
+                    <option value="365" <?php selected($range['preset'], '365'); ?>><?php esc_html_e('Last 12 months', 'b2b-industrial'); ?></option>
+                    <option value="custom" <?php selected($range['preset'], 'custom'); ?>><?php esc_html_e('Custom', 'b2b-industrial'); ?></option>
                 </select>
             </label>
             <label>
-                <span><?php esc_html_e('Start', 'lloyds-industrial'); ?></span>
+                <span><?php esc_html_e('Start', 'b2b-industrial'); ?></span>
                 <input type="date" name="start" value="<?php echo esc_attr($range['start_date']); ?>">
             </label>
             <label>
-                <span><?php esc_html_e('End', 'lloyds-industrial'); ?></span>
+                <span><?php esc_html_e('End', 'b2b-industrial'); ?></span>
                 <input type="date" name="end" value="<?php echo esc_attr($range['end_date']); ?>">
             </label>
-            <button class="button button-primary" type="submit"><?php esc_html_e('Apply', 'lloyds-industrial'); ?></button>
+            <button class="button button-primary" type="submit"><?php esc_html_e('Apply', 'b2b-industrial'); ?></button>
         </form>
 
         <div class="li-analytics-kpi-grid">
             <?php
-            li_render_analytics_kpi(__('Orders', 'lloyds-industrial'), number_format_i18n((int) $sales['orders']), __('WooCommerce processing, completed, and on-hold orders.', 'lloyds-industrial'));
-            li_render_analytics_kpi(__('Average Order', 'lloyds-industrial'), $currency . number_format_i18n((float) $sales['average_order'], 2), __('Revenue divided by order count.', 'lloyds-industrial'));
-            li_render_analytics_kpi(__('Sessions', 'lloyds-industrial'), number_format_i18n($sessions), __('Unique 30-minute visitor sessions.', 'lloyds-industrial'));
-            li_render_analytics_kpi(__('Cart Adds', 'lloyds-industrial'), number_format_i18n($cart_adds), __('Products added to cart.', 'lloyds-industrial'));
-            li_render_analytics_kpi(__('Documents', 'lloyds-industrial'), number_format_i18n($document_downloads), __('Secure and public document downloads.', 'lloyds-industrial'));
-            li_render_analytics_kpi(__('Inquiries', 'lloyds-industrial'), number_format_i18n($contact_submissions), __('Native contact form submissions.', 'lloyds-industrial'));
-            li_render_analytics_kpi(__('Chat Messages', 'lloyds-industrial'), number_format_i18n($chatbot_messages), __('AI assistant prompts from visitors and signed-in users.', 'lloyds-industrial'));
-            li_render_analytics_kpi(__('Chat SDS Events', 'lloyds-industrial'), number_format_i18n($chatbot_sds_events), __('SDS login prompts, access checks, and availability responses.', 'lloyds-industrial'));
-            li_render_analytics_kpi(__('Chat Logins', 'lloyds-industrial'), number_format_i18n($chatbot_logins), __('Successful in-chat login events.', 'lloyds-industrial'));
-            li_render_analytics_kpi(__('Chat Clicks', 'lloyds-industrial'), number_format_i18n($chatbot_action_clicks), __('Links and document actions clicked inside chat.', 'lloyds-industrial'));
-            li_render_analytics_kpi(__('Items Sold', 'lloyds-industrial'), number_format_i18n((int) $sales['items']), __('Line item quantity from tracked orders.', 'lloyds-industrial'));
-            li_render_analytics_kpi(__('Bot Events', 'lloyds-industrial'), number_format_i18n(max(0, $bot_events)), __('Recorded but excluded from primary metrics.', 'lloyds-industrial'));
+            li_render_analytics_kpi(__('Orders', 'b2b-industrial'), number_format_i18n((int) $sales['orders']), __('WooCommerce processing, completed, and on-hold orders.', 'b2b-industrial'));
+            li_render_analytics_kpi(__('Average Order', 'b2b-industrial'), $currency . number_format_i18n((float) $sales['average_order'], 2), __('Revenue divided by order count.', 'b2b-industrial'));
+            li_render_analytics_kpi(__('Sessions', 'b2b-industrial'), number_format_i18n($sessions), __('Unique 30-minute visitor sessions.', 'b2b-industrial'));
+            li_render_analytics_kpi(__('Cart Adds', 'b2b-industrial'), number_format_i18n($cart_adds), __('Products added to cart.', 'b2b-industrial'));
+            li_render_analytics_kpi(__('Documents', 'b2b-industrial'), number_format_i18n($document_downloads), __('Secure and public document downloads.', 'b2b-industrial'));
+            li_render_analytics_kpi(__('Inquiries', 'b2b-industrial'), number_format_i18n($contact_submissions), __('Native contact form submissions.', 'b2b-industrial'));
+            li_render_analytics_kpi(__('Chat Messages', 'b2b-industrial'), number_format_i18n($chatbot_messages), __('AI assistant prompts from visitors and signed-in users.', 'b2b-industrial'));
+            li_render_analytics_kpi(__('Chat SDS Events', 'b2b-industrial'), number_format_i18n($chatbot_sds_events), __('SDS login prompts, access checks, and availability responses.', 'b2b-industrial'));
+            li_render_analytics_kpi(__('Chat Logins', 'b2b-industrial'), number_format_i18n($chatbot_logins), __('Successful in-chat login events.', 'b2b-industrial'));
+            li_render_analytics_kpi(__('Chat Clicks', 'b2b-industrial'), number_format_i18n($chatbot_action_clicks), __('Links and document actions clicked inside chat.', 'b2b-industrial'));
+            li_render_analytics_kpi(__('Items Sold', 'b2b-industrial'), number_format_i18n((int) $sales['items']), __('Line item quantity from tracked orders.', 'b2b-industrial'));
+            li_render_analytics_kpi(__('Bot Events', 'b2b-industrial'), number_format_i18n(max(0, $bot_events)), __('Recorded but excluded from primary metrics.', 'b2b-industrial'));
             ?>
         </div>
 
         <section class="li-analytics-panel li-analytics-panel--wide">
             <div class="li-settings-section-heading">
-                <p class="li-settings-kicker"><?php esc_html_e('Trend', 'lloyds-industrial'); ?></p>
-                <h2><?php esc_html_e('Daily Traffic', 'lloyds-industrial'); ?></h2>
-                <p><?php esc_html_e('Page and product views with unique visitors by day.', 'lloyds-industrial'); ?></p>
+                <p class="li-settings-kicker"><?php esc_html_e('Trend', 'b2b-industrial'); ?></p>
+                <h2><?php esc_html_e('Daily Traffic', 'b2b-industrial'); ?></h2>
+                <p><?php esc_html_e('Page and product views with unique visitors by day.', 'b2b-industrial'); ?></p>
             </div>
             <?php li_render_analytics_daily_table($daily_rows); ?>
         </section>
 
         <div class="li-analytics-grid">
             <?php
-            li_render_analytics_table(__('Top Pages', 'lloyds-industrial'), $top_pages, __('Path', 'lloyds-industrial'));
-            li_render_analytics_table(__('Referrers', 'lloyds-industrial'), $top_referrers, __('Host', 'lloyds-industrial'));
-            li_render_analytics_table(__('Product Views', 'lloyds-industrial'), $top_products, __('Product', 'lloyds-industrial'));
-            li_render_analytics_table(__('Document Downloads', 'lloyds-industrial'), $top_documents, __('Document', 'lloyds-industrial'));
-            li_render_analytics_table(__('Search Terms', 'lloyds-industrial'), $top_searches, __('Term', 'lloyds-industrial'));
-            li_render_analytics_table(__('Event Mix', 'lloyds-industrial'), $event_mix, __('Event', 'lloyds-industrial'));
-            li_render_analytics_table(__('Chatbot Prompts', 'lloyds-industrial'), $chatbot_prompt_rows, __('Prompt', 'lloyds-industrial'));
-            li_render_analytics_table(__('Devices', 'lloyds-industrial'), $devices, __('Device', 'lloyds-industrial'));
-            li_render_analytics_table(__('Browsers', 'lloyds-industrial'), $browsers, __('Browser', 'lloyds-industrial'));
+            li_render_analytics_table(__('Top Pages', 'b2b-industrial'), $top_pages, __('Path', 'b2b-industrial'));
+            li_render_analytics_table(__('Referrers', 'b2b-industrial'), $top_referrers, __('Host', 'b2b-industrial'));
+            li_render_analytics_table(__('Product Views', 'b2b-industrial'), $top_products, __('Product', 'b2b-industrial'));
+            li_render_analytics_table(__('Document Downloads', 'b2b-industrial'), $top_documents, __('Document', 'b2b-industrial'));
+            li_render_analytics_table(__('Search Terms', 'b2b-industrial'), $top_searches, __('Term', 'b2b-industrial'));
+            li_render_analytics_table(__('Event Mix', 'b2b-industrial'), $event_mix, __('Event', 'b2b-industrial'));
+            li_render_analytics_table(__('Chatbot Prompts', 'b2b-industrial'), $chatbot_prompt_rows, __('Prompt', 'b2b-industrial'));
+            li_render_analytics_table(__('Devices', 'b2b-industrial'), $devices, __('Device', 'b2b-industrial'));
+            li_render_analytics_table(__('Browsers', 'b2b-industrial'), $browsers, __('Browser', 'b2b-industrial'));
             ?>
         </div>
     </div>
@@ -716,14 +716,14 @@ function li_render_analytics_daily_table(array $rows): void
     <table class="widefat striped li-analytics-table">
         <thead>
             <tr>
-                <th><?php esc_html_e('Day', 'lloyds-industrial'); ?></th>
-                <th><?php esc_html_e('Views', 'lloyds-industrial'); ?></th>
-                <th><?php esc_html_e('Visitors', 'lloyds-industrial'); ?></th>
+                <th><?php esc_html_e('Day', 'b2b-industrial'); ?></th>
+                <th><?php esc_html_e('Views', 'b2b-industrial'); ?></th>
+                <th><?php esc_html_e('Visitors', 'b2b-industrial'); ?></th>
             </tr>
         </thead>
         <tbody>
             <?php if (!$rows) : ?>
-                <tr><td colspan="3"><?php esc_html_e('No traffic has been recorded for this range yet.', 'lloyds-industrial'); ?></td></tr>
+                <tr><td colspan="3"><?php esc_html_e('No traffic has been recorded for this range yet.', 'b2b-industrial'); ?></td></tr>
             <?php endif; ?>
             <?php foreach ($rows as $row) : ?>
                 <tr>
@@ -746,13 +746,13 @@ function li_render_analytics_table(string $title, array $rows, string $label_hea
             <thead>
                 <tr>
                     <th><?php echo esc_html($label_heading); ?></th>
-                    <th><?php esc_html_e('Events', 'lloyds-industrial'); ?></th>
-                    <th><?php esc_html_e('Visitors', 'lloyds-industrial'); ?></th>
+                    <th><?php esc_html_e('Events', 'b2b-industrial'); ?></th>
+                    <th><?php esc_html_e('Visitors', 'b2b-industrial'); ?></th>
                 </tr>
             </thead>
             <tbody>
                 <?php if (!$rows) : ?>
-                    <tr><td colspan="3"><?php esc_html_e('No data yet.', 'lloyds-industrial'); ?></td></tr>
+                    <tr><td colspan="3"><?php esc_html_e('No data yet.', 'b2b-industrial'); ?></td></tr>
                 <?php endif; ?>
                 <?php foreach ($rows as $row) : ?>
                     <tr>

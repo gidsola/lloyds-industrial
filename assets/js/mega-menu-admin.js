@@ -1,5 +1,5 @@
 /**
- * Lloyds Industrial - Mega Menu Admin JavaScript
+ * B2B Industrial - Mega Menu Admin JavaScript
  * Handles the form-based mega menu builder interface
  */
 

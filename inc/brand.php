@@ -30,14 +30,14 @@ function li_get_brand_defaults(): array
 function li_get_brand_color_labels(): array
 {
     return [
-        'primary_color'   => __('Primary Color', 'lloyds-industrial'),
-        'secondary_color' => __('Secondary Color', 'lloyds-industrial'),
-        'accent_color'    => __('Accent Color', 'lloyds-industrial'),
-        'surface_color'   => __('Surface Color', 'lloyds-industrial'),
-        'text_color'      => __('Text Color', 'lloyds-industrial'),
-        'header_bg'       => __('Header Background', 'lloyds-industrial'),
-        'footer_bg'       => __('Footer Background', 'lloyds-industrial'),
-        'hero_overlay'    => __('Hero Overlay Color', 'lloyds-industrial'),
+        'primary_color'   => __('Primary Color', 'b2b-industrial'),
+        'secondary_color' => __('Secondary Color', 'b2b-industrial'),
+        'accent_color'    => __('Accent Color', 'b2b-industrial'),
+        'surface_color'   => __('Surface Color', 'b2b-industrial'),
+        'text_color'      => __('Text Color', 'b2b-industrial'),
+        'header_bg'       => __('Header Background', 'b2b-industrial'),
+        'footer_bg'       => __('Footer Background', 'b2b-industrial'),
+        'hero_overlay'    => __('Hero Overlay Color', 'b2b-industrial'),
     ];
 }
 

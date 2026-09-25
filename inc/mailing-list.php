@@ -41,16 +41,16 @@ function li_mail_get_settings_defaults(): array
         'default_tag'          => '',
         'double_optin'         => false,
         'welcome_enabled'      => true,
-        'welcome_subject'      => __('Welcome to the Lloyds mailing list', 'lloyds-industrial'),
-        'welcome_message'      => __('Thank you for subscribing. We will send product updates, sales notices, promotions, and operational announcements when they are useful.', 'lloyds-industrial'),
-        'confirmation_subject' => __('Confirm your Lloyds mailing list subscription', 'lloyds-industrial'),
-        'confirmation_message' => __('Please confirm your subscription by opening this link: {{confirm_url}}', 'lloyds-industrial'),
-        'consent_text'         => __('I agree to receive email updates from Lloyds. I can unsubscribe at any time.', 'lloyds-industrial'),
+        'welcome_subject'      => __('Welcome to the B2B mailing list', 'b2b-industrial'),
+        'welcome_message'      => __('Thank you for subscribing. We will send product updates, sales notices, promotions, and operational announcements when they are useful.', 'b2b-industrial'),
+        'confirmation_subject' => __('Confirm your B2B mailing list subscription', 'b2b-industrial'),
+        'confirmation_message' => __('Please confirm your subscription by opening this link: {{confirm_url}}', 'b2b-industrial'),
+        'consent_text'         => __('I agree to receive email updates from B2B. I can unsubscribe at any time.', 'b2b-industrial'),
         'privacy_url'          => home_url('/privacy-policy/'),
         'max_recipients_run'   => 250,
         'queue_batch_size'     => 25,
         'queue_interval'       => 300,
-        'footer_text'          => __('You are receiving this message because you subscribed to Lloyds updates.', 'lloyds-industrial'),
+        'footer_text'          => __('You are receiving this message because you subscribed to B2B updates.', 'b2b-industrial'),
         'smtp_enabled'         => false,
         'smtp_host'            => '',
         'smtp_port'            => 587,
@@ -72,10 +72,10 @@ function li_mail_register_content_types(): void
 {
     register_post_type('li_mail_subscriber', [
         'labels' => [
-            'name'          => __('Mail Subscribers', 'lloyds-industrial'),
-            'singular_name' => __('Mail Subscriber', 'lloyds-industrial'),
-            'edit_item'     => __('Edit Subscriber', 'lloyds-industrial'),
-            'add_new_item'  => __('Add Subscriber', 'lloyds-industrial'),
+            'name'          => __('Mail Subscribers', 'b2b-industrial'),
+            'singular_name' => __('Mail Subscriber', 'b2b-industrial'),
+            'edit_item'     => __('Edit Subscriber', 'b2b-industrial'),
+            'add_new_item'  => __('Add Subscriber', 'b2b-industrial'),
         ],
         'public'              => false,
         'show_ui'             => true,
@@ -89,10 +89,10 @@ function li_mail_register_content_types(): void
 
     register_post_type('li_mail_campaign', [
         'labels' => [
-            'name'          => __('Mail Campaigns', 'lloyds-industrial'),
-            'singular_name' => __('Mail Campaign', 'lloyds-industrial'),
-            'edit_item'     => __('Edit Campaign', 'lloyds-industrial'),
-            'add_new_item'  => __('Add Campaign', 'lloyds-industrial'),
+            'name'          => __('Mail Campaigns', 'b2b-industrial'),
+            'singular_name' => __('Mail Campaign', 'b2b-industrial'),
+            'edit_item'     => __('Edit Campaign', 'b2b-industrial'),
+            'add_new_item'  => __('Add Campaign', 'b2b-industrial'),
         ],
         'public'              => false,
         'show_ui'             => false,
@@ -106,8 +106,8 @@ function li_mail_register_content_types(): void
 
     register_taxonomy('li_mail_tag', ['li_mail_subscriber'], [
         'labels' => [
-            'name'          => __('Mailing Tags', 'lloyds-industrial'),
-            'singular_name' => __('Mailing Tag', 'lloyds-industrial'),
+            'name'          => __('Mailing Tags', 'b2b-industrial'),
+            'singular_name' => __('Mailing Tag', 'b2b-industrial'),
         ],
         'public'       => false,
         'show_ui'      => true,
@@ -143,55 +143,55 @@ function li_mail_maybe_flush_rewrite_rules(): void
 function li_mail_register_admin_menu(): void
 {
     add_menu_page(
-        __('Lloyds Campaigns', 'lloyds-industrial'),
-        __('Campaigns', 'lloyds-industrial'),
+        __('B2B Campaigns', 'b2b-industrial'),
+        __('Campaigns', 'b2b-industrial'),
         'manage_options',
-        'lloyds-campaigns',
+        'b2b-campaigns',
         'li_mail_render_settings_page',
         'dashicons-megaphone',
         62
     );
 
     add_submenu_page(
-        'lloyds-campaigns',
-        __('Lloyds Mailing List', 'lloyds-industrial'),
-        __('Mailing List', 'lloyds-industrial'),
+        'b2b-campaigns',
+        __('B2B Mailing List', 'b2b-industrial'),
+        __('Mailing List', 'b2b-industrial'),
         'manage_options',
-        'lloyds-campaigns',
+        'b2b-campaigns',
         'li_mail_render_settings_page'
     );
 
     add_submenu_page(
-        'lloyds-campaigns',
-        __('Mail Subscribers', 'lloyds-industrial'),
-        __('Mail Subscribers', 'lloyds-industrial'),
+        'b2b-campaigns',
+        __('Mail Subscribers', 'b2b-industrial'),
+        __('Mail Subscribers', 'b2b-industrial'),
         'edit_posts',
         'edit.php?post_type=li_mail_subscriber'
     );
 
     add_submenu_page(
-        'lloyds-campaigns',
-        __('Mailing Tags', 'lloyds-industrial'),
-        __('Mailing Tags', 'lloyds-industrial'),
+        'b2b-campaigns',
+        __('Mailing Tags', 'b2b-industrial'),
+        __('Mailing Tags', 'b2b-industrial'),
         'manage_categories',
         'edit-tags.php?taxonomy=li_mail_tag&post_type=li_mail_subscriber'
     );
 
     add_submenu_page(
-        'lloyds-campaigns',
-        __('Campaign Studio', 'lloyds-industrial'),
-        __('Mail Campaigns', 'lloyds-industrial'),
+        'b2b-campaigns',
+        __('Campaign Studio', 'b2b-industrial'),
+        __('Mail Campaigns', 'b2b-industrial'),
         'manage_options',
-        'lloyds-mail-campaigns',
+        'b2b-mail-campaigns',
         'li_mail_render_campaigns_page'
     );
 
     add_submenu_page(
         null,
-        __('Campaign Builder', 'lloyds-industrial'),
-        __('Campaign Builder', 'lloyds-industrial'),
+        __('Campaign Builder', 'b2b-industrial'),
+        __('Campaign Builder', 'b2b-industrial'),
         'manage_options',
-        'lloyds-mail-campaign-builder',
+        'b2b-mail-campaign-builder',
         'li_mail_render_campaign_builder_page'
     );
 
@@ -284,7 +284,7 @@ function li_mail_handle_admin_actions(): void
         ], MINUTE_IN_SECONDS);
     }
 
-    wp_safe_redirect(wp_get_referer() ?: admin_url('admin.php?page=lloyds-campaigns'));
+    wp_safe_redirect(wp_get_referer() ?: admin_url('admin.php?page=b2b-campaigns'));
     exit;
 }
 
@@ -300,7 +300,7 @@ add_action('admin_notices', function (): void {
 
     if ($type === 'campaign_queued') {
         $message = sprintf(
-            __('Campaign queued. Queued: %1$d. Sent now: %2$d. Failed now: %3$d. Remaining queued: %4$d.', 'lloyds-industrial'),
+            __('Campaign queued. Queued: %1$d. Sent now: %2$d. Failed now: %3$d. Remaining queued: %4$d.', 'b2b-industrial'),
             (int) ($notice['queued'] ?? 0),
             (int) ($notice['sent'] ?? 0),
             (int) ($notice['failed'] ?? 0),
@@ -309,17 +309,17 @@ add_action('admin_notices', function (): void {
         $class = 'notice-success';
     } elseif ($type === 'queue_processed') {
         $message = sprintf(
-            __('Queue processed. Sent: %1$d. Failed: %2$d. Remaining queued: %3$d.', 'lloyds-industrial'),
+            __('Queue processed. Sent: %1$d. Failed: %2$d. Remaining queued: %3$d.', 'b2b-industrial'),
             (int) ($notice['sent'] ?? 0),
             (int) ($notice['failed'] ?? 0),
             (int) ($notice['remaining'] ?? 0)
         );
         $class = 'notice-success';
     } elseif ($type === 'test_sent') {
-        $message = __('Test email sent to the site administrator.', 'lloyds-industrial');
+        $message = __('Test email sent to the site administrator.', 'b2b-industrial');
         $class = 'notice-success';
     } else {
-        $message = __('Mailing list action could not be completed.', 'lloyds-industrial');
+        $message = __('Mailing list action could not be completed.', 'b2b-industrial');
         $class = 'notice-error';
     }
 
@@ -410,16 +410,16 @@ function li_mail_render_signup_shortcode(mixed $atts = []): string
 {
     $settings = li_mail_get_settings();
     $atts = shortcode_atts([
-        'title' => __('Subscribe to our mailing list', 'lloyds-industrial'),
-        'description' => __('Get Lloyds product updates, sales announcements, promotions, and practical industrial resources.', 'lloyds-industrial'),
+        'title' => __('Subscribe to our mailing list', 'b2b-industrial'),
+        'description' => __('Get B2B product updates, sales announcements, promotions, and practical industrial resources.', 'b2b-industrial'),
         'tag' => '',
         'source' => '',
         'show_company' => 'false',
         'show_name' => 'false',
         'show_consent' => 'false',
         'show_privacy' => 'false',
-        'placeholder' => __('Email address', 'lloyds-industrial'),
-        'button' => __('Subscribe', 'lloyds-industrial'),
+        'placeholder' => __('Email address', 'b2b-industrial'),
+        'button' => __('Subscribe', 'b2b-industrial'),
     ], is_array($atts) ? $atts : [], 'li_mailing_list_signup');
     $status = isset($_GET['li_mail_status']) ? sanitize_key((string) $_GET['li_mail_status']) : '';
     $source_url = get_permalink() ?: home_url('/');
@@ -434,11 +434,11 @@ function li_mail_render_signup_shortcode(mixed $atts = []): string
             <p><?php echo esc_html((string) $atts['description']); ?></p>
         <?php endif; ?>
         <?php if ($status === 'subscribed') : ?>
-            <div class="li-contact-form__notice li-contact-form__notice--success"><?php esc_html_e('Thank you. You are subscribed.', 'lloyds-industrial'); ?></div>
+            <div class="li-contact-form__notice li-contact-form__notice--success"><?php esc_html_e('Thank you. You are subscribed.', 'b2b-industrial'); ?></div>
         <?php elseif ($status === 'pending') : ?>
-            <div class="li-contact-form__notice li-contact-form__notice--success"><?php esc_html_e('Please check your email to confirm your subscription.', 'lloyds-industrial'); ?></div>
+            <div class="li-contact-form__notice li-contact-form__notice--success"><?php esc_html_e('Please check your email to confirm your subscription.', 'b2b-industrial'); ?></div>
         <?php elseif ($status === 'error') : ?>
-            <div class="li-contact-form__notice li-contact-form__notice--error"><?php esc_html_e('Please enter a valid email address and accept the mailing list consent.', 'lloyds-industrial'); ?></div>
+            <div class="li-contact-form__notice li-contact-form__notice--error"><?php esc_html_e('Please enter a valid email address and accept the mailing list consent.', 'b2b-industrial'); ?></div>
         <?php endif; ?>
         <div class="li-contact-form__notice" data-li-mail-signup-message hidden></div>
 
@@ -449,7 +449,7 @@ function li_mail_render_signup_shortcode(mixed $atts = []): string
         <?php wp_nonce_field('li_mail_subscribe', 'li_mail_nonce'); ?>
 
         <p class="li-contact-form__honeypot" aria-hidden="true">
-            <label for="li_mail_website"><?php esc_html_e('Website', 'lloyds-industrial'); ?></label>
+            <label for="li_mail_website"><?php esc_html_e('Website', 'b2b-industrial'); ?></label>
             <input id="li_mail_website" name="website" type="text" tabindex="-1" autocomplete="off">
         </p>
 
@@ -457,13 +457,13 @@ function li_mail_render_signup_shortcode(mixed $atts = []): string
             <div class="li-contact-form__grid">
                 <?php if ($atts['show_name'] !== 'false') : ?>
                     <p>
-                        <label for="li_mail_name"><?php esc_html_e('Name', 'lloyds-industrial'); ?></label>
+                        <label for="li_mail_name"><?php esc_html_e('Name', 'b2b-industrial'); ?></label>
                         <input id="li_mail_name" name="name" type="text" autocomplete="name">
                     </p>
                 <?php endif; ?>
                 <?php if ($atts['show_company'] !== 'false') : ?>
                     <p>
-                        <label for="li_mail_company"><?php esc_html_e('Company', 'lloyds-industrial'); ?></label>
+                        <label for="li_mail_company"><?php esc_html_e('Company', 'b2b-industrial'); ?></label>
                         <input id="li_mail_company" name="company" type="text" autocomplete="organization">
                     </p>
                 <?php endif; ?>
@@ -472,7 +472,7 @@ function li_mail_render_signup_shortcode(mixed $atts = []): string
 
         <div class="li-mail-signup__row">
             <p>
-                <label class="screen-reader-text" for="li_mail_email"><?php esc_html_e('Email address', 'lloyds-industrial'); ?></label>
+                <label class="screen-reader-text" for="li_mail_email"><?php esc_html_e('Email address', 'b2b-industrial'); ?></label>
                 <input id="li_mail_email" name="email" type="email" autocomplete="email" placeholder="<?php echo esc_attr((string) $atts['placeholder']); ?>" required>
             </p>
             <button class="li-button-primary" type="submit"><?php echo esc_html((string) $atts['button']); ?></button>
@@ -490,7 +490,7 @@ function li_mail_render_signup_shortcode(mixed $atts = []): string
         <?php endif; ?>
 
         <?php if ($atts['show_privacy'] !== 'false' && !empty($settings['privacy_url'])) : ?>
-            <p class="description"><a href="<?php echo esc_url((string) $settings['privacy_url']); ?>"><?php esc_html_e('Privacy policy', 'lloyds-industrial'); ?></a></p>
+            <p class="description"><a href="<?php echo esc_url((string) $settings['privacy_url']); ?>"><?php esc_html_e('Privacy policy', 'b2b-industrial'); ?></a></p>
         <?php endif; ?>
 
     </form>
@@ -507,7 +507,7 @@ function li_mail_handle_subscribe(): void
 
     if (!isset($_POST['li_mail_nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['li_mail_nonce'])), 'li_mail_subscribe')) {
         if ($is_ajax) {
-            wp_send_json_error(['message' => __('Please refresh the page and try again.', 'lloyds-industrial')], 403);
+            wp_send_json_error(['message' => __('Please refresh the page and try again.', 'b2b-industrial')], 403);
         }
 
         wp_safe_redirect($redirect_error);
@@ -516,7 +516,7 @@ function li_mail_handle_subscribe(): void
 
     if (!empty($_POST['website'])) {
         if ($is_ajax) {
-            wp_send_json_success(['message' => __('Thank you. You are subscribed.', 'lloyds-industrial'), 'status' => 'subscribed']);
+            wp_send_json_success(['message' => __('Thank you. You are subscribed.', 'b2b-industrial'), 'status' => 'subscribed']);
         }
 
         wp_safe_redirect(add_query_arg('li_mail_status', 'subscribed', $source_url));
@@ -528,7 +528,7 @@ function li_mail_handle_subscribe(): void
 
     if ($email === '' || !$consent) {
         if ($is_ajax) {
-            wp_send_json_error(['message' => __('Please enter a valid email address.', 'lloyds-industrial')], 400);
+            wp_send_json_error(['message' => __('Please enter a valid email address.', 'b2b-industrial')], 400);
         }
 
         wp_safe_redirect($redirect_error);
@@ -549,7 +549,7 @@ function li_mail_handle_subscribe(): void
 
     if (!$subscriber_id) {
         if ($is_ajax) {
-            wp_send_json_error(['message' => __('We could not subscribe that email right now.', 'lloyds-industrial')], 500);
+            wp_send_json_error(['message' => __('We could not subscribe that email right now.', 'b2b-industrial')], 500);
         }
 
         wp_safe_redirect($redirect_error);
@@ -559,7 +559,7 @@ function li_mail_handle_subscribe(): void
     if ($status === 'pending') {
         li_mail_send_confirmation_email($subscriber_id);
         if ($is_ajax) {
-            wp_send_json_success(['message' => __('Please check your email to confirm your subscription.', 'lloyds-industrial'), 'status' => 'pending']);
+            wp_send_json_success(['message' => __('Please check your email to confirm your subscription.', 'b2b-industrial'), 'status' => 'pending']);
         }
 
         wp_safe_redirect(add_query_arg('li_mail_status', 'pending', $source_url));
@@ -568,7 +568,7 @@ function li_mail_handle_subscribe(): void
 
     li_mail_send_welcome_email($subscriber_id);
     if ($is_ajax) {
-        wp_send_json_success(['message' => __('Thank you. You are subscribed.', 'lloyds-industrial'), 'status' => 'subscribed']);
+        wp_send_json_success(['message' => __('Thank you. You are subscribed.', 'b2b-industrial'), 'status' => 'subscribed']);
     }
 
     wp_safe_redirect(add_query_arg('li_mail_status', 'subscribed', $source_url));
@@ -587,20 +587,20 @@ function li_mail_handle_public_actions(): void
     $subscriber = li_mail_find_subscriber_by_token($token);
 
     if (!$subscriber instanceof WP_Post) {
-        wp_die(esc_html__('This mailing list link is invalid or expired.', 'lloyds-industrial'), esc_html__('Mailing List', 'lloyds-industrial'), ['response' => 404]);
+        wp_die(esc_html__('This mailing list link is invalid or expired.', 'b2b-industrial'), esc_html__('Mailing List', 'b2b-industrial'), ['response' => 404]);
     }
 
     if ($action === 'confirm') {
         update_post_meta($subscriber->ID, '_li_mail_status', 'active');
         update_post_meta($subscriber->ID, '_li_mail_confirmed_at', current_time('mysql'));
         li_mail_send_welcome_email((int) $subscriber->ID);
-        wp_die(esc_html__('Your subscription has been confirmed. Thank you.', 'lloyds-industrial'), esc_html__('Subscription Confirmed', 'lloyds-industrial'));
+        wp_die(esc_html__('Your subscription has been confirmed. Thank you.', 'b2b-industrial'), esc_html__('Subscription Confirmed', 'b2b-industrial'));
     }
 
     if ($action === 'unsubscribe') {
         update_post_meta($subscriber->ID, '_li_mail_status', 'unsubscribed');
         update_post_meta($subscriber->ID, '_li_mail_unsubscribed_at', current_time('mysql'));
-        wp_die(esc_html__('You have been unsubscribed from Lloyds mailing list emails.', 'lloyds-industrial'), esc_html__('Unsubscribed', 'lloyds-industrial'));
+        wp_die(esc_html__('You have been unsubscribed from B2B mailing list emails.', 'b2b-industrial'), esc_html__('Unsubscribed', 'b2b-industrial'));
     }
 }
 
@@ -713,20 +713,20 @@ function li_mail_send_welcome_email(int $subscriber_id): void
 
 function li_mail_add_meta_boxes(): void
 {
-    add_meta_box('li_mail_subscriber_details', __('Subscriber Details', 'lloyds-industrial'), 'li_mail_render_subscriber_metabox', 'li_mail_subscriber', 'normal', 'high');
-    add_meta_box('li_mail_campaign_details', __('Campaign Settings', 'lloyds-industrial'), 'li_mail_render_campaign_metabox', 'li_mail_campaign', 'side', 'high');
-    add_meta_box('li_mail_campaign_send', __('Send Campaign', 'lloyds-industrial'), 'li_mail_render_campaign_send_metabox', 'li_mail_campaign', 'side', 'default');
+    add_meta_box('li_mail_subscriber_details', __('Subscriber Details', 'b2b-industrial'), 'li_mail_render_subscriber_metabox', 'li_mail_subscriber', 'normal', 'high');
+    add_meta_box('li_mail_campaign_details', __('Campaign Settings', 'b2b-industrial'), 'li_mail_render_campaign_metabox', 'li_mail_campaign', 'side', 'high');
+    add_meta_box('li_mail_campaign_send', __('Send Campaign', 'b2b-industrial'), 'li_mail_render_campaign_send_metabox', 'li_mail_campaign', 'side', 'default');
 }
 
 function li_mail_render_subscriber_metabox(WP_Post $post): void
 {
     wp_nonce_field('li_mail_save_subscriber', 'li_mail_subscriber_nonce');
     $fields = [
-        'email' => __('Email', 'lloyds-industrial'),
-        'name' => __('Name', 'lloyds-industrial'),
-        'company' => __('Company', 'lloyds-industrial'),
-        'phone' => __('Phone', 'lloyds-industrial'),
-        'source' => __('Source', 'lloyds-industrial'),
+        'email' => __('Email', 'b2b-industrial'),
+        'name' => __('Name', 'b2b-industrial'),
+        'company' => __('Company', 'b2b-industrial'),
+        'phone' => __('Phone', 'b2b-industrial'),
+        'source' => __('Source', 'b2b-industrial'),
     ];
     $status = (string) get_post_meta($post->ID, '_li_mail_status', true);
     $status = in_array($status, ['active', 'pending', 'unsubscribed', 'bounced'], true) ? $status : 'active';
@@ -735,8 +735,8 @@ function li_mail_render_subscriber_metabox(WP_Post $post): void
         <div class="li-editor-panel__intro">
             <span class="dashicons dashicons-groups"></span>
             <div>
-                <h2><?php esc_html_e('Subscriber Profile', 'lloyds-industrial'); ?></h2>
-                <p><?php esc_html_e('Maintain subscriber contact details and delivery status for Lloyds mailing list campaigns.', 'lloyds-industrial'); ?></p>
+                <h2><?php esc_html_e('Subscriber Profile', 'b2b-industrial'); ?></h2>
+                <p><?php esc_html_e('Maintain subscriber contact details and delivery status for B2B mailing list campaigns.', 'b2b-industrial'); ?></p>
             </div>
         </div>
 
@@ -748,7 +748,7 @@ function li_mail_render_subscriber_metabox(WP_Post $post): void
                 </label>
             <?php endforeach; ?>
             <label class="li-editor-panel__field" for="li_mail_status">
-                <span><?php esc_html_e('Status', 'lloyds-industrial'); ?></span>
+                <span><?php esc_html_e('Status', 'b2b-industrial'); ?></span>
                 <select id="li_mail_status" name="li_mail_status">
                     <?php foreach (['active', 'pending', 'unsubscribed', 'bounced'] as $option) : ?>
                         <option value="<?php echo esc_attr($option); ?>" <?php selected($status, $option); ?>><?php echo esc_html(ucfirst($option)); ?></option>
@@ -771,15 +771,15 @@ function li_mail_render_campaign_metabox(WP_Post $post): void
     ?>
     <div class="li-editor-panel li-editor-panel--compact">
         <label class="li-editor-panel__field" for="li_mail_subject">
-            <span><?php esc_html_e('Email Subject', 'lloyds-industrial'); ?></span>
+            <span><?php esc_html_e('Email Subject', 'b2b-industrial'); ?></span>
             <input id="li_mail_subject" name="li_mail_subject" type="text" value="<?php echo esc_attr($subject); ?>">
         </label>
         <label class="li-editor-panel__field" for="li_mail_preheader">
-            <span><?php esc_html_e('Preheader', 'lloyds-industrial'); ?></span>
+            <span><?php esc_html_e('Preheader', 'b2b-industrial'); ?></span>
             <textarea id="li_mail_preheader" name="li_mail_preheader" rows="2"><?php echo esc_textarea($preheader); ?></textarea>
         </label>
         <label class="li-editor-panel__field" for="li_mail_campaign_type">
-            <span><?php esc_html_e('Campaign Type', 'lloyds-industrial'); ?></span>
+            <span><?php esc_html_e('Campaign Type', 'b2b-industrial'); ?></span>
             <select id="li_mail_campaign_type" name="li_mail_campaign_type">
             <?php foreach (li_mail_get_campaign_types() as $key => $label) : ?>
                 <option value="<?php echo esc_attr($key); ?>" <?php selected($type ?: 'newsletter', $key); ?>><?php echo esc_html($label); ?></option>
@@ -787,9 +787,9 @@ function li_mail_render_campaign_metabox(WP_Post $post): void
             </select>
         </label>
         <label class="li-editor-panel__field" for="li_mail_audience_tag">
-            <span><?php esc_html_e('Audience Tag', 'lloyds-industrial'); ?></span>
+            <span><?php esc_html_e('Audience Tag', 'b2b-industrial'); ?></span>
             <select id="li_mail_audience_tag" name="li_mail_audience_tag">
-            <option value=""><?php esc_html_e('All active subscribers', 'lloyds-industrial'); ?></option>
+            <option value=""><?php esc_html_e('All active subscribers', 'b2b-industrial'); ?></option>
             <?php if (!is_wp_error($tags)) : ?>
                 <?php foreach ($tags as $tag) : ?>
                     <option value="<?php echo esc_attr($tag->slug); ?>" <?php selected($audience_tag, $tag->slug); ?>><?php echo esc_html($tag->name); ?></option>
@@ -797,7 +797,7 @@ function li_mail_render_campaign_metabox(WP_Post $post): void
             <?php endif; ?>
             </select>
         </label>
-        <p class="li-editor-panel__notice"><?php esc_html_e('Placeholders: {{first_name}}, {{name}}, {{email}}, {{company}}, {{site_name}}, {{unsubscribe_url}}.', 'lloyds-industrial'); ?></p>
+        <p class="li-editor-panel__notice"><?php esc_html_e('Placeholders: {{first_name}}, {{name}}, {{email}}, {{company}}, {{site_name}}, {{unsubscribe_url}}.', 'b2b-industrial'); ?></p>
     </div>
     <?php
 }
@@ -808,21 +808,21 @@ function li_mail_render_campaign_send_metabox(WP_Post $post): void
     $failed = (int) get_post_meta($post->ID, '_li_mail_failed_count', true);
     $last_sent = (string) get_post_meta($post->ID, '_li_mail_last_sent_at', true);
     $queued = count(li_mail_get_campaign_queue((int) $post->ID));
-    $send_url = wp_nonce_url(admin_url('admin.php?page=lloyds-campaigns&li_mail_action=send_campaign&campaign_id=' . $post->ID), 'li_mail_send_campaign');
-    $process_url = wp_nonce_url(admin_url('admin.php?page=lloyds-campaigns&li_mail_action=process_queue&campaign_id=' . $post->ID), 'li_mail_process_queue');
-    $test_url = wp_nonce_url(admin_url('admin.php?page=lloyds-campaigns&li_mail_action=send_test_campaign&campaign_id=' . $post->ID), 'li_mail_send_test_campaign');
+    $send_url = wp_nonce_url(admin_url('admin.php?page=b2b-campaigns&li_mail_action=send_campaign&campaign_id=' . $post->ID), 'li_mail_send_campaign');
+    $process_url = wp_nonce_url(admin_url('admin.php?page=b2b-campaigns&li_mail_action=process_queue&campaign_id=' . $post->ID), 'li_mail_process_queue');
+    $test_url = wp_nonce_url(admin_url('admin.php?page=b2b-campaigns&li_mail_action=send_test_campaign&campaign_id=' . $post->ID), 'li_mail_send_test_campaign');
     ?>
     <div class="li-editor-panel li-editor-panel--compact">
         <dl class="li-editor-panel__stats">
-            <div><dt><?php esc_html_e('Sent', 'lloyds-industrial'); ?></dt><dd><?php echo esc_html((string) $sent); ?></dd></div>
-            <div><dt><?php esc_html_e('Failed', 'lloyds-industrial'); ?></dt><dd><?php echo esc_html((string) $failed); ?></dd></div>
-            <div><dt><?php esc_html_e('Queued', 'lloyds-industrial'); ?></dt><dd><?php echo esc_html((string) $queued); ?></dd></div>
-            <div><dt><?php esc_html_e('Last Sent', 'lloyds-industrial'); ?></dt><dd><?php echo esc_html($last_sent ?: '-'); ?></dd></div>
+            <div><dt><?php esc_html_e('Sent', 'b2b-industrial'); ?></dt><dd><?php echo esc_html((string) $sent); ?></dd></div>
+            <div><dt><?php esc_html_e('Failed', 'b2b-industrial'); ?></dt><dd><?php echo esc_html((string) $failed); ?></dd></div>
+            <div><dt><?php esc_html_e('Queued', 'b2b-industrial'); ?></dt><dd><?php echo esc_html((string) $queued); ?></dd></div>
+            <div><dt><?php esc_html_e('Last Sent', 'b2b-industrial'); ?></dt><dd><?php echo esc_html($last_sent ?: '-'); ?></dd></div>
         </dl>
         <div class="li-editor-panel__actions">
-            <a class="button button-secondary" href="<?php echo esc_url($test_url); ?>"><?php esc_html_e('Send Test', 'lloyds-industrial'); ?></a>
-            <a class="button button-primary" href="<?php echo esc_url($send_url); ?>" onclick="return confirm('<?php echo esc_js(__('Queue this campaign for scheduled delivery?', 'lloyds-industrial')); ?>');"><?php esc_html_e('Queue Campaign', 'lloyds-industrial'); ?></a>
-            <a class="button button-secondary" href="<?php echo esc_url($process_url); ?>"><?php esc_html_e('Process Queue Now', 'lloyds-industrial'); ?></a>
+            <a class="button button-secondary" href="<?php echo esc_url($test_url); ?>"><?php esc_html_e('Send Test', 'b2b-industrial'); ?></a>
+            <a class="button button-primary" href="<?php echo esc_url($send_url); ?>" onclick="return confirm('<?php echo esc_js(__('Queue this campaign for scheduled delivery?', 'b2b-industrial')); ?>');"><?php esc_html_e('Queue Campaign', 'b2b-industrial'); ?></a>
+            <a class="button button-secondary" href="<?php echo esc_url($process_url); ?>"><?php esc_html_e('Process Queue Now', 'b2b-industrial'); ?></a>
         </div>
     </div>
     <?php
@@ -831,13 +831,13 @@ function li_mail_render_campaign_send_metabox(WP_Post $post): void
 function li_mail_get_campaign_types(): array
 {
     return [
-        'newsletter' => __('Newsletter', 'lloyds-industrial'),
-        'sale' => __('Sale', 'lloyds-industrial'),
-        'promotion' => __('Promotion', 'lloyds-industrial'),
-        'product_update' => __('Product Update', 'lloyds-industrial'),
-        'announcement' => __('Announcement', 'lloyds-industrial'),
-        'event' => __('Event', 'lloyds-industrial'),
-        'custom' => __('Custom', 'lloyds-industrial'),
+        'newsletter' => __('Newsletter', 'b2b-industrial'),
+        'sale' => __('Sale', 'b2b-industrial'),
+        'promotion' => __('Promotion', 'b2b-industrial'),
+        'product_update' => __('Product Update', 'b2b-industrial'),
+        'announcement' => __('Announcement', 'b2b-industrial'),
+        'event' => __('Event', 'b2b-industrial'),
+        'custom' => __('Custom', 'b2b-industrial'),
     ];
 }
 
@@ -886,7 +886,7 @@ function li_mail_register_cron_schedules(array $schedules): array
 
     $schedules['li_mail_queue_interval'] = [
         'interval' => $interval,
-        'display'  => sprintf(__('Every %d minutes for mailing queue', 'lloyds-industrial'), max(1, (int) round($interval / 60))),
+        'display'  => sprintf(__('Every %d minutes for mailing queue', 'b2b-industrial'), max(1, (int) round($interval / 60))),
     ];
 
     return $schedules;
@@ -996,7 +996,7 @@ function li_mail_send_campaign_test(int $campaign_id): bool
     }
 
     return li_mail_send_campaign_email($campaign_id, 0, $admin_email, [
-        'name' => __('Test Recipient', 'lloyds-industrial'),
+        'name' => __('Test Recipient', 'b2b-industrial'),
         'email' => $admin_email,
         'company' => get_bloginfo('name'),
         'unsubscribe_url' => home_url('/'),
@@ -1093,7 +1093,7 @@ function li_mail_send_campaign_email(int $campaign_id, int $subscriber_id, strin
     $footer = strtr((string) $settings['footer_text'], $replacements);
     $html = '<div style="display:none;max-height:0;overflow:hidden;">' . esc_html($preheader) . '</div>';
     $html .= '<div style="font-family:Arial,sans-serif;line-height:1.6;color:#182126;">' . $body . '</div>';
-    $html .= '<hr><p style="font-size:12px;color:#66736f;">' . wp_kses_post($footer) . '<br><a href="' . esc_url((string) $replacements['{{unsubscribe_url}}']) . '">' . esc_html__('Unsubscribe', 'lloyds-industrial') . '</a></p>';
+    $html .= '<hr><p style="font-size:12px;color:#66736f;">' . wp_kses_post($footer) . '<br><a href="' . esc_url((string) $replacements['{{unsubscribe_url}}']) . '">' . esc_html__('Unsubscribe', 'b2b-industrial') . '</a></p>';
 
     return wp_mail($email, strtr($subject, $replacements), $html, li_mail_get_headers());
 }
@@ -1104,52 +1104,52 @@ function li_mail_render_settings_page(): void
     $subscriber_count = li_mail_count_subscribers('active');
     $pending_count = li_mail_count_subscribers('pending');
     $campaign_count = wp_count_posts('li_mail_campaign');
-    $campaigns_url = admin_url('admin.php?page=lloyds-mail-campaigns');
+    $campaigns_url = admin_url('admin.php?page=b2b-mail-campaigns');
     $subscribers_url = admin_url('edit.php?post_type=li_mail_subscriber');
-    $export_url = wp_nonce_url(admin_url('admin.php?page=lloyds-campaigns&li_mail_action=export_subscribers'), 'li_mail_export_subscribers');
+    $export_url = wp_nonce_url(admin_url('admin.php?page=b2b-campaigns&li_mail_action=export_subscribers'), 'li_mail_export_subscribers');
     ?>
     <div class="wrap li-settings-page li-mail-page">
         <div class="li-settings-hero">
             <div>
-                <p class="li-settings-kicker"><?php esc_html_e('Audience and Campaigns', 'lloyds-industrial'); ?></p>
-                <h1><?php esc_html_e('Lloyds Mailing List', 'lloyds-industrial'); ?></h1>
-                <p><?php esc_html_e('Build subscriber lists, embed signup forms, manage consent, segment audiences, and send sales, promotional, product, and announcement campaigns.', 'lloyds-industrial'); ?></p>
+                <p class="li-settings-kicker"><?php esc_html_e('Audience and Campaigns', 'b2b-industrial'); ?></p>
+                <h1><?php esc_html_e('B2B Mailing List', 'b2b-industrial'); ?></h1>
+                <p><?php esc_html_e('Build subscriber lists, embed signup forms, manage consent, segment audiences, and send sales, promotional, product, and announcement campaigns.', 'b2b-industrial'); ?></p>
             </div>
             <div class="li-settings-summary">
-                <div><span><?php esc_html_e('Active', 'lloyds-industrial'); ?></span><strong><?php echo esc_html(number_format_i18n($subscriber_count)); ?></strong></div>
-                <div><span><?php esc_html_e('Pending', 'lloyds-industrial'); ?></span><strong><?php echo esc_html(number_format_i18n($pending_count)); ?></strong></div>
-                <div><span><?php esc_html_e('Campaigns', 'lloyds-industrial'); ?></span><strong><?php echo esc_html(number_format_i18n((int) ($campaign_count->publish ?? 0))); ?></strong></div>
+                <div><span><?php esc_html_e('Active', 'b2b-industrial'); ?></span><strong><?php echo esc_html(number_format_i18n($subscriber_count)); ?></strong></div>
+                <div><span><?php esc_html_e('Pending', 'b2b-industrial'); ?></span><strong><?php echo esc_html(number_format_i18n($pending_count)); ?></strong></div>
+                <div><span><?php esc_html_e('Campaigns', 'b2b-industrial'); ?></span><strong><?php echo esc_html(number_format_i18n((int) ($campaign_count->publish ?? 0))); ?></strong></div>
             </div>
         </div>
 
         <p class="li-seo-actions">
-            <a class="button button-secondary" href="<?php echo esc_url($subscribers_url); ?>"><?php esc_html_e('View Subscribers', 'lloyds-industrial'); ?></a>
-            <a class="button button-secondary" href="<?php echo esc_url($campaigns_url); ?>"><?php esc_html_e('View Campaigns', 'lloyds-industrial'); ?></a>
-            <a class="button button-secondary" href="<?php echo esc_url(admin_url('admin.php?page=lloyds-mail-campaign-builder')); ?>"><?php esc_html_e('Create Campaign', 'lloyds-industrial'); ?></a>
-            <a class="button button-secondary" href="<?php echo esc_url($export_url); ?>"><?php esc_html_e('Export Subscribers', 'lloyds-industrial'); ?></a>
+            <a class="button button-secondary" href="<?php echo esc_url($subscribers_url); ?>"><?php esc_html_e('View Subscribers', 'b2b-industrial'); ?></a>
+            <a class="button button-secondary" href="<?php echo esc_url($campaigns_url); ?>"><?php esc_html_e('View Campaigns', 'b2b-industrial'); ?></a>
+            <a class="button button-secondary" href="<?php echo esc_url(admin_url('admin.php?page=b2b-mail-campaign-builder')); ?>"><?php esc_html_e('Create Campaign', 'b2b-industrial'); ?></a>
+            <a class="button button-secondary" href="<?php echo esc_url($export_url); ?>"><?php esc_html_e('Export Subscribers', 'b2b-industrial'); ?></a>
         </p>
 
-        <nav class="li-admin-tabs" data-li-admin-tabs=".li-mail-page" data-li-tabs-key="li-mail-settings-tab" aria-label="<?php esc_attr_e('Mailing list settings sections', 'lloyds-industrial'); ?>">
-            <button class="li-admin-tab" type="button" data-li-tab-target="mail-signup"><?php esc_html_e('Signup Form', 'lloyds-industrial'); ?></button>
-            <button class="li-admin-tab" type="button" data-li-tab-target="mail-sender"><?php esc_html_e('Sender', 'lloyds-industrial'); ?></button>
-            <button class="li-admin-tab" type="button" data-li-tab-target="mail-consent"><?php esc_html_e('Consent', 'lloyds-industrial'); ?></button>
-            <button class="li-admin-tab" type="button" data-li-tab-target="mail-automation"><?php esc_html_e('Automated Emails', 'lloyds-industrial'); ?></button>
-            <button class="li-admin-tab" type="button" data-li-tab-target="mail-delivery"><?php esc_html_e('Delivery', 'lloyds-industrial'); ?></button>
-            <button class="li-admin-tab" type="button" data-li-tab-target="mail-smtp"><?php esc_html_e('SMTP', 'lloyds-industrial'); ?></button>
+        <nav class="li-admin-tabs" data-li-admin-tabs=".li-mail-page" data-li-tabs-key="li-mail-settings-tab" aria-label="<?php esc_attr_e('Mailing list settings sections', 'b2b-industrial'); ?>">
+            <button class="li-admin-tab" type="button" data-li-tab-target="mail-signup"><?php esc_html_e('Signup Form', 'b2b-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="mail-sender"><?php esc_html_e('Sender', 'b2b-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="mail-consent"><?php esc_html_e('Consent', 'b2b-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="mail-automation"><?php esc_html_e('Automated Emails', 'b2b-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="mail-delivery"><?php esc_html_e('Delivery', 'b2b-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="mail-smtp"><?php esc_html_e('SMTP', 'b2b-industrial'); ?></button>
         </nav>
 
         <section class="li-admin-panel li-admin-tab-panel li-mail-shortcode-panel" data-li-tab-panel="mail-signup">
             <div>
-                <p class="li-settings-kicker"><?php esc_html_e('Signup Form', 'lloyds-industrial'); ?></p>
-                <h2><?php esc_html_e('Place a Join Our Mailing List Box', 'lloyds-industrial'); ?></h2>
-                <p><?php esc_html_e('Add the shortcode to any page, post, product description, template pattern, or reusable block. The default embed is a compact email field and join button.', 'lloyds-industrial'); ?></p>
+                <p class="li-settings-kicker"><?php esc_html_e('Signup Form', 'b2b-industrial'); ?></p>
+                <h2><?php esc_html_e('Place a Join Our Mailing List Box', 'b2b-industrial'); ?></h2>
+                <p><?php esc_html_e('Add the shortcode to any page, post, product description, template pattern, or reusable block. The default embed is a compact email field and join button.', 'b2b-industrial'); ?></p>
             </div>
 
             <div class="li-mail-shortcode-grid">
                 <div>
-                    <h3><?php esc_html_e('Recommended', 'lloyds-industrial'); ?></h3>
+                    <h3><?php esc_html_e('Recommended', 'b2b-industrial'); ?></h3>
                     <code>[li_mailing_list_signup title="Join our mailing list" button="Join"]</code>
-                    <h3><?php esc_html_e('Useful Variants', 'lloyds-industrial'); ?></h3>
+                    <h3><?php esc_html_e('Useful Variants', 'b2b-industrial'); ?></h3>
                     <code>[li_mailing_list_signup]</code>
                     <code>[li_mailing_list_signup tag="product-updates" source="footer_signup"]</code>
                     <code>[li_mailing_list_signup title="" description="" button="Subscribe"]</code>
@@ -1157,18 +1157,18 @@ function li_mail_render_settings_page(): void
                 </div>
 
                 <div>
-                    <h3><?php esc_html_e('Attributes', 'lloyds-industrial'); ?></h3>
+                    <h3><?php esc_html_e('Attributes', 'b2b-industrial'); ?></h3>
                     <dl class="li-mail-shortcode-attributes">
-                        <div><dt><code>title</code></dt><dd><?php esc_html_e('Changes the form heading.', 'lloyds-industrial'); ?></dd></div>
-                        <div><dt><code>description</code></dt><dd><?php esc_html_e('Changes or hides the intro copy.', 'lloyds-industrial'); ?></dd></div>
-                        <div><dt><code>tag</code></dt><dd><?php esc_html_e('Applies a mailing tag to new subscribers.', 'lloyds-industrial'); ?></dd></div>
-                        <div><dt><code>source</code></dt><dd><?php esc_html_e('Stores where the signup came from.', 'lloyds-industrial'); ?></dd></div>
-                        <div><dt><code>show_name</code></dt><dd><?php esc_html_e('Set to true to show the name field.', 'lloyds-industrial'); ?></dd></div>
-                        <div><dt><code>show_company</code></dt><dd><?php esc_html_e('Set to true to show the company field.', 'lloyds-industrial'); ?></dd></div>
-                        <div><dt><code>show_consent</code></dt><dd><?php esc_html_e('Set to true to show the consent checkbox.', 'lloyds-industrial'); ?></dd></div>
-                        <div><dt><code>show_privacy</code></dt><dd><?php esc_html_e('Set to true to show the privacy policy link.', 'lloyds-industrial'); ?></dd></div>
-                        <div><dt><code>placeholder</code></dt><dd><?php esc_html_e('Changes the email field placeholder.', 'lloyds-industrial'); ?></dd></div>
-                        <div><dt><code>button</code></dt><dd><?php esc_html_e('Changes the submit button text.', 'lloyds-industrial'); ?></dd></div>
+                        <div><dt><code>title</code></dt><dd><?php esc_html_e('Changes the form heading.', 'b2b-industrial'); ?></dd></div>
+                        <div><dt><code>description</code></dt><dd><?php esc_html_e('Changes or hides the intro copy.', 'b2b-industrial'); ?></dd></div>
+                        <div><dt><code>tag</code></dt><dd><?php esc_html_e('Applies a mailing tag to new subscribers.', 'b2b-industrial'); ?></dd></div>
+                        <div><dt><code>source</code></dt><dd><?php esc_html_e('Stores where the signup came from.', 'b2b-industrial'); ?></dd></div>
+                        <div><dt><code>show_name</code></dt><dd><?php esc_html_e('Set to true to show the name field.', 'b2b-industrial'); ?></dd></div>
+                        <div><dt><code>show_company</code></dt><dd><?php esc_html_e('Set to true to show the company field.', 'b2b-industrial'); ?></dd></div>
+                        <div><dt><code>show_consent</code></dt><dd><?php esc_html_e('Set to true to show the consent checkbox.', 'b2b-industrial'); ?></dd></div>
+                        <div><dt><code>show_privacy</code></dt><dd><?php esc_html_e('Set to true to show the privacy policy link.', 'b2b-industrial'); ?></dd></div>
+                        <div><dt><code>placeholder</code></dt><dd><?php esc_html_e('Changes the email field placeholder.', 'b2b-industrial'); ?></dd></div>
+                        <div><dt><code>button</code></dt><dd><?php esc_html_e('Changes the submit button text.', 'b2b-industrial'); ?></dd></div>
                     </dl>
                 </div>
             </div>
@@ -1178,65 +1178,65 @@ function li_mail_render_settings_page(): void
             <?php settings_fields('li_mailing_list_settings'); ?>
 
             <section class="li-admin-tab-panel" data-li-tab-panel="mail-sender">
-                <h2><?php esc_html_e('Sender Identity', 'lloyds-industrial'); ?></h2>
-                <p><?php esc_html_e('Configure the default sender used for confirmations, welcome messages, and campaigns.', 'lloyds-industrial'); ?></p>
+                <h2><?php esc_html_e('Sender Identity', 'b2b-industrial'); ?></h2>
+                <p><?php esc_html_e('Configure the default sender used for confirmations, welcome messages, and campaigns.', 'b2b-industrial'); ?></p>
                 <table class="form-table" role="presentation"><tbody>
-                    <?php li_mail_render_text_row('from_name', __('From name', 'lloyds-industrial'), $settings); ?>
-                    <?php li_mail_render_email_row('from_email', __('From email', 'lloyds-industrial'), $settings); ?>
-                    <?php li_mail_render_email_row('reply_to_email', __('Reply-to email', 'lloyds-industrial'), $settings); ?>
-                    <?php li_mail_render_text_row('default_tag', __('Default subscriber tag', 'lloyds-industrial'), $settings); ?>
+                    <?php li_mail_render_text_row('from_name', __('From name', 'b2b-industrial'), $settings); ?>
+                    <?php li_mail_render_email_row('from_email', __('From email', 'b2b-industrial'), $settings); ?>
+                    <?php li_mail_render_email_row('reply_to_email', __('Reply-to email', 'b2b-industrial'), $settings); ?>
+                    <?php li_mail_render_text_row('default_tag', __('Default subscriber tag', 'b2b-industrial'), $settings); ?>
                 </tbody></table>
-                <?php submit_button(__('Save Mailing List Settings', 'lloyds-industrial')); ?>
+                <?php submit_button(__('Save Mailing List Settings', 'b2b-industrial')); ?>
             </section>
 
             <section class="li-admin-tab-panel" data-li-tab-panel="mail-consent">
-                <h2><?php esc_html_e('Signup and Consent', 'lloyds-industrial'); ?></h2>
-                <p><?php esc_html_e('Configure the consent behavior used by embedded mailing list signup forms.', 'lloyds-industrial'); ?></p>
+                <h2><?php esc_html_e('Signup and Consent', 'b2b-industrial'); ?></h2>
+                <p><?php esc_html_e('Configure the consent behavior used by embedded mailing list signup forms.', 'b2b-industrial'); ?></p>
                 <table class="form-table" role="presentation"><tbody>
-                    <?php li_mail_render_checkbox_row('double_optin', __('Require email confirmation', 'lloyds-industrial'), $settings); ?>
-                    <?php li_mail_render_text_row('consent_text', __('Consent text', 'lloyds-industrial'), $settings); ?>
-                    <?php li_mail_render_text_row('privacy_url', __('Privacy policy URL', 'lloyds-industrial'), $settings); ?>
+                    <?php li_mail_render_checkbox_row('double_optin', __('Require email confirmation', 'b2b-industrial'), $settings); ?>
+                    <?php li_mail_render_text_row('consent_text', __('Consent text', 'b2b-industrial'), $settings); ?>
+                    <?php li_mail_render_text_row('privacy_url', __('Privacy policy URL', 'b2b-industrial'), $settings); ?>
                 </tbody></table>
-                <?php submit_button(__('Save Mailing List Settings', 'lloyds-industrial')); ?>
+                <?php submit_button(__('Save Mailing List Settings', 'b2b-industrial')); ?>
             </section>
 
             <section class="li-admin-tab-panel" data-li-tab-panel="mail-automation">
-                <h2><?php esc_html_e('Automated Emails', 'lloyds-industrial'); ?></h2>
-                <p><?php esc_html_e('Customize confirmation and welcome messages. Confirmation messages can use {{confirm_url}}.', 'lloyds-industrial'); ?></p>
+                <h2><?php esc_html_e('Automated Emails', 'b2b-industrial'); ?></h2>
+                <p><?php esc_html_e('Customize confirmation and welcome messages. Confirmation messages can use {{confirm_url}}.', 'b2b-industrial'); ?></p>
                 <table class="form-table" role="presentation"><tbody>
-                    <?php li_mail_render_checkbox_row('welcome_enabled', __('Send welcome email', 'lloyds-industrial'), $settings); ?>
-                    <?php li_mail_render_text_row('welcome_subject', __('Welcome subject', 'lloyds-industrial'), $settings); ?>
-                    <?php li_mail_render_textarea_row('welcome_message', __('Welcome message', 'lloyds-industrial'), $settings); ?>
-                    <?php li_mail_render_text_row('confirmation_subject', __('Confirmation subject', 'lloyds-industrial'), $settings); ?>
-                    <?php li_mail_render_textarea_row('confirmation_message', __('Confirmation message', 'lloyds-industrial'), $settings); ?>
+                    <?php li_mail_render_checkbox_row('welcome_enabled', __('Send welcome email', 'b2b-industrial'), $settings); ?>
+                    <?php li_mail_render_text_row('welcome_subject', __('Welcome subject', 'b2b-industrial'), $settings); ?>
+                    <?php li_mail_render_textarea_row('welcome_message', __('Welcome message', 'b2b-industrial'), $settings); ?>
+                    <?php li_mail_render_text_row('confirmation_subject', __('Confirmation subject', 'b2b-industrial'), $settings); ?>
+                    <?php li_mail_render_textarea_row('confirmation_message', __('Confirmation message', 'b2b-industrial'), $settings); ?>
                 </tbody></table>
-                <?php submit_button(__('Save Mailing List Settings', 'lloyds-industrial')); ?>
+                <?php submit_button(__('Save Mailing List Settings', 'b2b-industrial')); ?>
             </section>
 
             <section class="li-admin-tab-panel" data-li-tab-panel="mail-delivery">
-                <h2><?php esc_html_e('Campaign Delivery', 'lloyds-industrial'); ?></h2>
-                <p><?php esc_html_e('Queued delivery sends small batches through WP-Cron so mail providers and local servers are not hit with the entire list at once.', 'lloyds-industrial'); ?></p>
+                <h2><?php esc_html_e('Campaign Delivery', 'b2b-industrial'); ?></h2>
+                <p><?php esc_html_e('Queued delivery sends small batches through WP-Cron so mail providers and local servers are not hit with the entire list at once.', 'b2b-industrial'); ?></p>
                 <table class="form-table" role="presentation"><tbody>
-                    <?php li_mail_render_number_row('queue_batch_size', __('Emails per queue batch', 'lloyds-industrial'), $settings, 1, 250); ?>
-                    <?php li_mail_render_number_row('queue_interval', __('Queue interval seconds', 'lloyds-industrial'), $settings, 60, HOUR_IN_SECONDS); ?>
-                    <?php li_mail_render_textarea_row('footer_text', __('Campaign footer text', 'lloyds-industrial'), $settings); ?>
+                    <?php li_mail_render_number_row('queue_batch_size', __('Emails per queue batch', 'b2b-industrial'), $settings, 1, 250); ?>
+                    <?php li_mail_render_number_row('queue_interval', __('Queue interval seconds', 'b2b-industrial'), $settings, 60, HOUR_IN_SECONDS); ?>
+                    <?php li_mail_render_textarea_row('footer_text', __('Campaign footer text', 'b2b-industrial'), $settings); ?>
                 </tbody></table>
-                <?php submit_button(__('Save Mailing List Settings', 'lloyds-industrial')); ?>
+                <?php submit_button(__('Save Mailing List Settings', 'b2b-industrial')); ?>
             </section>
 
             <section class="li-admin-tab-panel" data-li-tab-panel="mail-smtp">
-                <h2><?php esc_html_e('Optional SMTP Provider', 'lloyds-industrial'); ?></h2>
-                <p><?php esc_html_e('When enabled and configured, all WordPress mail will use this SMTP transport. Leave disabled to use the server default.', 'lloyds-industrial'); ?></p>
+                <h2><?php esc_html_e('Optional SMTP Provider', 'b2b-industrial'); ?></h2>
+                <p><?php esc_html_e('When enabled and configured, all WordPress mail will use this SMTP transport. Leave disabled to use the server default.', 'b2b-industrial'); ?></p>
                 <table class="form-table" role="presentation"><tbody>
-                    <?php li_mail_render_checkbox_row('smtp_enabled', __('Use SMTP provider', 'lloyds-industrial'), $settings); ?>
-                    <?php li_mail_render_text_row('smtp_host', __('SMTP host', 'lloyds-industrial'), $settings); ?>
-                    <?php li_mail_render_number_row('smtp_port', __('SMTP port', 'lloyds-industrial'), $settings, 1, 65535); ?>
-                    <?php li_mail_render_select_row('smtp_encryption', __('Encryption', 'lloyds-industrial'), $settings, ['tls' => 'TLS', 'ssl' => 'SSL', '' => __('None', 'lloyds-industrial')]); ?>
-                    <?php li_mail_render_checkbox_row('smtp_auth', __('SMTP authentication', 'lloyds-industrial'), $settings); ?>
-                    <?php li_mail_render_text_row('smtp_username', __('SMTP username', 'lloyds-industrial'), $settings); ?>
-                    <?php li_mail_render_password_row('smtp_password', __('SMTP password', 'lloyds-industrial'), $settings); ?>
+                    <?php li_mail_render_checkbox_row('smtp_enabled', __('Use SMTP provider', 'b2b-industrial'), $settings); ?>
+                    <?php li_mail_render_text_row('smtp_host', __('SMTP host', 'b2b-industrial'), $settings); ?>
+                    <?php li_mail_render_number_row('smtp_port', __('SMTP port', 'b2b-industrial'), $settings, 1, 65535); ?>
+                    <?php li_mail_render_select_row('smtp_encryption', __('Encryption', 'b2b-industrial'), $settings, ['tls' => 'TLS', 'ssl' => 'SSL', '' => __('None', 'b2b-industrial')]); ?>
+                    <?php li_mail_render_checkbox_row('smtp_auth', __('SMTP authentication', 'b2b-industrial'), $settings); ?>
+                    <?php li_mail_render_text_row('smtp_username', __('SMTP username', 'b2b-industrial'), $settings); ?>
+                    <?php li_mail_render_password_row('smtp_password', __('SMTP password', 'b2b-industrial'), $settings); ?>
                 </tbody></table>
-                <?php submit_button(__('Save Mailing List Settings', 'lloyds-industrial')); ?>
+                <?php submit_button(__('Save Mailing List Settings', 'b2b-industrial')); ?>
             </section>
         </form>
     </div>
@@ -1257,7 +1257,7 @@ function li_mail_count_subscribers(string $status): int
 function li_mail_export_subscribers_csv(): void
 {
     if (!current_user_can('manage_options')) {
-        wp_die(esc_html__('You do not have permission to export subscribers.', 'lloyds-industrial'), esc_html__('Mailing List', 'lloyds-industrial'), ['response' => 403]);
+        wp_die(esc_html__('You do not have permission to export subscribers.', 'b2b-industrial'), esc_html__('Mailing List', 'b2b-industrial'), ['response' => 403]);
     }
 
     $query = new WP_Query([
@@ -1270,7 +1270,7 @@ function li_mail_export_subscribers_csv(): void
 
     nocache_headers();
     header('Content-Type: text/csv; charset=utf-8');
-    header('Content-Disposition: attachment; filename=lloyds-mail-subscribers-' . gmdate('Y-m-d') . '.csv');
+    header('Content-Disposition: attachment; filename=b2b-mail-subscribers-' . gmdate('Y-m-d') . '.csv');
 
     $out = fopen('php://output', 'w');
 
@@ -1304,7 +1304,7 @@ function li_mail_export_subscribers_csv(): void
 function li_mail_handle_campaign_builder_save(): void
 {
     if (!current_user_can('manage_options')) {
-        wp_die(esc_html__('You do not have permission to save campaigns.', 'lloyds-industrial'), esc_html__('Mailing List', 'lloyds-industrial'), ['response' => 403]);
+        wp_die(esc_html__('You do not have permission to save campaigns.', 'b2b-industrial'), esc_html__('Mailing List', 'b2b-industrial'), ['response' => 403]);
     }
 
     check_admin_referer('li_mail_save_campaign_builder');
@@ -1314,7 +1314,7 @@ function li_mail_handle_campaign_builder_save(): void
     $content = wp_kses_post(wp_unslash((string) ($_POST['campaign_content'] ?? '')));
 
     if ($title === '') {
-        $title = __('Untitled Campaign', 'lloyds-industrial');
+        $title = __('Untitled Campaign', 'b2b-industrial');
     }
 
     $post_data = [
@@ -1332,7 +1332,7 @@ function li_mail_handle_campaign_builder_save(): void
     }
 
     if (!$campaign_id) {
-        wp_safe_redirect(admin_url('admin.php?page=lloyds-mail-campaign-builder&li_mail_saved=0'));
+        wp_safe_redirect(admin_url('admin.php?page=b2b-mail-campaign-builder&li_mail_saved=0'));
         exit;
     }
 
@@ -1347,7 +1347,7 @@ function li_mail_handle_campaign_builder_save(): void
     update_post_meta($campaign_id, '_li_mail_campaign_type', $type);
     update_post_meta($campaign_id, '_li_mail_audience_tag', sanitize_title(wp_unslash((string) ($_POST['campaign_audience_tag'] ?? ''))));
 
-    wp_safe_redirect(admin_url('admin.php?page=lloyds-mail-campaign-builder&campaign_id=' . $campaign_id . '&li_mail_saved=1'));
+    wp_safe_redirect(admin_url('admin.php?page=b2b-mail-campaign-builder&campaign_id=' . $campaign_id . '&li_mail_saved=1'));
     exit;
 }
 
@@ -1368,27 +1368,27 @@ function li_mail_render_campaigns_page(): void
     <div class="wrap li-settings-page li-mail-studio">
         <div class="li-settings-hero">
             <div>
-                <p class="li-settings-kicker"><?php esc_html_e('Campaign Studio', 'lloyds-industrial'); ?></p>
-                <h1><?php esc_html_e('Mail Campaigns', 'lloyds-industrial'); ?></h1>
-                <p><?php esc_html_e('Create, preview, test, and send campaign blasts without using the WordPress page editor.', 'lloyds-industrial'); ?></p>
+                <p class="li-settings-kicker"><?php esc_html_e('Campaign Studio', 'b2b-industrial'); ?></p>
+                <h1><?php esc_html_e('Mail Campaigns', 'b2b-industrial'); ?></h1>
+                <p><?php esc_html_e('Create, preview, test, and send campaign blasts without using the WordPress page editor.', 'b2b-industrial'); ?></p>
             </div>
             <div class="li-settings-summary">
-                <div><span><?php esc_html_e('Shortcode', 'lloyds-industrial'); ?></span><strong>[li_mailing_list_signup]</strong></div>
-                <div><span><?php esc_html_e('Campaigns', 'lloyds-industrial'); ?></span><strong><?php echo esc_html(number_format_i18n((int) $campaigns->found_posts)); ?></strong></div>
-                <div><span><?php esc_html_e('Transport', 'lloyds-industrial'); ?></span><strong><?php echo esc_html(!empty(li_mail_get_settings()['smtp_enabled']) ? __('SMTP', 'lloyds-industrial') : __('Default', 'lloyds-industrial')); ?></strong></div>
+                <div><span><?php esc_html_e('Shortcode', 'b2b-industrial'); ?></span><strong>[li_mailing_list_signup]</strong></div>
+                <div><span><?php esc_html_e('Campaigns', 'b2b-industrial'); ?></span><strong><?php echo esc_html(number_format_i18n((int) $campaigns->found_posts)); ?></strong></div>
+                <div><span><?php esc_html_e('Transport', 'b2b-industrial'); ?></span><strong><?php echo esc_html(!empty(li_mail_get_settings()['smtp_enabled']) ? __('SMTP', 'b2b-industrial') : __('Default', 'b2b-industrial')); ?></strong></div>
             </div>
         </div>
 
         <p class="li-seo-actions">
-            <a class="button button-primary" href="<?php echo esc_url(admin_url('admin.php?page=lloyds-mail-campaign-builder')); ?>"><?php esc_html_e('New Campaign', 'lloyds-industrial'); ?></a>
-            <a class="button button-secondary" href="<?php echo esc_url(admin_url('admin.php?page=lloyds-campaigns')); ?>"><?php esc_html_e('Mail Settings', 'lloyds-industrial'); ?></a>
+            <a class="button button-primary" href="<?php echo esc_url(admin_url('admin.php?page=b2b-mail-campaign-builder')); ?>"><?php esc_html_e('New Campaign', 'b2b-industrial'); ?></a>
+            <a class="button button-secondary" href="<?php echo esc_url(admin_url('admin.php?page=b2b-campaigns')); ?>"><?php esc_html_e('Mail Settings', 'b2b-industrial'); ?></a>
         </p>
 
         <div class="li-mail-campaign-list">
             <?php if (!$campaigns->posts) : ?>
                 <div class="li-mail-empty-state">
-                    <h2><?php esc_html_e('No campaigns yet', 'lloyds-industrial'); ?></h2>
-                    <p><?php esc_html_e('Create the first campaign for sales, promotions, product updates, or management announcements.', 'lloyds-industrial'); ?></p>
+                    <h2><?php esc_html_e('No campaigns yet', 'b2b-industrial'); ?></h2>
+                    <p><?php esc_html_e('Create the first campaign for sales, promotions, product updates, or management announcements.', 'b2b-industrial'); ?></p>
                 </div>
             <?php endif; ?>
             <?php foreach ($campaigns->posts as $campaign) : ?>
@@ -1403,17 +1403,17 @@ function li_mail_render_campaigns_page(): void
                 ?>
                 <article class="li-mail-campaign-card">
                     <div>
-                        <span><?php echo esc_html($types[$type] ?? __('Newsletter', 'lloyds-industrial')); ?></span>
+                        <span><?php echo esc_html($types[$type] ?? __('Newsletter', 'b2b-industrial')); ?></span>
                         <h2><?php echo esc_html(get_the_title($campaign_id)); ?></h2>
-                        <p><?php echo esc_html((string) get_post_meta($campaign_id, '_li_mail_subject', true) ?: __('No subject set', 'lloyds-industrial')); ?></p>
+                        <p><?php echo esc_html((string) get_post_meta($campaign_id, '_li_mail_subject', true) ?: __('No subject set', 'b2b-industrial')); ?></p>
                     </div>
                     <dl>
-                        <div><dt><?php esc_html_e('Sent', 'lloyds-industrial'); ?></dt><dd><?php echo esc_html((string) $sent); ?></dd></div>
-                        <div><dt><?php esc_html_e('Failed', 'lloyds-industrial'); ?></dt><dd><?php echo esc_html((string) $failed); ?></dd></div>
-                        <div><dt><?php esc_html_e('Queued', 'lloyds-industrial'); ?></dt><dd><?php echo esc_html((string) $queued); ?></dd></div>
+                        <div><dt><?php esc_html_e('Sent', 'b2b-industrial'); ?></dt><dd><?php echo esc_html((string) $sent); ?></dd></div>
+                        <div><dt><?php esc_html_e('Failed', 'b2b-industrial'); ?></dt><dd><?php echo esc_html((string) $failed); ?></dd></div>
+                        <div><dt><?php esc_html_e('Queued', 'b2b-industrial'); ?></dt><dd><?php echo esc_html((string) $queued); ?></dd></div>
                     </dl>
                     <p>
-                        <a class="button button-secondary" href="<?php echo esc_url(admin_url('admin.php?page=lloyds-mail-campaign-builder&campaign_id=' . $campaign_id)); ?>"><?php esc_html_e('Open Builder', 'lloyds-industrial'); ?></a>
+                        <a class="button button-secondary" href="<?php echo esc_url(admin_url('admin.php?page=b2b-mail-campaign-builder&campaign_id=' . $campaign_id)); ?>"><?php esc_html_e('Open Builder', 'b2b-industrial'); ?></a>
                     </p>
                 </article>
             <?php endforeach; ?>
@@ -1440,26 +1440,26 @@ function li_mail_render_campaign_builder_page(): void
     $sent = $campaign_id ? (int) get_post_meta($campaign_id, '_li_mail_sent_count', true) : 0;
     $failed = $campaign_id ? (int) get_post_meta($campaign_id, '_li_mail_failed_count', true) : 0;
     $queued = $campaign_id ? count(li_mail_get_campaign_queue($campaign_id)) : 0;
-    $send_url = $campaign_id ? wp_nonce_url(admin_url('admin.php?page=lloyds-campaigns&li_mail_action=send_campaign&campaign_id=' . $campaign_id), 'li_mail_send_campaign') : '';
-    $process_url = $campaign_id ? wp_nonce_url(admin_url('admin.php?page=lloyds-campaigns&li_mail_action=process_queue&campaign_id=' . $campaign_id), 'li_mail_process_queue') : '';
-    $test_url = $campaign_id ? wp_nonce_url(admin_url('admin.php?page=lloyds-campaigns&li_mail_action=send_test_campaign&campaign_id=' . $campaign_id), 'li_mail_send_test_campaign') : '';
+    $send_url = $campaign_id ? wp_nonce_url(admin_url('admin.php?page=b2b-campaigns&li_mail_action=send_campaign&campaign_id=' . $campaign_id), 'li_mail_send_campaign') : '';
+    $process_url = $campaign_id ? wp_nonce_url(admin_url('admin.php?page=b2b-campaigns&li_mail_action=process_queue&campaign_id=' . $campaign_id), 'li_mail_process_queue') : '';
+    $test_url = $campaign_id ? wp_nonce_url(admin_url('admin.php?page=b2b-campaigns&li_mail_action=send_test_campaign&campaign_id=' . $campaign_id), 'li_mail_send_test_campaign') : '';
     ?>
     <div class="wrap li-settings-page li-mail-builder-page">
         <div class="li-settings-hero">
             <div>
-                <p class="li-settings-kicker"><?php esc_html_e('Campaign Builder', 'lloyds-industrial'); ?></p>
-                <h1><?php echo esc_html($campaign_id ? __('Edit Campaign', 'lloyds-industrial') : __('Create Campaign', 'lloyds-industrial')); ?></h1>
-                <p><?php esc_html_e('Build a polished email blast with audience targeting, test sending, and delivery controls in one focused workspace.', 'lloyds-industrial'); ?></p>
+                <p class="li-settings-kicker"><?php esc_html_e('Campaign Builder', 'b2b-industrial'); ?></p>
+                <h1><?php echo esc_html($campaign_id ? __('Edit Campaign', 'b2b-industrial') : __('Create Campaign', 'b2b-industrial')); ?></h1>
+                <p><?php esc_html_e('Build a polished email blast with audience targeting, test sending, and delivery controls in one focused workspace.', 'b2b-industrial'); ?></p>
             </div>
             <div class="li-settings-summary">
-                <div><span><?php esc_html_e('Sent', 'lloyds-industrial'); ?></span><strong><?php echo esc_html((string) $sent); ?></strong></div>
-                <div><span><?php esc_html_e('Failed', 'lloyds-industrial'); ?></span><strong><?php echo esc_html((string) $failed); ?></strong></div>
-                <div><span><?php esc_html_e('Queued', 'lloyds-industrial'); ?></span><strong><?php echo esc_html((string) $queued); ?></strong></div>
+                <div><span><?php esc_html_e('Sent', 'b2b-industrial'); ?></span><strong><?php echo esc_html((string) $sent); ?></strong></div>
+                <div><span><?php esc_html_e('Failed', 'b2b-industrial'); ?></span><strong><?php echo esc_html((string) $failed); ?></strong></div>
+                <div><span><?php esc_html_e('Queued', 'b2b-industrial'); ?></span><strong><?php echo esc_html((string) $queued); ?></strong></div>
             </div>
         </div>
 
         <?php if (isset($_GET['li_mail_saved'])) : ?>
-            <?php li_render_admin_notice(__('Campaign saved.', 'lloyds-industrial')); ?>
+            <?php li_render_admin_notice(__('Campaign saved.', 'b2b-industrial')); ?>
         <?php endif; ?>
 
         <form class="li-mail-builder" method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
@@ -1469,28 +1469,28 @@ function li_mail_render_campaign_builder_page(): void
 
             <section class="li-mail-builder-main">
                 <label>
-                    <span><?php esc_html_e('Campaign Name', 'lloyds-industrial'); ?></span>
-                    <input type="text" name="campaign_title" value="<?php echo esc_attr($title); ?>" placeholder="<?php esc_attr_e('Spring promotion, Q3 product update...', 'lloyds-industrial'); ?>">
+                    <span><?php esc_html_e('Campaign Name', 'b2b-industrial'); ?></span>
+                    <input type="text" name="campaign_title" value="<?php echo esc_attr($title); ?>" placeholder="<?php esc_attr_e('Spring promotion, Q3 product update...', 'b2b-industrial'); ?>">
                 </label>
                 <label>
-                    <span><?php esc_html_e('Email Subject', 'lloyds-industrial'); ?></span>
-                    <input type="text" name="campaign_subject" value="<?php echo esc_attr($subject); ?>" placeholder="<?php esc_attr_e('A clear, specific subject line', 'lloyds-industrial'); ?>">
+                    <span><?php esc_html_e('Email Subject', 'b2b-industrial'); ?></span>
+                    <input type="text" name="campaign_subject" value="<?php echo esc_attr($subject); ?>" placeholder="<?php esc_attr_e('A clear, specific subject line', 'b2b-industrial'); ?>">
                 </label>
                 <label>
-                    <span><?php esc_html_e('Preheader', 'lloyds-industrial'); ?></span>
-                    <textarea name="campaign_preheader" rows="2" placeholder="<?php esc_attr_e('Short inbox preview text', 'lloyds-industrial'); ?>"><?php echo esc_textarea($preheader); ?></textarea>
+                    <span><?php esc_html_e('Preheader', 'b2b-industrial'); ?></span>
+                    <textarea name="campaign_preheader" rows="2" placeholder="<?php esc_attr_e('Short inbox preview text', 'b2b-industrial'); ?>"><?php echo esc_textarea($preheader); ?></textarea>
                 </label>
                 <label>
-                    <span><?php esc_html_e('Message Body', 'lloyds-industrial'); ?></span>
-                    <textarea class="li-mail-builder-body" name="campaign_content" rows="18" placeholder="<?php esc_attr_e('Write the campaign email here. Basic HTML is supported.', 'lloyds-industrial'); ?>"><?php echo esc_textarea($content); ?></textarea>
+                    <span><?php esc_html_e('Message Body', 'b2b-industrial'); ?></span>
+                    <textarea class="li-mail-builder-body" name="campaign_content" rows="18" placeholder="<?php esc_attr_e('Write the campaign email here. Basic HTML is supported.', 'b2b-industrial'); ?>"><?php echo esc_textarea($content); ?></textarea>
                 </label>
             </section>
 
             <aside class="li-mail-builder-side">
                 <section>
-                    <h2><?php esc_html_e('Audience', 'lloyds-industrial'); ?></h2>
+                    <h2><?php esc_html_e('Audience', 'b2b-industrial'); ?></h2>
                     <label>
-                        <span><?php esc_html_e('Campaign Type', 'lloyds-industrial'); ?></span>
+                        <span><?php esc_html_e('Campaign Type', 'b2b-industrial'); ?></span>
                         <select name="campaign_type">
                             <?php foreach (li_mail_get_campaign_types() as $key => $label) : ?>
                                 <option value="<?php echo esc_attr($key); ?>" <?php selected($type ?: 'newsletter', $key); ?>><?php echo esc_html($label); ?></option>
@@ -1498,9 +1498,9 @@ function li_mail_render_campaign_builder_page(): void
                         </select>
                     </label>
                     <label>
-                        <span><?php esc_html_e('Audience Tag', 'lloyds-industrial'); ?></span>
+                        <span><?php esc_html_e('Audience Tag', 'b2b-industrial'); ?></span>
                         <select name="campaign_audience_tag">
-                            <option value=""><?php esc_html_e('All active subscribers', 'lloyds-industrial'); ?></option>
+                            <option value=""><?php esc_html_e('All active subscribers', 'b2b-industrial'); ?></option>
                             <?php if (!is_wp_error($tags)) : ?>
                                 <?php foreach ($tags as $tag) : ?>
                                     <option value="<?php echo esc_attr($tag->slug); ?>" <?php selected($audience_tag, $tag->slug); ?>><?php echo esc_html($tag->name); ?></option>
@@ -1511,21 +1511,21 @@ function li_mail_render_campaign_builder_page(): void
                 </section>
 
                 <section>
-                    <h2><?php esc_html_e('Personalization', 'lloyds-industrial'); ?></h2>
+                    <h2><?php esc_html_e('Personalization', 'b2b-industrial'); ?></h2>
                     <p><code>{{first_name}}</code> <code>{{name}}</code> <code>{{email}}</code> <code>{{company}}</code> <code>{{site_name}}</code> <code>{{unsubscribe_url}}</code></p>
                 </section>
 
                 <section>
-                    <h2><?php esc_html_e('Actions', 'lloyds-industrial'); ?></h2>
-                    <button class="button button-primary" type="submit"><?php esc_html_e('Save Campaign', 'lloyds-industrial'); ?></button>
+                    <h2><?php esc_html_e('Actions', 'b2b-industrial'); ?></h2>
+                    <button class="button button-primary" type="submit"><?php esc_html_e('Save Campaign', 'b2b-industrial'); ?></button>
                     <?php if ($campaign_id) : ?>
-                        <a class="button button-secondary" href="<?php echo esc_url($test_url); ?>"><?php esc_html_e('Send Test', 'lloyds-industrial'); ?></a>
-                        <a class="button button-secondary" href="<?php echo esc_url($send_url); ?>" onclick="return confirm('<?php echo esc_js(__('Queue this campaign for scheduled delivery?', 'lloyds-industrial')); ?>');"><?php esc_html_e('Queue Campaign', 'lloyds-industrial'); ?></a>
+                        <a class="button button-secondary" href="<?php echo esc_url($test_url); ?>"><?php esc_html_e('Send Test', 'b2b-industrial'); ?></a>
+                        <a class="button button-secondary" href="<?php echo esc_url($send_url); ?>" onclick="return confirm('<?php echo esc_js(__('Queue this campaign for scheduled delivery?', 'b2b-industrial')); ?>');"><?php esc_html_e('Queue Campaign', 'b2b-industrial'); ?></a>
                         <?php if ($queued > 0) : ?>
-                            <a class="button button-secondary" href="<?php echo esc_url($process_url); ?>"><?php esc_html_e('Process Queue Now', 'lloyds-industrial'); ?></a>
+                            <a class="button button-secondary" href="<?php echo esc_url($process_url); ?>"><?php esc_html_e('Process Queue Now', 'b2b-industrial'); ?></a>
                         <?php endif; ?>
                     <?php endif; ?>
-                    <a class="button button-link" href="<?php echo esc_url(admin_url('admin.php?page=lloyds-mail-campaigns')); ?>"><?php esc_html_e('Back to Campaigns', 'lloyds-industrial'); ?></a>
+                    <a class="button button-link" href="<?php echo esc_url(admin_url('admin.php?page=b2b-mail-campaigns')); ?>"><?php esc_html_e('Back to Campaigns', 'b2b-industrial'); ?></a>
                 </section>
             </aside>
         </form>
@@ -1564,7 +1564,7 @@ function li_mail_render_textarea_row(string $key, string $label, array $settings
 function li_mail_render_checkbox_row(string $key, string $label, array $settings): void
 {
     ?>
-    <tr><th scope="row"><?php echo esc_html($label); ?></th><td><label><input type="checkbox" name="<?php echo esc_attr(LI_MAIL_SETTINGS_OPTION); ?>[<?php echo esc_attr($key); ?>]" value="1" <?php checked(!empty($settings[$key])); ?>> <?php esc_html_e('Enabled', 'lloyds-industrial'); ?></label></td></tr>
+    <tr><th scope="row"><?php echo esc_html($label); ?></th><td><label><input type="checkbox" name="<?php echo esc_attr(LI_MAIL_SETTINGS_OPTION); ?>[<?php echo esc_attr($key); ?>]" value="1" <?php checked(!empty($settings[$key])); ?>> <?php esc_html_e('Enabled', 'b2b-industrial'); ?></label></td></tr>
     <?php
 }
 
@@ -1594,12 +1594,12 @@ function li_mail_render_select_row(string $key, string $label, array $settings, 
 add_filter('manage_li_mail_subscriber_posts_columns', function (array $columns): array {
     return [
         'cb' => $columns['cb'] ?? '',
-        'title' => __('Subscriber', 'lloyds-industrial'),
-        'li_mail_email' => __('Email', 'lloyds-industrial'),
-        'li_mail_status' => __('Status', 'lloyds-industrial'),
-        'li_mail_company' => __('Company', 'lloyds-industrial'),
-        'li_mail_tags' => __('Tags', 'lloyds-industrial'),
-        'date' => $columns['date'] ?? __('Date', 'lloyds-industrial'),
+        'title' => __('Subscriber', 'b2b-industrial'),
+        'li_mail_email' => __('Email', 'b2b-industrial'),
+        'li_mail_status' => __('Status', 'b2b-industrial'),
+        'li_mail_company' => __('Company', 'b2b-industrial'),
+        'li_mail_tags' => __('Tags', 'b2b-industrial'),
+        'date' => $columns['date'] ?? __('Date', 'b2b-industrial'),
     ];
 });
 
@@ -1620,11 +1620,11 @@ add_action('manage_li_mail_subscriber_posts_custom_column', function (string $co
 add_filter('manage_li_mail_campaign_posts_columns', function (array $columns): array {
     return [
         'cb' => $columns['cb'] ?? '',
-        'title' => __('Campaign', 'lloyds-industrial'),
-        'li_mail_subject' => __('Subject', 'lloyds-industrial'),
-        'li_mail_type' => __('Type', 'lloyds-industrial'),
-        'li_mail_sent' => __('Sent', 'lloyds-industrial'),
-        'date' => $columns['date'] ?? __('Date', 'lloyds-industrial'),
+        'title' => __('Campaign', 'b2b-industrial'),
+        'li_mail_subject' => __('Subject', 'b2b-industrial'),
+        'li_mail_type' => __('Type', 'b2b-industrial'),
+        'li_mail_sent' => __('Sent', 'b2b-industrial'),
+        'date' => $columns['date'] ?? __('Date', 'b2b-industrial'),
     ];
 });
 
@@ -1634,7 +1634,7 @@ add_action('manage_li_mail_campaign_posts_custom_column', function (string $colu
     } elseif ($column === 'li_mail_type') {
         $types = li_mail_get_campaign_types();
         $type = (string) get_post_meta($post_id, '_li_mail_campaign_type', true);
-        echo esc_html($types[$type] ?? __('Newsletter', 'lloyds-industrial'));
+        echo esc_html($types[$type] ?? __('Newsletter', 'b2b-industrial'));
     } elseif ($column === 'li_mail_sent') {
         echo esc_html((string) ((int) get_post_meta($post_id, '_li_mail_sent_count', true)));
     }

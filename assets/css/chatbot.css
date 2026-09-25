@@ -1,33 +1,33 @@
-.lloyds-chatbot-root {
-    --lloyds-chatbot-accent: #17443b;
+.b2b-chatbot-root {
+    --b2b-chatbot-accent: #17443b;
     font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     position: fixed;
     z-index: 9999;
 }
 
-.lloyds-chatbot-root--bottom-right {
+.b2b-chatbot-root--bottom-right {
     bottom: 22px;
     right: 22px;
 }
 
-.lloyds-chatbot-root--bottom-left {
+.b2b-chatbot-root--bottom-left {
     bottom: 22px;
     left: 22px;
 }
 
-.lloyds-chatbot-root--top-right {
+.b2b-chatbot-root--top-right {
     right: 22px;
     top: 86px;
 }
 
-.lloyds-chatbot-root--top-left {
+.b2b-chatbot-root--top-left {
     left: 22px;
     top: 86px;
 }
 
-.lloyds-chatbot-launcher {
+.b2b-chatbot-launcher {
     align-items: center;
-    background: var(--lloyds-chatbot-accent);
+    background: var(--b2b-chatbot-accent);
     border: 0;
     border-radius: 999px;
     box-shadow: 0 16px 36px rgba(0, 0, 0, 0.22);
@@ -41,8 +41,8 @@
     padding: 8px 18px 8px 8px;
 }
 
-.lloyds-chatbot-launcher__avatar,
-.lloyds-chatbot__avatar {
+.b2b-chatbot-launcher__avatar,
+.b2b-chatbot__avatar {
     align-items: center;
     background: rgba(255, 255, 255, 0.16);
     border: 1px solid rgba(255, 255, 255, 0.26);
@@ -56,7 +56,7 @@
     width: 38px;
 }
 
-.lloyds-chatbot {
+.b2b-chatbot {
     background: #fff;
     border: 1px solid #d9e3df;
     border-radius: 8px;
@@ -71,39 +71,39 @@
     width: min(400px, calc(100vw - 30px));
 }
 
-.lloyds-chatbot-root--bottom-left .lloyds-chatbot,
-.lloyds-chatbot-root--top-left .lloyds-chatbot {
+.b2b-chatbot-root--bottom-left .b2b-chatbot,
+.b2b-chatbot-root--top-left .b2b-chatbot {
     left: 0;
     right: auto;
 }
 
-.lloyds-chatbot-root--top-right .lloyds-chatbot,
-.lloyds-chatbot-root--top-left .lloyds-chatbot {
+.b2b-chatbot-root--top-right .b2b-chatbot,
+.b2b-chatbot-root--top-left .b2b-chatbot {
     bottom: auto;
     top: calc(100% + 14px);
 }
 
-.lloyds-chatbot[hidden] {
+.b2b-chatbot[hidden] {
     display: none;
 }
 
-.lloyds-chatbot__header {
+.b2b-chatbot__header {
     align-items: center;
-    background: var(--lloyds-chatbot-accent);
+    background: var(--b2b-chatbot-accent);
     color: #fff;
     display: flex;
     justify-content: space-between;
     padding: 14px;
 }
 
-.lloyds-chatbot__header > div {
+.b2b-chatbot__header > div {
     align-items: center;
     display: flex;
     gap: 10px;
     min-width: 0;
 }
 
-.lloyds-chatbot__header strong {
+.b2b-chatbot__header strong {
     color: #fff;
     font-size: 15px;
     overflow: hidden;
@@ -111,13 +111,13 @@
     white-space: nowrap;
 }
 
-.lloyds-chatbot__header-actions {
+.b2b-chatbot__header-actions {
     align-items: center;
     display: flex;
     gap: 6px;
 }
 
-.lloyds-chatbot__new {
+.b2b-chatbot__new {
     background: rgba(255, 255, 255, 0.14);
     border: 1px solid rgba(255, 255, 255, 0.28);
     border-radius: 999px;
@@ -130,13 +130,13 @@
     padding: 0 10px;
 }
 
-.lloyds-chatbot__new:hover,
-.lloyds-chatbot__new:focus {
+.b2b-chatbot__new:hover,
+.b2b-chatbot__new:focus {
     background: rgba(255, 255, 255, 0.24);
     outline: none;
 }
 
-.lloyds-chatbot__close {
+.b2b-chatbot__close {
     background: transparent;
     border: 0;
     color: #fff;
@@ -146,7 +146,7 @@
     padding: 2px 6px;
 }
 
-.lloyds-chatbot__messages {
+.b2b-chatbot__messages {
     background: #f6f8f7;
     display: flex;
     flex-direction: column;
@@ -156,22 +156,22 @@
     padding: 16px;
 }
 
-.lloyds-chatbot-message {
+.b2b-chatbot-message {
     display: flex;
     flex-direction: column;
     gap: 8px;
     max-width: 88%;
 }
 
-.lloyds-chatbot-message--user {
+.b2b-chatbot-message--user {
     align-self: flex-end;
 }
 
-.lloyds-chatbot-message--assistant {
+.b2b-chatbot-message--assistant {
     align-self: flex-start;
 }
 
-.lloyds-chatbot-message__bubble {
+.b2b-chatbot-message__bubble {
     background: #fff;
     border: 1px solid #dbe5e1;
     border-radius: 8px;
@@ -181,27 +181,27 @@
     padding: 11px 12px;
 }
 
-.lloyds-chatbot-message--user .lloyds-chatbot-message__bubble {
-    background: var(--lloyds-chatbot-accent);
-    border-color: var(--lloyds-chatbot-accent);
+.b2b-chatbot-message--user .b2b-chatbot-message__bubble {
+    background: var(--b2b-chatbot-accent);
+    border-color: var(--b2b-chatbot-accent);
     color: #fff;
 }
 
-.lloyds-chatbot-message--thinking .lloyds-chatbot-message__bubble {
+.b2b-chatbot-message--thinking .b2b-chatbot-message__bubble {
     color: #66736f;
 }
 
-.lloyds-chatbot-actions {
+.b2b-chatbot-actions {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.lloyds-chatbot-action,
-.lloyds-chatbot-login button,
-.lloyds-chatbot__form button {
-    background: var(--lloyds-chatbot-accent);
-    border: 1px solid var(--lloyds-chatbot-accent);
+.b2b-chatbot-action,
+.b2b-chatbot-login button,
+.b2b-chatbot__form button {
+    background: var(--b2b-chatbot-accent);
+    border: 1px solid var(--b2b-chatbot-accent);
     border-radius: 6px;
     color: #fff;
     cursor: pointer;
@@ -212,7 +212,7 @@
     text-decoration: none;
 }
 
-.lloyds-chatbot-login {
+.b2b-chatbot-login {
     background: #fff;
     border: 1px solid #dbe5e1;
     border-radius: 8px;
@@ -221,8 +221,8 @@
     padding: 10px;
 }
 
-.lloyds-chatbot-login input,
-.lloyds-chatbot__form textarea {
+.b2b-chatbot-login input,
+.b2b-chatbot__form textarea {
     border: 1px solid #cfd9d5;
     border-radius: 6px;
     box-sizing: border-box;
@@ -231,7 +231,7 @@
     width: 100%;
 }
 
-.lloyds-chatbot__form {
+.b2b-chatbot__form {
     align-items: end;
     background: #fff;
     border-top: 1px solid #dbe5e1;
@@ -241,7 +241,7 @@
     padding: 10px;
 }
 
-.lloyds-chatbot__form textarea {
+.b2b-chatbot__form textarea {
     font-size: 13px;
     line-height: 1.4;
     max-height: 132px;
@@ -249,34 +249,34 @@
     resize: none;
 }
 
-.lloyds-chatbot__form button {
+.b2b-chatbot__form button {
     min-height: 48px;
     padding-inline: 12px;
 }
 
-.lloyds-chatbot__form.is-busy {
+.b2b-chatbot__form.is-busy {
     opacity: 0.72;
 }
 
 @media (max-width: 520px) {
-    .lloyds-chatbot-root {
+    .b2b-chatbot-root {
         bottom: 14px;
         left: 14px;
         right: 14px;
         top: auto;
     }
 
-    .lloyds-chatbot-launcher {
+    .b2b-chatbot-launcher {
         margin-left: auto;
     }
 
-    .lloyds-chatbot-root--bottom-left .lloyds-chatbot-launcher,
-    .lloyds-chatbot-root--top-left .lloyds-chatbot-launcher {
+    .b2b-chatbot-root--bottom-left .b2b-chatbot-launcher,
+    .b2b-chatbot-root--top-left .b2b-chatbot-launcher {
         margin-left: 0;
         margin-right: auto;
     }
 
-    .lloyds-chatbot {
+    .b2b-chatbot {
         bottom: calc(100% + 12px);
         left: 0;
         right: 0;

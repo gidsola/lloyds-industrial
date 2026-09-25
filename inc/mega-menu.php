@@ -37,11 +37,11 @@ function li_get_default_mega_menu(): array
 {
     return [
         [
-            'label' => __('Products', 'lloyds-industrial'),
+            'label' => __('Products', 'b2b-industrial'),
             'url' => '/products',
             'icon' => '',
             'image' => '',
-            'description' => __('Browse our complete product catalog', 'lloyds-industrial'),
+            'description' => __('Browse our complete product catalog', 'b2b-industrial'),
             'bg_color' => '',
             'text_color' => '',
             'hover_color' => '',
@@ -52,10 +52,10 @@ function li_get_default_mega_menu(): array
             'featured' => [
                 'enabled' => true,
                 'image' => '',
-                'title' => __('Browse The Lloyds Catalogue', 'lloyds-industrial'),
-                'text' => __('Explore product lines by category, application, industry, and document availability.', 'lloyds-industrial'),
+                'title' => __('Browse The B2B Catalogue', 'b2b-industrial'),
+                'text' => __('Explore product lines by category, application, industry, and document availability.', 'b2b-industrial'),
                 'url' => '/catalogue',
-                'button_label' => __('Open Catalogue', 'lloyds-industrial'),
+                'button_label' => __('Open Catalogue', 'b2b-industrial'),
             ],
             'enabled' => true,
             'new_tab' => false,
@@ -63,11 +63,11 @@ function li_get_default_mega_menu(): array
             'mobile_visible' => true,
             'children' => [
                 [
-                    'label' => __('Lubricants', 'lloyds-industrial'),
+                    'label' => __('Lubricants', 'b2b-industrial'),
                     'url' => '/product-category/lubricants-corrosion-inhibitors',
                     'icon' => '',
                     'image' => '',
-                    'description' => __('Lubricants, corrosion inhibitors, and equipment protection', 'lloyds-industrial'),
+                    'description' => __('Lubricants, corrosion inhibitors, and equipment protection', 'b2b-industrial'),
                     'bg_color' => '',
                     'text_color' => '',
                     'hover_color' => '',
@@ -83,11 +83,11 @@ function li_get_default_mega_menu(): array
                     'children' => [],
                 ],
                 [
-                    'label' => __('Cleaners & Degreasers', 'lloyds-industrial'),
+                    'label' => __('Cleaners & Degreasers', 'b2b-industrial'),
                     'url' => '/product-category/cleaner-degreasers',
                     'icon' => '',
                     'image' => '',
-                    'description' => __('Professional maintenance cleaning for demanding environments', 'lloyds-industrial'),
+                    'description' => __('Professional maintenance cleaning for demanding environments', 'b2b-industrial'),
                     'bg_color' => '',
                     'text_color' => '',
                     'hover_color' => '',
@@ -103,11 +103,11 @@ function li_get_default_mega_menu(): array
                     'children' => [],
                 ],
                 [
-                    'label' => __('Automotive & Fleet', 'lloyds-industrial'),
+                    'label' => __('Automotive & Fleet', 'b2b-industrial'),
                     'url' => '/product-category/automotive-fleet-maintenance',
                     'icon' => '',
                     'image' => '',
-                    'description' => __('Fleet maintenance, wash, polish, and shop products', 'lloyds-industrial'),
+                    'description' => __('Fleet maintenance, wash, polish, and shop products', 'b2b-industrial'),
                     'bg_color' => '',
                     'text_color' => '',
                     'hover_color' => '',
@@ -123,11 +123,11 @@ function li_get_default_mega_menu(): array
                     'children' => [],
                 ],
                 [
-                    'label' => __('Construction Specialty', 'lloyds-industrial'),
+                    'label' => __('Construction Specialty', 'b2b-industrial'),
                     'url' => '/product-category/construction-specialty',
                     'icon' => '',
                     'image' => '',
-                    'description' => __('Concrete, form release, coatings, and jobsite specialty products', 'lloyds-industrial'),
+                    'description' => __('Concrete, form release, coatings, and jobsite specialty products', 'b2b-industrial'),
                     'bg_color' => '',
                     'text_color' => '',
                     'hover_color' => '',
@@ -143,11 +143,11 @@ function li_get_default_mega_menu(): array
                     'children' => [],
                 ],
                 [
-                    'label' => __('Electrical & Facility Care', 'lloyds-industrial'),
+                    'label' => __('Electrical & Facility Care', 'b2b-industrial'),
                     'url' => '/product-category/facility-property-maintenance',
                     'icon' => '',
                     'image' => '',
-                    'description' => __('Electrical specialty, sanitation, and facility maintenance', 'lloyds-industrial'),
+                    'description' => __('Electrical specialty, sanitation, and facility maintenance', 'b2b-industrial'),
                     'bg_color' => '',
                     'text_color' => '',
                     'hover_color' => '',
@@ -163,11 +163,11 @@ function li_get_default_mega_menu(): array
                     'children' => [],
                 ],
                 [
-                    'label' => __('Catalogue', 'lloyds-industrial'),
+                    'label' => __('Catalogue', 'b2b-industrial'),
                     'url' => '/catalogue',
                     'icon' => '',
                     'image' => '',
-                    'description' => __('Current product catalogue and product-line overview.', 'lloyds-industrial'),
+                    'description' => __('Current product catalogue and product-line overview.', 'b2b-industrial'),
                     'bg_color' => '',
                     'text_color' => '',
                     'hover_color' => '',
@@ -192,11 +192,11 @@ function li_get_default_mega_menu(): array
             ],
         ],
         [
-            'label' => __('Industries', 'lloyds-industrial'),
+            'label' => __('Industries', 'b2b-industrial'),
             'url' => '/industries',
             'icon' => '',
             'image' => '',
-            'description' => __('Industries we serve', 'lloyds-industrial'),
+            'description' => __('Industries we serve', 'b2b-industrial'),
             'bg_color' => '',
             'text_color' => '',
             'hover_color' => '',
@@ -207,10 +207,10 @@ function li_get_default_mega_menu(): array
             'featured' => [
                 'enabled' => true,
                 'image' => '',
-                'title' => __('Need Document Help?', 'lloyds-industrial'),
-                'text' => __('Get help with SDS access, technical resources, and product documentation.', 'lloyds-industrial'),
+                'title' => __('Need Document Help?', 'b2b-industrial'),
+                'text' => __('Get help with SDS access, technical resources, and product documentation.', 'b2b-industrial'),
                 'url' => '/contact',
-                'button_label' => __('Contact Support', 'lloyds-industrial'),
+                'button_label' => __('Contact Support', 'b2b-industrial'),
             ],
             'enabled' => true,
             'new_tab' => false,
@@ -218,11 +218,11 @@ function li_get_default_mega_menu(): array
             'mobile_visible' => true,
             'children' => [
                 [
-                    'label' => __('Utilities & Energy', 'lloyds-industrial'),
+                    'label' => __('Utilities & Energy', 'b2b-industrial'),
                     'url' => '/industries/utilities-energy',
                     'icon' => '',
                     'image' => '',
-                    'description' => __('Available to customers with related purchase history.', 'lloyds-industrial'),
+                    'description' => __('Available to customers with related purchase history.', 'b2b-industrial'),
                     'bg_color' => '',
                     'text_color' => '',
                     'hover_color' => '',
@@ -238,11 +238,11 @@ function li_get_default_mega_menu(): array
                     'children' => [],
                 ],
                 [
-                    'label' => __('Manufacturing', 'lloyds-industrial'),
+                    'label' => __('Manufacturing', 'b2b-industrial'),
                     'url' => '/industries/manufacturing',
                     'icon' => '',
                     'image' => '',
-                    'description' => __('Sign in for account details, orders, and eligible document access.', 'lloyds-industrial'),
+                    'description' => __('Sign in for account details, orders, and eligible document access.', 'b2b-industrial'),
                     'bg_color' => '',
                     'text_color' => '',
                     'hover_color' => '',
@@ -258,7 +258,7 @@ function li_get_default_mega_menu(): array
                     'children' => [],
                 ],
                 [
-                    'label' => __('Transportation', 'lloyds-industrial'),
+                    'label' => __('Transportation', 'b2b-industrial'),
                     'url' => '/industries/transportation',
                     'icon' => '',
                     'image' => '',
@@ -280,11 +280,11 @@ function li_get_default_mega_menu(): array
             ],
         ],
         [
-            'label' => __('Documentation', 'lloyds-industrial'),
+            'label' => __('Documentation', 'b2b-industrial'),
             'url' => '/documentation',
             'icon' => '',
             'image' => '',
-            'description' => __('Technical documents and safety information', 'lloyds-industrial'),
+            'description' => __('Technical documents and safety information', 'b2b-industrial'),
             'bg_color' => '',
             'text_color' => '',
             'hover_color' => '',
@@ -306,11 +306,11 @@ function li_get_default_mega_menu(): array
             'mobile_visible' => true,
             'children' => [
                 [
-                    'label' => __('Catalogue', 'lloyds-industrial'),
+                    'label' => __('Catalogue', 'b2b-industrial'),
                     'url' => '/catalogue',
                     'icon' => '',
                     'image' => '',
-                    'description' => __('Current product catalogue and product-line overview', 'lloyds-industrial'),
+                    'description' => __('Current product catalogue and product-line overview', 'b2b-industrial'),
                     'bg_color' => '',
                     'text_color' => '',
                     'hover_color' => '',
@@ -326,7 +326,7 @@ function li_get_default_mega_menu(): array
                     'children' => [],
                 ],
                 [
-                    'label' => __('Technical Documents', 'lloyds-industrial'),
+                    'label' => __('Technical Documents', 'b2b-industrial'),
                     'url' => '/documentation/technical',
                     'icon' => '',
                     'image' => '',
@@ -346,7 +346,7 @@ function li_get_default_mega_menu(): array
                     'children' => [],
                 ],
                 [
-                    'label' => __('SDS Access', 'lloyds-industrial'),
+                    'label' => __('SDS Access', 'b2b-industrial'),
                     'url' => '/documentation/sds',
                     'icon' => '',
                     'image' => '',
@@ -354,7 +354,7 @@ function li_get_default_mega_menu(): array
                     'bg_color' => '',
                     'text_color' => '',
                     'hover_color' => '',
-                    'badge' => __('SDS', 'lloyds-industrial'),
+                    'badge' => __('SDS', 'b2b-industrial'),
                     'badge_color' => '#dc3545',
                     'badge_text_color' => '#ffffff',
                     'column' => 1,
@@ -366,7 +366,7 @@ function li_get_default_mega_menu(): array
                     'children' => [],
                 ],
                 [
-                    'label' => __('Account Login', 'lloyds-industrial'),
+                    'label' => __('Account Login', 'b2b-industrial'),
                     'url' => '/account',
                     'icon' => '',
                     'image' => '',
@@ -386,11 +386,11 @@ function li_get_default_mega_menu(): array
                     'children' => [],
                 ],
                 [
-                    'label' => __('Contact Support', 'lloyds-industrial'),
+                    'label' => __('Contact Support', 'b2b-industrial'),
                     'url' => '/contact',
                     'icon' => '',
                     'image' => '',
-                    'description' => __('Get help with documents, SDS access, and product questions.', 'lloyds-industrial'),
+                    'description' => __('Get help with documents, SDS access, and product questions.', 'b2b-industrial'),
                     'bg_color' => '',
                     'text_color' => '',
                     'hover_color' => '',
@@ -408,7 +408,7 @@ function li_get_default_mega_menu(): array
             ],
         ],
         [
-            'label' => __('Company', 'lloyds-industrial'),
+            'label' => __('Company', 'b2b-industrial'),
             'url' => '/about',
             'icon' => '',
             'image' => '',
@@ -434,7 +434,7 @@ function li_get_default_mega_menu(): array
             'mobile_visible' => true,
             'children' => [
                 [
-                    'label' => __('About Us', 'lloyds-industrial'),
+                    'label' => __('About Us', 'b2b-industrial'),
                     'url' => '/about',
                     'icon' => '',
                     'image' => '',
@@ -454,7 +454,7 @@ function li_get_default_mega_menu(): array
                     'children' => [],
                 ],
                 [
-                    'label' => __('Partner Brands', 'lloyds-industrial'),
+                    'label' => __('Partner Brands', 'b2b-industrial'),
                     'url' => '/partners',
                     'icon' => '',
                     'image' => '',
@@ -474,7 +474,7 @@ function li_get_default_mega_menu(): array
                     'children' => [],
                 ],
                 [
-                    'label' => __('Contact', 'lloyds-industrial'),
+                    'label' => __('Contact', 'b2b-industrial'),
                     'url' => '/contact',
                     'icon' => '',
                     'image' => '',
@@ -503,11 +503,11 @@ function li_get_default_mega_menu(): array
 function li_get_reseller_finder_mega_menu_item(): array
 {
     return [
-        'label' => __('Find A Reseller', 'lloyds-industrial'),
+        'label' => __('Find A Reseller', 'b2b-industrial'),
         'url' => '/find-a-reseller',
         'icon' => '',
         'image' => '',
-        'description' => __('Search the Lloyds reseller and distributor directory.', 'lloyds-industrial'),
+        'description' => __('Search the B2B reseller and distributor directory.', 'b2b-industrial'),
         'bg_color' => '',
         'text_color' => '',
         'hover_color' => '',
@@ -527,11 +527,11 @@ function li_get_reseller_finder_mega_menu_item(): array
 function li_get_reseller_mega_menu_item(): array
 {
     return [
-        'label' => __('Become A Reseller', 'lloyds-industrial'),
+        'label' => __('Become A Reseller', 'b2b-industrial'),
         'url' => '/reseller-application',
         'icon' => '',
         'image' => '',
-        'description' => __('Apply to join the Lloyds reseller and distributor network.', 'lloyds-industrial'),
+        'description' => __('Apply to join the B2B reseller and distributor network.', 'b2b-industrial'),
         'bg_color' => '',
         'text_color' => '',
         'hover_color' => '',
@@ -618,10 +618,10 @@ function li_migrate_mega_menu_items(array $items): array
             $item['featured'] = [
                 'enabled' => true,
                 'image' => $item['featured']['image'] ?? '',
-                'title' => __('Browse The Lloyds Catalogue', 'lloyds-industrial'),
-                'text' => __('Explore product lines by category, application, industry, and document availability.', 'lloyds-industrial'),
+                'title' => __('Browse The B2B Catalogue', 'b2b-industrial'),
+                'text' => __('Explore product lines by category, application, industry, and document availability.', 'b2b-industrial'),
                 'url' => '/catalogue',
-                'button_label' => __('Open Catalogue', 'lloyds-industrial'),
+                'button_label' => __('Open Catalogue', 'b2b-industrial'),
             ];
         }
 
@@ -629,38 +629,38 @@ function li_migrate_mega_menu_items(array $items): array
             $item['featured'] = [
                 'enabled' => true,
                 'image' => $item['featured']['image'] ?? '',
-                'title' => __('Need Document Help?', 'lloyds-industrial'),
-                'text' => __('Get help with SDS access, technical resources, and product documentation.', 'lloyds-industrial'),
+                'title' => __('Need Document Help?', 'b2b-industrial'),
+                'text' => __('Get help with SDS access, technical resources, and product documentation.', 'b2b-industrial'),
                 'url' => '/contact',
-                'button_label' => __('Contact Support', 'lloyds-industrial'),
+                'button_label' => __('Contact Support', 'b2b-industrial'),
             ];
         }
 
         if ($label === 'Product Catalogue') {
-            $item['label'] = __('Catalogue', 'lloyds-industrial');
+            $item['label'] = __('Catalogue', 'b2b-industrial');
             $item['url'] = '/catalogue';
-            $item['description'] = __('Current product catalogue and product-line overview.', 'lloyds-industrial');
+            $item['description'] = __('Current product catalogue and product-line overview.', 'b2b-industrial');
             $item['featured'] = ['enabled' => false];
         }
 
         if ($label === 'Support CTA' || ($url === '/contact' && !empty($item['bg_color']))) {
-            $item['label'] = __('Contact Support', 'lloyds-industrial');
-            $item['description'] = $item['description'] ?: __('Get help with documents, SDS access, and product questions.', 'lloyds-industrial');
+            $item['label'] = __('Contact Support', 'b2b-industrial');
+            $item['description'] = $item['description'] ?: __('Get help with documents, SDS access, and product questions.', 'b2b-industrial');
             $item['bg_color'] = '';
             $item['text_color'] = '';
             $item['hover_color'] = '';
         }
 
         if ($label === 'Technical Documents' || $url === '/documentation/technical') {
-            $item['description'] = $item['description'] ?: __('Public technical resources and product documentation.', 'lloyds-industrial');
+            $item['description'] = $item['description'] ?: __('Public technical resources and product documentation.', 'b2b-industrial');
         }
 
         if ($label === 'SDS Access' || $url === '/documentation/sds') {
-            $item['description'] = $item['description'] ?: __('Available to customers with related purchase history.', 'lloyds-industrial');
+            $item['description'] = $item['description'] ?: __('Available to customers with related purchase history.', 'b2b-industrial');
         }
 
         if ($label === 'Account Login' || $url === '/account') {
-            $item['description'] = $item['description'] ?: __('Sign in for account details, orders, and eligible document access.', 'lloyds-industrial');
+            $item['description'] = $item['description'] ?: __('Sign in for account details, orders, and eligible document access.', 'b2b-industrial');
         }
 
         if (!empty($item['children']) && is_array($item['children'])) {
@@ -1031,7 +1031,7 @@ function li_render_mega_menu(): string
         return '';
     }
     
-    $html = '<nav class="li-mega-menu" aria-label="' . esc_attr__('Main navigation', 'lloyds-industrial') . '">';
+    $html = '<nav class="li-mega-menu" aria-label="' . esc_attr__('Main navigation', 'b2b-industrial') . '">';
     $html .= '<ul class="li-mega-menu__list">';
     
     foreach ($menu_data as $item) {

@@ -1,8 +1,8 @@
 <?php
 /**
  * Title: Contact Options
- * Slug: lloyds-industrial/contact-options
- * Categories: lloyds-industrial
+ * Slug: b2b-industrial/contact-options
+ * Categories: b2b-industrial
  */
 ?>
 
@@ -24,7 +24,7 @@
                 <p>Questions about applications, industries, product selection, technical documents, or SDS access help.</p>
                 <!-- /wp:paragraph -->
                 <!-- wp:paragraph {"className":"li-card-link"} -->
-                <p class="li-card-link"><a href="mailto:Marketing@lloydslaboratories.com">Marketing@lloydslaboratories.com</a></p>
+                <p class="li-card-link"><a href="mailto:Marketing@b2blaboratories.com">Marketing@b2blaboratories.com</a></p>
                 <!-- /wp:paragraph -->
             </div>
             <!-- /wp:column -->
@@ -38,7 +38,7 @@
                 <p>Product availability, quote routing, order coordination, and account purchasing support.</p>
                 <!-- /wp:paragraph -->
                 <!-- wp:paragraph {"className":"li-card-link"} -->
-                <p class="li-card-link"><a href="mailto:Orderdesk@lloydslaboratories.com">Orderdesk@lloydslaboratories.com</a></p>
+                <p class="li-card-link"><a href="mailto:Orderdesk@b2blaboratories.com">Orderdesk@b2blaboratories.com</a></p>
                 <!-- /wp:paragraph -->
             </div>
             <!-- /wp:column -->
@@ -52,7 +52,7 @@
                 <p>Invoices, payments, payables, and commercial account billing questions.</p>
                 <!-- /wp:paragraph -->
                 <!-- wp:paragraph {"className":"li-card-link"} -->
-                <p class="li-card-link"><a href="mailto:Payables@lloydslaboratories.com">Payables@lloydslaboratories.com</a></p>
+                <p class="li-card-link"><a href="mailto:Payables@b2blaboratories.com">Payables@b2blaboratories.com</a></p>
                 <!-- /wp:paragraph -->
             </div>
             <!-- /wp:column -->

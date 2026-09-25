@@ -26,8 +26,8 @@ function li_get_global_layout_defaults(): array
         'announcement_enabled'       => true,
         'announcement_show_message'  => true,
         'announcement_show_link'     => true,
-        'announcement_text'          => __('Industrial chemical solutions engineered for modern industry.', 'lloyds-industrial'),
-        'announcement_link_label'    => __('Contact technical support', 'lloyds-industrial'),
+        'announcement_text'          => __('Industrial chemical solutions engineered for modern industry.', 'b2b-industrial'),
+        'announcement_link_label'    => __('Contact technical support', 'b2b-industrial'),
         'announcement_link_url'      => '/contact',
         'announcement_bg_color'      => '#d9a441',
         'announcement_text_color'    => '#101820',
@@ -35,24 +35,24 @@ function li_get_global_layout_defaults(): array
         'announcement_font_size'     => 15,
         'announcement_font_weight'   => '700',
         'announcement_text_transform' => 'none',
-        'header_primary_label'       => __('Products', 'lloyds-industrial'),
+        'header_primary_label'       => __('Products', 'b2b-industrial'),
         'header_primary_url'         => '/products',
-        'header_secondary_label'     => __('Request Quote', 'lloyds-industrial'),
+        'header_secondary_label'     => __('Request Quote', 'b2b-industrial'),
         'header_secondary_url'       => '/contact',
         'show_account_link'          => true,
         'show_cart_link'             => false,
-        'footer_tagline'             => __('Industrial chemical solutions, product knowledge, and SDS access for professional customers.', 'lloyds-industrial'),
+        'footer_tagline'             => __('Industrial chemical solutions, product knowledge, and SDS access for professional customers.', 'b2b-industrial'),
         'footer_legal_text'          => '&copy; {year} {site}. All rights reserved.',
         'footer_note_enabled'        => true,
-        'footer_note_text'           => __('Built on the Lloyds Industrial multisite framework.', 'lloyds-industrial'),
+        'footer_note_text'           => __('Built on the B2B Industrial multisite framework.', 'b2b-industrial'),
         'footer_column_1_enabled'    => true,
-        'footer_column_1_heading'    => __('Products', 'lloyds-industrial'),
+        'footer_column_1_heading'    => __('Products', 'b2b-industrial'),
         'footer_column_1_links'      => "Products|/products\nCatalogue|/catalogue\nLubricants & Corrosion Inhibitors|/product-category/lubricants-corrosion-inhibitors\nCleaners & Degreasers|/product-category/cleaner-degreasers",
         'footer_column_2_enabled'    => true,
-        'footer_column_2_heading'    => __('Resources', 'lloyds-industrial'),
+        'footer_column_2_heading'    => __('Resources', 'b2b-industrial'),
         'footer_column_2_links'      => "Knowledge Center|/documentation\nSDS Access|/documentation/sds\nTechnical Data Sheets|/documentation/technical\nTechnical Support|/contact\nCustomer Login|/account",
         'footer_column_3_enabled'    => true,
-        'footer_column_3_heading'    => __('Company', 'lloyds-industrial'),
+        'footer_column_3_heading'    => __('Company', 'b2b-industrial'),
         'footer_column_3_links'      => "About|/about\nIndustries|/industries\nPlace Orders|/contact\nAccounting|/contact\nContact|/contact",
     ];
 }
@@ -284,7 +284,7 @@ add_shortcode('li_header_actions', function (): string {
 
     if (li_theme_setting_checkbox_value($settings, 'show_account_link')) {
         $links[] = li_render_action_link(
-            __('Account', 'lloyds-industrial'),
+            __('Account', 'b2b-industrial'),
             li_get_account_url(),
             'li-header-action li-header-action--link li-header-action--account'
         );
@@ -292,7 +292,7 @@ add_shortcode('li_header_actions', function (): string {
 
     if (li_is_woocommerce_available() && li_theme_setting_checkbox_value($settings, 'show_cart_link')) {
         $links[] = li_render_action_link(
-            __('Cart', 'lloyds-industrial'),
+            __('Cart', 'b2b-industrial'),
             li_get_cart_url(),
             'li-header-action li-header-action--link li-header-action--cart'
         );
@@ -304,7 +304,7 @@ add_shortcode('li_header_actions', function (): string {
         return '';
     }
 
-    return '<nav class="li-header-actions" aria-label="' . esc_attr__('Header actions', 'lloyds-industrial') . '">' . implode('', $links) . '</nav>';
+    return '<nav class="li-header-actions" aria-label="' . esc_attr__('Header actions', 'b2b-industrial') . '">' . implode('', $links) . '</nav>';
 });
 
 add_shortcode('li_footer_tagline', function (): string {

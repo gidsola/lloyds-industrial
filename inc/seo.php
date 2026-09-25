@@ -9,7 +9,7 @@ if (!defined('ABSPATH')) {
 const LI_SEO_SETTINGS_OPTION = 'li_seo_settings';
 const LI_SEO_CACHE_VERSION_OPTION = 'li_seo_cache_version';
 const LI_SEO_REWRITE_VERSION_OPTION = 'li_seo_rewrite_version';
-const LI_SEO_ADVANCED_CACHE_SIGNATURE = 'Lloyds SEO Advanced Page Cache';
+const LI_SEO_ADVANCED_CACHE_SIGNATURE = 'B2B SEO Advanced Page Cache';
 
 add_action('init', 'li_seo_register_routes');
 add_action('init', 'li_seo_disable_default_canonical', 20);
@@ -115,11 +115,11 @@ function li_seo_disable_default_canonical(): void
 function li_seo_register_admin_menu(): void
 {
     add_submenu_page(
-        'lloyds',
-        __('Lloyds SEO', 'lloyds-industrial'),
-        __('SEO', 'lloyds-industrial'),
+        'b2b',
+        __('B2B SEO', 'b2b-industrial'),
+        __('SEO', 'b2b-industrial'),
         'manage_options',
-        'lloyds-seo',
+        'b2b-seo',
         'li_seo_render_admin_page'
     );
 }
@@ -252,43 +252,43 @@ function li_seo_enqueue_block_editor_panel(): void
     wp_enqueue_media();
 
     wp_enqueue_style(
-        'lloyds-settings-admin',
+        'b2b-settings-admin',
         get_template_directory_uri() . '/assets/css/settings-admin.css',
         [],
         filemtime(get_template_directory() . '/assets/css/settings-admin.css')
     );
 
     wp_enqueue_script(
-        'lloyds-seo-editor',
+        'b2b-seo-editor',
         get_template_directory_uri() . '/assets/js/seo-editor.js',
         ['wp-plugins', 'wp-edit-post', 'wp-element', 'wp-components', 'wp-data'],
         filemtime(get_template_directory() . '/assets/js/seo-editor.js'),
         true
     );
 
-    wp_localize_script('lloyds-seo-editor', 'lloydsSeoEditor', [
+    wp_localize_script('b2b-seo-editor', 'b2bSeoEditor', [
         'supportedPostTypes' => li_seo_get_supported_public_post_types(),
         'labels' => [
-            'eyebrow'           => __('Lloyds SEO', 'lloyds-industrial'),
-            'title'             => __('Search and Social Preview', 'lloyds-industrial'),
-            'description'       => __('Tune how this content appears in search results, social cards, and canonical discovery.', 'lloyds-industrial'),
-            'seoTitle'          => __('SEO Title', 'lloyds-industrial'),
-            'seoTitleHelp'      => __('Recommended: 50-60 characters. Leave blank to auto-generate.', 'lloyds-industrial'),
-            'metaDescription'   => __('Meta Description', 'lloyds-industrial'),
-            'metaDescriptionHelp' => __('Recommended: 140-160 characters. Product summaries and excerpts are used as fallback.', 'lloyds-industrial'),
-            'focusKeyword'      => __('Focus Keyword', 'lloyds-industrial'),
-            'canonical'         => __('Canonical URL', 'lloyds-industrial'),
-            'robots'            => __('Robots', 'lloyds-industrial'),
-            'socialTitle'       => __('Social Title', 'lloyds-industrial'),
-            'socialDescription' => __('Social Description', 'lloyds-industrial'),
-            'socialImage'       => __('Social Image', 'lloyds-industrial'),
-            'selectImage'       => __('Select Image', 'lloyds-industrial'),
-            'removeImage'       => __('Remove', 'lloyds-industrial'),
-            'noImage'           => __('No image selected', 'lloyds-industrial'),
-            'selectImageTitle'  => __('Select SEO Social Image', 'lloyds-industrial'),
-            'useImage'          => __('Use This Image', 'lloyds-industrial'),
-            'defaults'          => __('Use global defaults', 'lloyds-industrial'),
-            'sidebarNote'       => __('SEO fields save with this content item.', 'lloyds-industrial'),
+            'eyebrow'           => __('B2B SEO', 'b2b-industrial'),
+            'title'             => __('Search and Social Preview', 'b2b-industrial'),
+            'description'       => __('Tune how this content appears in search results, social cards, and canonical discovery.', 'b2b-industrial'),
+            'seoTitle'          => __('SEO Title', 'b2b-industrial'),
+            'seoTitleHelp'      => __('Recommended: 50-60 characters. Leave blank to auto-generate.', 'b2b-industrial'),
+            'metaDescription'   => __('Meta Description', 'b2b-industrial'),
+            'metaDescriptionHelp' => __('Recommended: 140-160 characters. Product summaries and excerpts are used as fallback.', 'b2b-industrial'),
+            'focusKeyword'      => __('Focus Keyword', 'b2b-industrial'),
+            'canonical'         => __('Canonical URL', 'b2b-industrial'),
+            'robots'            => __('Robots', 'b2b-industrial'),
+            'socialTitle'       => __('Social Title', 'b2b-industrial'),
+            'socialDescription' => __('Social Description', 'b2b-industrial'),
+            'socialImage'       => __('Social Image', 'b2b-industrial'),
+            'selectImage'       => __('Select Image', 'b2b-industrial'),
+            'removeImage'       => __('Remove', 'b2b-industrial'),
+            'noImage'           => __('No image selected', 'b2b-industrial'),
+            'selectImageTitle'  => __('Select SEO Social Image', 'b2b-industrial'),
+            'useImage'          => __('Use This Image', 'b2b-industrial'),
+            'defaults'          => __('Use global defaults', 'b2b-industrial'),
+            'sidebarNote'       => __('SEO fields save with this content item.', 'b2b-industrial'),
         ],
     ]);
 }
@@ -319,7 +319,7 @@ function li_seo_handle_admin_actions(): void
         set_transient('li_seo_notice', $result, MINUTE_IN_SECONDS);
     }
 
-    wp_safe_redirect(admin_url('admin.php?page=lloyds-seo'));
+    wp_safe_redirect(admin_url('admin.php?page=b2b-seo'));
     exit;
 }
 
@@ -333,14 +333,14 @@ add_action('admin_notices', function (): void {
     delete_transient('li_seo_notice');
 
     $messages = [
-        'cache_purged'       => __('SEO page cache purged.', 'lloyds-industrial'),
-        'dropin_installed'   => __('Advanced cache drop-in installed. Add define(\'WP_CACHE\', true); to wp-config.php if it is not already enabled.', 'lloyds-industrial'),
-        'dropin_failed'      => __('Advanced cache drop-in could not be installed. Check wp-content file permissions.', 'lloyds-industrial'),
-        'htaccess_installed' => __('Apache browser-cache rules installed in .htaccess.', 'lloyds-industrial'),
-        'htaccess_failed'    => __('Apache browser-cache rules could not be installed. Check .htaccess permissions.', 'lloyds-industrial'),
-        'wp_cache_enabled'   => __('WP_CACHE enabled in wp-config.php. A timestamped backup was created beside the original file.', 'lloyds-industrial'),
-        'wp_cache_already_enabled' => __('WP_CACHE is already enabled.', 'lloyds-industrial'),
-        'wp_cache_failed'    => __('WP_CACHE could not be enabled automatically. Check wp-config.php file permissions.', 'lloyds-industrial'),
+        'cache_purged'       => __('SEO page cache purged.', 'b2b-industrial'),
+        'dropin_installed'   => __('Advanced cache drop-in installed. Add define(\'WP_CACHE\', true); to wp-config.php if it is not already enabled.', 'b2b-industrial'),
+        'dropin_failed'      => __('Advanced cache drop-in could not be installed. Check wp-content file permissions.', 'b2b-industrial'),
+        'htaccess_installed' => __('Apache browser-cache rules installed in .htaccess.', 'b2b-industrial'),
+        'htaccess_failed'    => __('Apache browser-cache rules could not be installed. Check .htaccess permissions.', 'b2b-industrial'),
+        'wp_cache_enabled'   => __('WP_CACHE enabled in wp-config.php. A timestamped backup was created beside the original file.', 'b2b-industrial'),
+        'wp_cache_already_enabled' => __('WP_CACHE is already enabled.', 'b2b-industrial'),
+        'wp_cache_failed'    => __('WP_CACHE could not be enabled automatically. Check wp-config.php file permissions.', 'b2b-industrial'),
     ];
 
     li_render_admin_notice(
@@ -358,7 +358,7 @@ function li_seo_add_meta_boxes(): void
 
         add_meta_box(
             'li_seo_meta',
-            __('Lloyds SEO', 'lloyds-industrial'),
+            __('B2B SEO', 'b2b-industrial'),
             'li_seo_render_meta_box',
             $post_type,
             'normal',
@@ -379,31 +379,31 @@ function li_seo_render_meta_box(WP_Post $post): void
     $social_title = (string) get_post_meta($post->ID, '_li_seo_social_title', true);
     $social_description = (string) get_post_meta($post->ID, '_li_seo_social_description', true);
     $social_image_id = (int) get_post_meta($post->ID, '_li_seo_social_image_id', true);
-    $social_image_label = $social_image_id ? get_the_title($social_image_id) : __('No image selected', 'lloyds-industrial');
+    $social_image_label = $social_image_id ? get_the_title($social_image_id) : __('No image selected', 'b2b-industrial');
     ?>
     <div class="li-seo-metabox">
         <p>
-            <label for="li_seo_title"><strong><?php esc_html_e('SEO Title', 'lloyds-industrial'); ?></strong></label>
+            <label for="li_seo_title"><strong><?php esc_html_e('SEO Title', 'b2b-industrial'); ?></strong></label>
             <input class="widefat" id="li_seo_title" name="li_seo_title" type="text" value="<?php echo esc_attr($title); ?>" maxlength="70">
-            <span class="description"><?php esc_html_e('Recommended: 50-60 characters. Leave blank to auto-generate.', 'lloyds-industrial'); ?></span>
+            <span class="description"><?php esc_html_e('Recommended: 50-60 characters. Leave blank to auto-generate.', 'b2b-industrial'); ?></span>
         </p>
         <p>
-            <label for="li_seo_description"><strong><?php esc_html_e('Meta Description', 'lloyds-industrial'); ?></strong></label>
+            <label for="li_seo_description"><strong><?php esc_html_e('Meta Description', 'b2b-industrial'); ?></strong></label>
             <textarea class="widefat" id="li_seo_description" name="li_seo_description" rows="3" maxlength="180"><?php echo esc_textarea($description); ?></textarea>
-            <span class="description"><?php esc_html_e('Recommended: 140-160 characters. Product summaries and excerpts are used as fallback.', 'lloyds-industrial'); ?></span>
+            <span class="description"><?php esc_html_e('Recommended: 140-160 characters. Product summaries and excerpts are used as fallback.', 'b2b-industrial'); ?></span>
         </p>
         <p>
-            <label for="li_seo_focus_keyword"><strong><?php esc_html_e('Focus Keyword', 'lloyds-industrial'); ?></strong></label>
+            <label for="li_seo_focus_keyword"><strong><?php esc_html_e('Focus Keyword', 'b2b-industrial'); ?></strong></label>
             <input class="regular-text" id="li_seo_focus_keyword" name="li_seo_focus_keyword" type="text" value="<?php echo esc_attr($focus_keyword); ?>">
         </p>
         <p>
-            <label for="li_seo_canonical"><strong><?php esc_html_e('Canonical URL', 'lloyds-industrial'); ?></strong></label>
+            <label for="li_seo_canonical"><strong><?php esc_html_e('Canonical URL', 'b2b-industrial'); ?></strong></label>
             <input class="widefat" id="li_seo_canonical" name="li_seo_canonical" type="url" value="<?php echo esc_attr($canonical); ?>">
         </p>
         <p>
-            <label for="li_seo_robots"><strong><?php esc_html_e('Robots', 'lloyds-industrial'); ?></strong></label>
+            <label for="li_seo_robots"><strong><?php esc_html_e('Robots', 'b2b-industrial'); ?></strong></label>
             <select id="li_seo_robots" name="li_seo_robots">
-                <option value="" <?php selected($robots, ''); ?>><?php esc_html_e('Use global defaults', 'lloyds-industrial'); ?></option>
+                <option value="" <?php selected($robots, ''); ?>><?php esc_html_e('Use global defaults', 'b2b-industrial'); ?></option>
                 <option value="index,follow" <?php selected($robots, 'index,follow'); ?>>index, follow</option>
                 <option value="noindex,follow" <?php selected($robots, 'noindex,follow'); ?>>noindex, follow</option>
                 <option value="noindex,nofollow" <?php selected($robots, 'noindex,nofollow'); ?>>noindex, nofollow</option>
@@ -411,19 +411,19 @@ function li_seo_render_meta_box(WP_Post $post): void
         </p>
         <hr>
         <p>
-            <label for="li_seo_social_title"><strong><?php esc_html_e('Social Title', 'lloyds-industrial'); ?></strong></label>
+            <label for="li_seo_social_title"><strong><?php esc_html_e('Social Title', 'b2b-industrial'); ?></strong></label>
             <input class="widefat" id="li_seo_social_title" name="li_seo_social_title" type="text" value="<?php echo esc_attr($social_title); ?>">
         </p>
         <p>
-            <label for="li_seo_social_description"><strong><?php esc_html_e('Social Description', 'lloyds-industrial'); ?></strong></label>
+            <label for="li_seo_social_description"><strong><?php esc_html_e('Social Description', 'b2b-industrial'); ?></strong></label>
             <textarea class="widefat" id="li_seo_social_description" name="li_seo_social_description" rows="2"><?php echo esc_textarea($social_description); ?></textarea>
         </p>
         <p data-li-media-picker>
             <input type="hidden" id="li_seo_social_image_id" name="li_seo_social_image_id" value="<?php echo esc_attr((string) $social_image_id); ?>" data-li-media-id>
-            <strong><?php esc_html_e('Social Image', 'lloyds-industrial'); ?></strong><br>
+            <strong><?php esc_html_e('Social Image', 'b2b-industrial'); ?></strong><br>
             <span data-li-media-label><?php echo esc_html($social_image_label); ?></span><br>
-            <button type="button" class="button" data-li-media-select data-li-media-title="<?php esc_attr_e('Select SEO Social Image', 'lloyds-industrial'); ?>" data-li-media-button="<?php esc_attr_e('Use This Image', 'lloyds-industrial'); ?>" data-li-media-type="image"><?php esc_html_e('Select Image', 'lloyds-industrial'); ?></button>
-            <button type="button" class="button" data-li-media-remove <?php echo $social_image_id ? '' : 'hidden'; ?>><?php esc_html_e('Remove', 'lloyds-industrial'); ?></button>
+            <button type="button" class="button" data-li-media-select data-li-media-title="<?php esc_attr_e('Select SEO Social Image', 'b2b-industrial'); ?>" data-li-media-button="<?php esc_attr_e('Use This Image', 'b2b-industrial'); ?>" data-li-media-type="image"><?php esc_html_e('Select Image', 'b2b-industrial'); ?></button>
+            <button type="button" class="button" data-li-media-remove <?php echo $social_image_id ? '' : 'hidden'; ?>><?php esc_html_e('Remove', 'b2b-industrial'); ?></button>
         </p>
     </div>
     <?php
@@ -513,7 +513,7 @@ function li_seo_get_title(): string
     }
 
     if (is_search()) {
-        return sprintf(__('Search results for %s', 'lloyds-industrial'), get_search_query(false)) . ' ' . $settings['separator'] . ' ' . get_bloginfo('name');
+        return sprintf(__('Search results for %s', 'b2b-industrial'), get_search_query(false)) . ' ' . $settings['separator'] . ' ' . get_bloginfo('name');
     }
 
     return '';
@@ -847,7 +847,7 @@ function li_seo_cache_dir(): string
     $uploads = wp_upload_dir(null, false);
     $base = !empty($uploads['basedir']) ? (string) $uploads['basedir'] : WP_CONTENT_DIR . '/uploads';
 
-    return trailingslashit($base) . 'lloyds-page-cache';
+    return trailingslashit($base) . 'b2b-page-cache';
 }
 
 function li_seo_cache_key(): string
@@ -903,12 +903,12 @@ function li_seo_send_cache_capability_headers(): void
         return;
     }
 
-    header('X-Cache-Enabled: Lloyds SEO Page Cache');
+    header('X-Cache-Enabled: B2B SEO Page Cache');
 }
 
 function li_seo_send_page_cache_headers(string $status, int $ttl, int $modified_time = 0): void
 {
-    header('X-Cache-Enabled: Lloyds SEO Page Cache');
+    header('X-Cache-Enabled: B2B SEO Page Cache');
     header('X-Cache-Status: ' . $status);
     header('Cache-Control: public, max-age=' . max(0, $ttl));
 
@@ -1010,7 +1010,7 @@ function li_seo_install_advanced_cache_dropin(): bool
     $dropin = <<<'PHP'
 <?php
 /**
- * Lloyds SEO Advanced Page Cache
+ * B2B SEO Advanced Page Cache
  *
  * Served before WordPress fully loads when WP_CACHE is enabled.
  */
@@ -1043,7 +1043,7 @@ foreach ($_COOKIE as $name => $value) {
 }
 
 $uploads_dir = defined('WP_CONTENT_DIR') ? WP_CONTENT_DIR . '/uploads' : dirname(__DIR__) . '/uploads';
-$cache_dir = $uploads_dir . '/lloyds-page-cache';
+$cache_dir = $uploads_dir . '/b2b-page-cache';
 $config_file = $cache_dir . '/config.json';
 $config = [
     'enabled' => true,
@@ -1071,14 +1071,14 @@ $cache_file = $cache_dir . '/' . md5($host . '|' . $request_uri . '|' . $variant
 $ttl = max(300, (int) ($config['ttl'] ?? 3600));
 
 if (!is_readable($cache_file) || filemtime($cache_file) <= (time() - $ttl)) {
-    header('X-Cache-Enabled: Lloyds SEO Advanced Page Cache');
+    header('X-Cache-Enabled: B2B SEO Advanced Page Cache');
     header('X-Cache-Status: MISS');
     return;
 }
 
 $modified = (int) filemtime($cache_file);
 
-header('X-Cache-Enabled: Lloyds SEO Advanced Page Cache');
+header('X-Cache-Enabled: B2B SEO Advanced Page Cache');
 header('X-Cache-Status: HIT');
 header('Cache-Control: public, max-age=' . $ttl);
 header('Age: ' . max(0, time() - $modified));
@@ -1135,7 +1135,7 @@ function li_seo_enable_wp_cache_constant(): string
             1
         );
     } else {
-        $define = "define('WP_CACHE', true); // Added by Lloyds SEO cache\n";
+        $define = "define('WP_CACHE', true); // Added by B2B SEO cache\n";
         $markers = [
             "/* That's all, stop editing!",
             "/* That's all, stop editing! Happy publishing. */",
@@ -1162,7 +1162,7 @@ function li_seo_enable_wp_cache_constant(): string
         return 'wp_cache_failed';
     }
 
-    $backup_path = $path . '.lloyds-seo-backup-' . gmdate('YmdHis');
+    $backup_path = $path . '.b2b-seo-backup-' . gmdate('YmdHis');
 
     if (!copy($path, $backup_path)) {
         return 'wp_cache_failed';
@@ -1178,7 +1178,7 @@ function li_seo_install_htaccess_rules(): bool
     $path = trailingslashit(ABSPATH) . '.htaccess';
     $existing = is_readable($path) ? (string) file_get_contents($path) : '';
     $rules = <<<'HTACCESS'
-# BEGIN Lloyds SEO Browser Cache
+# BEGIN B2B SEO Browser Cache
 <IfModule mod_expires.c>
     ExpiresActive On
     ExpiresByType text/css "access plus 1 month"
@@ -1200,10 +1200,10 @@ function li_seo_install_htaccess_rules(): bool
 <IfModule mod_deflate.c>
     AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json image/svg+xml
 </IfModule>
-# END Lloyds SEO Browser Cache
+# END B2B SEO Browser Cache
 HTACCESS;
 
-    $pattern = '/# BEGIN Lloyds SEO Browser Cache.*?# END Lloyds SEO Browser Cache\s*/s';
+    $pattern = '/# BEGIN B2B SEO Browser Cache.*?# END B2B SEO Browser Cache\s*/s';
     $updated = preg_match($pattern, $existing)
         ? preg_replace($pattern, $rules . "\n", $existing)
         : rtrim($existing) . "\n\n" . $rules . "\n";
@@ -1246,10 +1246,10 @@ function li_seo_render_admin_page(): void
     $taxonomies = li_seo_get_supported_public_taxonomies();
     $cache_dir = li_seo_cache_dir();
     $cache_files = is_dir($cache_dir) ? count(glob(trailingslashit($cache_dir) . '*.html') ?: []) : 0;
-    $purge_url = wp_nonce_url(admin_url('admin.php?page=lloyds-seo&li_seo_action=purge_cache'), 'li_seo_purge_cache');
-    $dropin_url = wp_nonce_url(admin_url('admin.php?page=lloyds-seo&li_seo_action=install_dropin'), 'li_seo_install_dropin');
-    $htaccess_url = wp_nonce_url(admin_url('admin.php?page=lloyds-seo&li_seo_action=install_htaccess'), 'li_seo_install_htaccess');
-    $wp_cache_url = wp_nonce_url(admin_url('admin.php?page=lloyds-seo&li_seo_action=enable_wp_cache'), 'li_seo_enable_wp_cache');
+    $purge_url = wp_nonce_url(admin_url('admin.php?page=b2b-seo&li_seo_action=purge_cache'), 'li_seo_purge_cache');
+    $dropin_url = wp_nonce_url(admin_url('admin.php?page=b2b-seo&li_seo_action=install_dropin'), 'li_seo_install_dropin');
+    $htaccess_url = wp_nonce_url(admin_url('admin.php?page=b2b-seo&li_seo_action=install_htaccess'), 'li_seo_install_htaccess');
+    $wp_cache_url = wp_nonce_url(admin_url('admin.php?page=b2b-seo&li_seo_action=enable_wp_cache'), 'li_seo_enable_wp_cache');
     $dropin_installed = li_seo_is_advanced_cache_installed();
     $wp_cache_enabled = defined('WP_CACHE') && WP_CACHE;
     $wp_config_path = li_seo_find_wp_config_path();
@@ -1258,120 +1258,120 @@ function li_seo_render_admin_page(): void
     <div class="wrap li-settings-page li-seo-page">
         <div class="li-settings-hero">
             <div>
-                <p class="li-settings-kicker"><?php esc_html_e('Search and Performance', 'lloyds-industrial'); ?></p>
-                <h1><?php esc_html_e('Lloyds SEO', 'lloyds-industrial'); ?></h1>
-                <p><?php esc_html_e('Manage metadata, social sharing, structured data, sitemap discovery, robots directives, and anonymous page caching for pages, products, archives, and content.', 'lloyds-industrial'); ?></p>
+                <p class="li-settings-kicker"><?php esc_html_e('Search and Performance', 'b2b-industrial'); ?></p>
+                <h1><?php esc_html_e('B2B SEO', 'b2b-industrial'); ?></h1>
+                <p><?php esc_html_e('Manage metadata, social sharing, structured data, sitemap discovery, robots directives, and anonymous page caching for pages, products, archives, and content.', 'b2b-industrial'); ?></p>
             </div>
             <div class="li-settings-summary">
                 <div>
-                    <span><?php esc_html_e('SEO', 'lloyds-industrial'); ?></span>
-                    <strong><?php echo esc_html(!empty($settings['enabled']) ? __('Enabled', 'lloyds-industrial') : __('Disabled', 'lloyds-industrial')); ?></strong>
+                    <span><?php esc_html_e('SEO', 'b2b-industrial'); ?></span>
+                    <strong><?php echo esc_html(!empty($settings['enabled']) ? __('Enabled', 'b2b-industrial') : __('Disabled', 'b2b-industrial')); ?></strong>
                 </div>
                 <div>
-                    <span><?php esc_html_e('Cache Files', 'lloyds-industrial'); ?></span>
+                    <span><?php esc_html_e('Cache Files', 'b2b-industrial'); ?></span>
                     <strong><?php echo esc_html(number_format_i18n($cache_files)); ?></strong>
                 </div>
                 <div>
-                    <span><?php esc_html_e('Sitemap', 'lloyds-industrial'); ?></span>
-                    <strong><?php echo esc_html(!empty($settings['enable_xml_sitemap']) ? __('Active', 'lloyds-industrial') : __('Off', 'lloyds-industrial')); ?></strong>
+                    <span><?php esc_html_e('Sitemap', 'b2b-industrial'); ?></span>
+                    <strong><?php echo esc_html(!empty($settings['enable_xml_sitemap']) ? __('Active', 'b2b-industrial') : __('Off', 'b2b-industrial')); ?></strong>
                 </div>
             </div>
         </div>
 
-        <nav class="li-admin-tabs" data-li-admin-tabs=".li-seo-page" data-li-tabs-key="li-seo-admin-tab" aria-label="<?php esc_attr_e('SEO settings sections', 'lloyds-industrial'); ?>">
-            <button class="li-admin-tab" type="button" data-li-tab-target="seo-metadata"><?php esc_html_e('Metadata', 'lloyds-industrial'); ?></button>
-            <button class="li-admin-tab" type="button" data-li-tab-target="seo-social"><?php esc_html_e('Social & Schema', 'lloyds-industrial'); ?></button>
-            <button class="li-admin-tab" type="button" data-li-tab-target="seo-indexing"><?php esc_html_e('Indexing', 'lloyds-industrial'); ?></button>
-            <button class="li-admin-tab" type="button" data-li-tab-target="seo-cache"><?php esc_html_e('Page Cache', 'lloyds-industrial'); ?></button>
-            <button class="li-admin-tab" type="button" data-li-tab-target="seo-tools"><?php esc_html_e('Tools', 'lloyds-industrial'); ?></button>
+        <nav class="li-admin-tabs" data-li-admin-tabs=".li-seo-page" data-li-tabs-key="li-seo-admin-tab" aria-label="<?php esc_attr_e('SEO settings sections', 'b2b-industrial'); ?>">
+            <button class="li-admin-tab" type="button" data-li-tab-target="seo-metadata"><?php esc_html_e('Metadata', 'b2b-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="seo-social"><?php esc_html_e('Social & Schema', 'b2b-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="seo-indexing"><?php esc_html_e('Indexing', 'b2b-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="seo-cache"><?php esc_html_e('Page Cache', 'b2b-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="seo-tools"><?php esc_html_e('Tools', 'b2b-industrial'); ?></button>
         </nav>
 
         <form class="li-settings-form li-seo-settings-form li-admin-tab-panels" method="post" action="options.php">
             <?php settings_fields('li_seo_settings'); ?>
 
             <section class="li-admin-tab-panel" data-li-tab-panel="seo-metadata">
-                <h2><?php esc_html_e('Global Metadata', 'lloyds-industrial'); ?></h2>
-                <p><?php esc_html_e('Control default titles and descriptions used when individual content does not provide overrides.', 'lloyds-industrial'); ?></p>
+                <h2><?php esc_html_e('Global Metadata', 'b2b-industrial'); ?></h2>
+                <p><?php esc_html_e('Control default titles and descriptions used when individual content does not provide overrides.', 'b2b-industrial'); ?></p>
                 <table class="form-table" role="presentation"><tbody>
-                    <?php li_seo_render_checkbox_row('enabled', __('Enable SEO output', 'lloyds-industrial'), $settings); ?>
-                    <?php li_seo_render_text_row('site_title_pattern', __('Title pattern', 'lloyds-industrial'), $settings, '%title% | %site%'); ?>
-                    <?php li_seo_render_text_row('home_title', __('Home title', 'lloyds-industrial'), $settings); ?>
-                    <?php li_seo_render_textarea_row('default_description', __('Default description', 'lloyds-industrial'), $settings); ?>
-                    <?php li_seo_render_text_row('separator', __('Title separator', 'lloyds-industrial'), $settings); ?>
+                    <?php li_seo_render_checkbox_row('enabled', __('Enable SEO output', 'b2b-industrial'), $settings); ?>
+                    <?php li_seo_render_text_row('site_title_pattern', __('Title pattern', 'b2b-industrial'), $settings, '%title% | %site%'); ?>
+                    <?php li_seo_render_text_row('home_title', __('Home title', 'b2b-industrial'), $settings); ?>
+                    <?php li_seo_render_textarea_row('default_description', __('Default description', 'b2b-industrial'), $settings); ?>
+                    <?php li_seo_render_text_row('separator', __('Title separator', 'b2b-industrial'), $settings); ?>
                 </tbody></table>
-                <?php submit_button(__('Save SEO Settings', 'lloyds-industrial')); ?>
+                <?php submit_button(__('Save SEO Settings', 'b2b-industrial')); ?>
             </section>
 
             <section class="li-admin-tab-panel" data-li-tab-panel="seo-social">
-                <h2><?php esc_html_e('Social and Schema', 'lloyds-industrial'); ?></h2>
-                <p><?php esc_html_e('Add share metadata and JSON-LD structured data for the organization, website, pages, articles, and products.', 'lloyds-industrial'); ?></p>
+                <h2><?php esc_html_e('Social and Schema', 'b2b-industrial'); ?></h2>
+                <p><?php esc_html_e('Add share metadata and JSON-LD structured data for the organization, website, pages, articles, and products.', 'b2b-industrial'); ?></p>
                 <table class="form-table" role="presentation"><tbody>
-                    <?php li_seo_render_text_row('organization_name', __('Organization name', 'lloyds-industrial'), $settings); ?>
-                    <?php li_seo_render_media_row('organization_logo_id', __('Organization logo', 'lloyds-industrial'), $settings); ?>
-                    <?php li_seo_render_media_row('social_image_id', __('Default social image', 'lloyds-industrial'), $settings); ?>
-                    <?php li_seo_render_text_row('twitter_site', __('Twitter/X site handle', 'lloyds-industrial'), $settings, '@lloyds'); ?>
-                    <?php li_seo_render_text_row('facebook_app_id', __('Facebook app ID', 'lloyds-industrial'), $settings); ?>
-                    <?php li_seo_render_checkbox_row('enable_open_graph', __('Enable Open Graph tags', 'lloyds-industrial'), $settings); ?>
-                    <?php li_seo_render_checkbox_row('enable_twitter_cards', __('Enable Twitter cards', 'lloyds-industrial'), $settings); ?>
-                    <?php li_seo_render_checkbox_row('enable_json_ld', __('Enable JSON-LD schema', 'lloyds-industrial'), $settings); ?>
+                    <?php li_seo_render_text_row('organization_name', __('Organization name', 'b2b-industrial'), $settings); ?>
+                    <?php li_seo_render_media_row('organization_logo_id', __('Organization logo', 'b2b-industrial'), $settings); ?>
+                    <?php li_seo_render_media_row('social_image_id', __('Default social image', 'b2b-industrial'), $settings); ?>
+                    <?php li_seo_render_text_row('twitter_site', __('Twitter/X site handle', 'b2b-industrial'), $settings, '@b2b'); ?>
+                    <?php li_seo_render_text_row('facebook_app_id', __('Facebook app ID', 'b2b-industrial'), $settings); ?>
+                    <?php li_seo_render_checkbox_row('enable_open_graph', __('Enable Open Graph tags', 'b2b-industrial'), $settings); ?>
+                    <?php li_seo_render_checkbox_row('enable_twitter_cards', __('Enable Twitter cards', 'b2b-industrial'), $settings); ?>
+                    <?php li_seo_render_checkbox_row('enable_json_ld', __('Enable JSON-LD schema', 'b2b-industrial'), $settings); ?>
                 </tbody></table>
-                <?php submit_button(__('Save SEO Settings', 'lloyds-industrial')); ?>
+                <?php submit_button(__('Save SEO Settings', 'b2b-industrial')); ?>
             </section>
 
             <section class="li-admin-tab-panel" data-li-tab-panel="seo-indexing">
-                <h2><?php esc_html_e('Indexing and Discovery', 'lloyds-industrial'); ?></h2>
-                <p><?php esc_html_e('Control canonical URLs, robots directives, XML sitemap content, and robots.txt sitemap discovery.', 'lloyds-industrial'); ?></p>
+                <h2><?php esc_html_e('Indexing and Discovery', 'b2b-industrial'); ?></h2>
+                <p><?php esc_html_e('Control canonical URLs, robots directives, XML sitemap content, and robots.txt sitemap discovery.', 'b2b-industrial'); ?></p>
                 <table class="form-table" role="presentation"><tbody>
-                    <?php li_seo_render_checkbox_row('enable_canonical', __('Enable canonical URLs', 'lloyds-industrial'), $settings); ?>
-                    <?php li_seo_render_checkbox_row('enable_robots_meta', __('Enable robots meta tags', 'lloyds-industrial'), $settings); ?>
-                    <?php li_seo_render_checkbox_row('noindex_search', __('Noindex search result pages', 'lloyds-industrial'), $settings); ?>
-                    <?php li_seo_render_checkbox_row('noindex_404', __('Noindex 404 pages', 'lloyds-industrial'), $settings); ?>
-                    <?php li_seo_render_checkbox_row('noindex_private_docs', __('Noindex private documents', 'lloyds-industrial'), $settings); ?>
-                    <?php li_seo_render_checkbox_row('enable_xml_sitemap', __('Enable XML sitemap', 'lloyds-industrial'), $settings); ?>
-                    <?php li_seo_render_checkbox_row('enable_robots_txt', __('Add sitemap to robots.txt', 'lloyds-industrial'), $settings); ?>
-                    <?php li_seo_render_checklist_row('sitemap_post_types', __('Sitemap post types', 'lloyds-industrial'), $settings, $post_types); ?>
-                    <?php li_seo_render_checklist_row('sitemap_taxonomies', __('Sitemap taxonomies', 'lloyds-industrial'), $settings, $taxonomies); ?>
+                    <?php li_seo_render_checkbox_row('enable_canonical', __('Enable canonical URLs', 'b2b-industrial'), $settings); ?>
+                    <?php li_seo_render_checkbox_row('enable_robots_meta', __('Enable robots meta tags', 'b2b-industrial'), $settings); ?>
+                    <?php li_seo_render_checkbox_row('noindex_search', __('Noindex search result pages', 'b2b-industrial'), $settings); ?>
+                    <?php li_seo_render_checkbox_row('noindex_404', __('Noindex 404 pages', 'b2b-industrial'), $settings); ?>
+                    <?php li_seo_render_checkbox_row('noindex_private_docs', __('Noindex private documents', 'b2b-industrial'), $settings); ?>
+                    <?php li_seo_render_checkbox_row('enable_xml_sitemap', __('Enable XML sitemap', 'b2b-industrial'), $settings); ?>
+                    <?php li_seo_render_checkbox_row('enable_robots_txt', __('Add sitemap to robots.txt', 'b2b-industrial'), $settings); ?>
+                    <?php li_seo_render_checklist_row('sitemap_post_types', __('Sitemap post types', 'b2b-industrial'), $settings, $post_types); ?>
+                    <?php li_seo_render_checklist_row('sitemap_taxonomies', __('Sitemap taxonomies', 'b2b-industrial'), $settings, $taxonomies); ?>
                 </tbody></table>
-                <?php submit_button(__('Save SEO Settings', 'lloyds-industrial')); ?>
+                <?php submit_button(__('Save SEO Settings', 'b2b-industrial')); ?>
             </section>
 
             <section class="li-admin-tab-panel" data-li-tab-panel="seo-cache">
-                <h2><?php esc_html_e('Page Caching', 'lloyds-industrial'); ?></h2>
-                <p><?php esc_html_e('Cache anonymous full-page HTML for fast repeat visits. Logged-in users, carts, checkouts, account pages, previews, searches, feeds, and query-string URLs are bypassed.', 'lloyds-industrial'); ?></p>
+                <h2><?php esc_html_e('Page Caching', 'b2b-industrial'); ?></h2>
+                <p><?php esc_html_e('Cache anonymous full-page HTML for fast repeat visits. Logged-in users, carts, checkouts, account pages, previews, searches, feeds, and query-string URLs are bypassed.', 'b2b-industrial'); ?></p>
                 <table class="form-table" role="presentation"><tbody>
-                    <?php li_seo_render_checkbox_row('enable_page_cache', __('Enable page caching', 'lloyds-industrial'), $settings); ?>
-                    <?php li_seo_render_number_row('cache_ttl', __('Cache TTL seconds', 'lloyds-industrial'), $settings, 300, DAY_IN_SECONDS); ?>
-                    <?php li_seo_render_checkbox_row('cache_mobile_separately', __('Keep separate mobile cache files', 'lloyds-industrial'), $settings); ?>
-                    <?php li_seo_render_checkbox_row('cache_products', __('Cache product pages', 'lloyds-industrial'), $settings); ?>
-                    <?php li_seo_render_checkbox_row('cache_archives', __('Cache archive and taxonomy pages', 'lloyds-industrial'), $settings); ?>
+                    <?php li_seo_render_checkbox_row('enable_page_cache', __('Enable page caching', 'b2b-industrial'), $settings); ?>
+                    <?php li_seo_render_number_row('cache_ttl', __('Cache TTL seconds', 'b2b-industrial'), $settings, 300, DAY_IN_SECONDS); ?>
+                    <?php li_seo_render_checkbox_row('cache_mobile_separately', __('Keep separate mobile cache files', 'b2b-industrial'), $settings); ?>
+                    <?php li_seo_render_checkbox_row('cache_products', __('Cache product pages', 'b2b-industrial'), $settings); ?>
+                    <?php li_seo_render_checkbox_row('cache_archives', __('Cache archive and taxonomy pages', 'b2b-industrial'), $settings); ?>
                 </tbody></table>
-                <?php submit_button(__('Save SEO Settings', 'lloyds-industrial')); ?>
+                <?php submit_button(__('Save SEO Settings', 'b2b-industrial')); ?>
             </section>
         </form>
 
         <section class="li-admin-panel li-admin-tab-panel" data-li-tab-panel="seo-tools">
-            <h2><?php esc_html_e('SEO Tools and Status', 'lloyds-industrial'); ?></h2>
-            <p><?php esc_html_e('Inspect generated assets and manage page cache integrations.', 'lloyds-industrial'); ?></p>
+            <h2><?php esc_html_e('SEO Tools and Status', 'b2b-industrial'); ?></h2>
+            <p><?php esc_html_e('Inspect generated assets and manage page cache integrations.', 'b2b-industrial'); ?></p>
             <p class="li-seo-actions">
-                <a class="button button-secondary" href="<?php echo esc_url(home_url('/li-sitemap.xml')); ?>" target="_blank" rel="noopener"><?php esc_html_e('View Sitemap', 'lloyds-industrial'); ?></a>
-                <a class="button button-secondary" href="<?php echo esc_url($purge_url); ?>"><?php esc_html_e('Purge Page Cache', 'lloyds-industrial'); ?></a>
-                <a class="button button-secondary" href="<?php echo esc_url($dropin_url); ?>"><?php esc_html_e('Install Advanced Cache Drop-in', 'lloyds-industrial'); ?></a>
-                <a class="button button-secondary" href="<?php echo esc_url($wp_cache_url); ?>"><?php esc_html_e('Enable WP_CACHE', 'lloyds-industrial'); ?></a>
-                <a class="button button-secondary" href="<?php echo esc_url($htaccess_url); ?>"><?php esc_html_e('Install Apache Cache Rules', 'lloyds-industrial'); ?></a>
+                <a class="button button-secondary" href="<?php echo esc_url(home_url('/li-sitemap.xml')); ?>" target="_blank" rel="noopener"><?php esc_html_e('View Sitemap', 'b2b-industrial'); ?></a>
+                <a class="button button-secondary" href="<?php echo esc_url($purge_url); ?>"><?php esc_html_e('Purge Page Cache', 'b2b-industrial'); ?></a>
+                <a class="button button-secondary" href="<?php echo esc_url($dropin_url); ?>"><?php esc_html_e('Install Advanced Cache Drop-in', 'b2b-industrial'); ?></a>
+                <a class="button button-secondary" href="<?php echo esc_url($wp_cache_url); ?>"><?php esc_html_e('Enable WP_CACHE', 'b2b-industrial'); ?></a>
+                <a class="button button-secondary" href="<?php echo esc_url($htaccess_url); ?>"><?php esc_html_e('Install Apache Cache Rules', 'b2b-industrial'); ?></a>
             </p>
 
             <div class="li-seo-status-grid">
                 <div class="li-seo-status-card">
-                    <span><?php esc_html_e('Advanced Drop-in', 'lloyds-industrial'); ?></span>
-                    <strong><?php echo esc_html($dropin_installed ? __('Installed', 'lloyds-industrial') : __('Not Installed', 'lloyds-industrial')); ?></strong>
+                    <span><?php esc_html_e('Advanced Drop-in', 'b2b-industrial'); ?></span>
+                    <strong><?php echo esc_html($dropin_installed ? __('Installed', 'b2b-industrial') : __('Not Installed', 'b2b-industrial')); ?></strong>
                 </div>
                 <div class="li-seo-status-card">
-                    <span><?php esc_html_e('WP_CACHE', 'lloyds-industrial'); ?></span>
-                    <strong><?php echo esc_html($wp_cache_enabled ? __('Enabled', 'lloyds-industrial') : ($wp_config_writable ? __('Ready to Enable', 'lloyds-industrial') : __('Config Not Writable', 'lloyds-industrial'))); ?></strong>
+                    <span><?php esc_html_e('WP_CACHE', 'b2b-industrial'); ?></span>
+                    <strong><?php echo esc_html($wp_cache_enabled ? __('Enabled', 'b2b-industrial') : ($wp_config_writable ? __('Ready to Enable', 'b2b-industrial') : __('Config Not Writable', 'b2b-industrial'))); ?></strong>
                 </div>
                 <div class="li-seo-status-card">
-                    <span><?php esc_html_e('Cache Directory', 'lloyds-industrial'); ?></span>
-                    <strong><?php echo esc_html(is_writable($cache_dir) || wp_mkdir_p($cache_dir) ? __('Writable', 'lloyds-industrial') : __('Not Writable', 'lloyds-industrial')); ?></strong>
+                    <span><?php esc_html_e('Cache Directory', 'b2b-industrial'); ?></span>
+                    <strong><?php echo esc_html(is_writable($cache_dir) || wp_mkdir_p($cache_dir) ? __('Writable', 'b2b-industrial') : __('Not Writable', 'b2b-industrial')); ?></strong>
                 </div>
             </div>
         </section>
@@ -1414,7 +1414,7 @@ function li_seo_render_checkbox_row(string $key, string $label, array $settings)
     ?>
     <tr>
         <th scope="row"><?php echo esc_html($label); ?></th>
-        <td><label><input type="checkbox" name="<?php echo esc_attr(LI_SEO_SETTINGS_OPTION); ?>[<?php echo esc_attr($key); ?>]" value="1" <?php checked(!empty($settings[$key])); ?>> <?php esc_html_e('Enabled', 'lloyds-industrial'); ?></label></td>
+        <td><label><input type="checkbox" name="<?php echo esc_attr(LI_SEO_SETTINGS_OPTION); ?>[<?php echo esc_attr($key); ?>]" value="1" <?php checked(!empty($settings[$key])); ?>> <?php esc_html_e('Enabled', 'b2b-industrial'); ?></label></td>
     </tr>
     <?php
 }
@@ -1437,15 +1437,15 @@ function li_seo_render_checklist_row(string $key, string $label, array $settings
 function li_seo_render_media_row(string $key, string $label, array $settings): void
 {
     $image_id = absint($settings[$key] ?? 0);
-    $label_text = $image_id ? get_the_title($image_id) : __('No image selected', 'lloyds-industrial');
+    $label_text = $image_id ? get_the_title($image_id) : __('No image selected', 'b2b-industrial');
     ?>
     <tr>
         <th scope="row"><?php echo esc_html($label); ?></th>
         <td data-li-media-picker>
             <input type="hidden" name="<?php echo esc_attr(LI_SEO_SETTINGS_OPTION); ?>[<?php echo esc_attr($key); ?>]" value="<?php echo esc_attr((string) $image_id); ?>" data-li-media-id>
             <span data-li-media-label><?php echo esc_html($label_text); ?></span><br>
-            <button type="button" class="button" data-li-media-select data-li-media-title="<?php esc_attr_e('Select Image', 'lloyds-industrial'); ?>" data-li-media-button="<?php esc_attr_e('Use This Image', 'lloyds-industrial'); ?>" data-li-media-type="image"><?php esc_html_e('Select Image', 'lloyds-industrial'); ?></button>
-            <button type="button" class="button" data-li-media-remove <?php echo $image_id ? '' : 'hidden'; ?>><?php esc_html_e('Remove', 'lloyds-industrial'); ?></button>
+            <button type="button" class="button" data-li-media-select data-li-media-title="<?php esc_attr_e('Select Image', 'b2b-industrial'); ?>" data-li-media-button="<?php esc_attr_e('Use This Image', 'b2b-industrial'); ?>" data-li-media-type="image"><?php esc_html_e('Select Image', 'b2b-industrial'); ?></button>
+            <button type="button" class="button" data-li-media-remove <?php echo $image_id ? '' : 'hidden'; ?>><?php esc_html_e('Remove', 'b2b-industrial'); ?></button>
         </td>
     </tr>
     <?php

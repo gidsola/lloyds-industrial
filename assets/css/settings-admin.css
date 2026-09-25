@@ -957,15 +957,15 @@
     line-height: 1.2;
 }
 
-.lloyds-seo-document-panel,
-.lloyds-seo-document-panel input,
-.lloyds-seo-document-panel textarea,
-.lloyds-seo-document-panel select,
-.lloyds-seo-document-panel button {
+.b2b-seo-document-panel,
+.b2b-seo-document-panel input,
+.b2b-seo-document-panel textarea,
+.b2b-seo-document-panel select,
+.b2b-seo-document-panel button {
     font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-.lloyds-seo-document-panel__intro {
+.b2b-seo-document-panel__intro {
     background: #17443b;
     border-radius: 8px;
     color: #fff;
@@ -975,7 +975,7 @@
     padding: 14px;
 }
 
-.lloyds-seo-document-panel__intro span {
+.b2b-seo-document-panel__intro span {
     color: #d9a441;
     font-size: 11px;
     font-weight: 900;
@@ -983,29 +983,29 @@
     text-transform: uppercase;
 }
 
-.lloyds-seo-document-panel__intro h3 {
+.b2b-seo-document-panel__intro h3 {
     color: #fff;
     font-size: 15px;
     line-height: 1.25;
     margin: 0;
 }
 
-.lloyds-seo-document-panel__intro p {
+.b2b-seo-document-panel__intro p {
     color: rgba(255, 255, 255, 0.82);
     line-height: 1.45;
     margin: 0;
 }
 
-.lloyds-seo-document-panel .components-panel__body-title {
+.b2b-seo-document-panel .components-panel__body-title {
     color: #17443b;
 }
 
-.lloyds-seo-document-panel .components-base-control {
+.b2b-seo-document-panel .components-base-control {
     margin-bottom: 16px;
 }
 
-.lloyds-seo-document-panel .components-base-control__label,
-.lloyds-seo-document-panel__media strong {
+.b2b-seo-document-panel .components-base-control__label,
+.b2b-seo-document-panel__media strong {
     color: #17443b;
     font-size: 11px;
     font-weight: 900;
@@ -1013,20 +1013,20 @@
     text-transform: uppercase;
 }
 
-.lloyds-seo-document-panel__social {
+.b2b-seo-document-panel__social {
     border-top: 1px solid #dde5e2;
     margin-top: 4px;
     padding-top: 12px;
 }
 
-.lloyds-seo-document-panel__social h4 {
+.b2b-seo-document-panel__social h4 {
     color: #17443b;
     font-size: 13px;
     line-height: 1.3;
     margin: 0 0 12px;
 }
 
-.lloyds-seo-document-panel__media {
+.b2b-seo-document-panel__media {
     background: #f8faf9;
     border: 1px solid #dde5e2;
     border-radius: 8px;
@@ -1036,11 +1036,11 @@
     padding: 12px;
 }
 
-.lloyds-seo-document-panel__media > span {
+.b2b-seo-document-panel__media > span {
     color: #66736f;
 }
 
-.lloyds-seo-document-panel__actions {
+.b2b-seo-document-panel__actions {
     align-items: center;
     display: flex;
     flex-wrap: wrap;
@@ -1263,7 +1263,7 @@
 .post-type-li_mail_subscriber #titlediv #title,
 .post-type-li_mail_campaign #titlediv #title,
 .post-type-li_reseller #titlediv #title,
-.post-type-lloyds_flipbook #titlediv #title {
+.post-type-b2b_flipbook #titlediv #title {
     border-color: #cfd9d5;
     border-radius: 8px;
     box-shadow: 0 10px 28px rgba(24, 33, 38, 0.04);
@@ -1275,7 +1275,7 @@
 .post-type-li_mail_subscriber #poststuff,
 .post-type-li_mail_campaign #poststuff,
 .post-type-li_reseller #poststuff,
-.post-type-lloyds_flipbook #poststuff {
+.post-type-b2b_flipbook #poststuff {
     max-width: 1280px;
 }
 
@@ -1284,7 +1284,7 @@
 .post-type-li_mail_subscriber .postbox,
 .post-type-li_mail_campaign .postbox,
 .post-type-li_reseller .postbox,
-.post-type-lloyds_flipbook .postbox {
+.post-type-b2b_flipbook .postbox {
     border-color: #dde5e2;
     border-radius: 8px;
     box-shadow: 0 10px 28px rgba(24, 33, 38, 0.04);
@@ -1295,7 +1295,7 @@
 .post-type-li_contact_msg .postbox-header,
 .post-type-li_mail_subscriber .postbox-header,
 .post-type-li_mail_campaign .postbox-header,
-.post-type-lloyds_flipbook .postbox-header {
+.post-type-b2b_flipbook .postbox-header {
     background: #fff;
     border-bottom-color: #dde5e2;
 }
@@ -1304,7 +1304,7 @@
 .post-type-li_contact_msg .postbox-header h2,
 .post-type-li_mail_subscriber .postbox-header h2,
 .post-type-li_mail_campaign .postbox-header h2,
-.post-type-lloyds_flipbook .postbox-header h2 {
+.post-type-b2b_flipbook .postbox-header h2 {
     color: #17443b;
     font-weight: 800;
 }
@@ -1713,7 +1713,7 @@
     color: #66736f;
 }
 
-.post-type-lloyds_flipbook #post-body-content {
+.post-type-b2b_flipbook #post-body-content {
     background: #fff;
     border: 1px solid #dde5e2;
     border-radius: 8px;
@@ -1723,41 +1723,41 @@
     padding: 18px;
 }
 
-.post-type-lloyds_flipbook #titlediv {
+.post-type-b2b_flipbook #titlediv {
     margin: 0;
 }
 
-.post-type-lloyds_flipbook #titlediv #title-prompt-text {
+.post-type-b2b_flipbook #titlediv #title-prompt-text {
     color: #66736f;
     padding: 10px 12px;
 }
 
-.post-type-lloyds_flipbook #postdivrich,
-.post-type-lloyds_flipbook #postexcerpt .postbox-header {
+.post-type-b2b_flipbook #postdivrich,
+.post-type-b2b_flipbook #postexcerpt .postbox-header {
     display: none;
 }
 
-.post-type-lloyds_flipbook #lloyds_flipbook_pdf {
+.post-type-b2b_flipbook #b2b_flipbook_pdf {
     border: 0;
     box-shadow: none;
     background: transparent;
 }
 
-.post-type-lloyds_flipbook #lloyds_flipbook_pdf .postbox-header {
+.post-type-b2b_flipbook #b2b_flipbook_pdf .postbox-header {
     display: none;
 }
 
-.post-type-lloyds_flipbook #lloyds_flipbook_pdf .inside {
+.post-type-b2b_flipbook #b2b_flipbook_pdf .inside {
     margin: 0;
     padding: 0;
 }
 
-.lloyds-flipbook-order-field {
+.b2b-flipbook-order-field {
     display: grid;
     gap: 8px;
 }
 
-.lloyds-flipbook-order-field label {
+.b2b-flipbook-order-field label {
     color: #17443b;
     font-size: 11px;
     font-weight: 900;
@@ -1765,19 +1765,19 @@
     text-transform: uppercase;
 }
 
-.lloyds-flipbook-order-field input {
+.b2b-flipbook-order-field input {
     border-color: #cfd9d5;
     border-radius: 6px;
     max-width: 120px;
 }
 
-.lloyds-flipbook-order-field p {
+.b2b-flipbook-order-field p {
     color: #66736f;
     line-height: 1.45;
     margin: 0;
 }
 
-.lloyds-flipbook-builder {
+.b2b-flipbook-builder {
     background: #fff;
     border: 1px solid #dde5e2;
     border-radius: 8px;
@@ -1785,34 +1785,34 @@
     padding: 18px;
 }
 
-.lloyds-flipbook-builder .li-editor-panel__intro {
+.b2b-flipbook-builder .li-editor-panel__intro {
     background: #17443b;
     border-color: #12332e;
     color: #fff;
 }
 
-.lloyds-flipbook-builder .li-editor-panel__intro .dashicons {
+.b2b-flipbook-builder .li-editor-panel__intro .dashicons {
     background: rgba(255, 255, 255, 0.12);
     color: #d9a441;
 }
 
-.lloyds-flipbook-builder .li-editor-panel__intro h2 {
+.b2b-flipbook-builder .li-editor-panel__intro h2 {
     color: #fff;
 }
 
-.lloyds-flipbook-builder .li-editor-panel__intro p {
+.b2b-flipbook-builder .li-editor-panel__intro p {
     color: rgba(255, 255, 255, 0.82);
 }
 
-.lloyds-flipbook-builder__grid {
+.b2b-flipbook-builder__grid {
     align-items: stretch;
     display: grid;
     gap: 16px;
     grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
 }
 
-.lloyds-flipbook-builder__main,
-.lloyds-flipbook-builder__side {
+.b2b-flipbook-builder__main,
+.b2b-flipbook-builder__side {
     background: #f8faf9;
     border: 1px solid #dde5e2;
     border-radius: 8px;
@@ -1821,17 +1821,17 @@
     padding: 16px;
 }
 
-.lloyds-flipbook-builder__main .li-editor-panel__selected-file {
+.b2b-flipbook-builder__main .li-editor-panel__selected-file {
     background: #fff;
     min-height: 108px;
 }
 
-.lloyds-flipbook-builder__main .li-editor-panel__selected-file strong {
+.b2b-flipbook-builder__main .li-editor-panel__selected-file strong {
     font-size: 20px;
     line-height: 1.25;
 }
 
-.lloyds-flipbook-builder__steps {
+.b2b-flipbook-builder__steps {
     background: #fff;
     border: 1px solid #dde5e2;
     border-radius: 8px;
@@ -1843,7 +1843,7 @@
     padding: 12px;
 }
 
-.lloyds-flipbook-builder__steps li {
+.b2b-flipbook-builder__steps li {
     align-items: center;
     color: #182126;
     display: grid;
@@ -1852,7 +1852,7 @@
     line-height: 1.4;
 }
 
-.lloyds-flipbook-builder__steps li::before {
+.b2b-flipbook-builder__steps li::before {
     align-items: center;
     background: #17443b;
     border-radius: 999px;
@@ -2022,7 +2022,7 @@
     .li-mail-shortcode-grid,
     .li-carousel-usage-grid,
     .li-editor-panel__grid,
-    .lloyds-flipbook-builder__grid,
+    .b2b-flipbook-builder__grid,
     .li-reseller-builder__grid,
     .li-reseller-builder__section:nth-child(3) .li-reseller-builder__fields {
         grid-template-columns: 1fr;

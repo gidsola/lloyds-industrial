@@ -15,8 +15,8 @@ add_filter('ajax_query_attachments_args', 'li_media_filter_ajax_library_query');
 
 function li_media_add_library_columns(array $columns): array
 {
-    $columns['li_media_context'] = __('Lloyds Use', 'lloyds-industrial');
-    $columns['li_media_storage'] = __('Storage', 'lloyds-industrial');
+    $columns['li_media_context'] = __('B2B Use', 'b2b-industrial');
+    $columns['li_media_storage'] = __('Storage', 'b2b-industrial');
 
     return $columns;
 }
@@ -42,18 +42,18 @@ function li_media_render_library_context_filter(string $post_type): void
     $selected = isset($_GET['li_media_context']) ? sanitize_key((string) $_GET['li_media_context']) : '';
     $selected_folder = isset($_GET['li_media_folder']) ? sanitize_text_field(wp_unslash((string) $_GET['li_media_folder'])) : '';
     ?>
-    <label class="screen-reader-text" for="li_media_context"><?php esc_html_e('Filter by Lloyds media use', 'lloyds-industrial'); ?></label>
+    <label class="screen-reader-text" for="li_media_context"><?php esc_html_e('Filter by B2B media use', 'b2b-industrial'); ?></label>
     <select name="li_media_context" id="li_media_context">
-        <option value=""><?php esc_html_e('All Lloyds media uses', 'lloyds-industrial'); ?></option>
+        <option value=""><?php esc_html_e('All B2B media uses', 'b2b-industrial'); ?></option>
         <?php foreach (li_media_get_context_filter_options() as $value => $label): ?>
             <option value="<?php echo esc_attr($value); ?>" <?php selected($selected, $value); ?>>
                 <?php echo esc_html($label); ?>
             </option>
         <?php endforeach; ?>
     </select>
-    <label class="screen-reader-text" for="li_media_folder"><?php esc_html_e('Filter by Lloyds folder', 'lloyds-industrial'); ?></label>
+    <label class="screen-reader-text" for="li_media_folder"><?php esc_html_e('Filter by B2B folder', 'b2b-industrial'); ?></label>
     <select name="li_media_folder" id="li_media_folder">
-        <option value=""><?php esc_html_e('All Lloyds folders', 'lloyds-industrial'); ?></option>
+        <option value=""><?php esc_html_e('All B2B folders', 'b2b-industrial'); ?></option>
         <?php foreach (li_media_get_folder_filter_options() as $folder => $label): ?>
             <option value="<?php echo esc_attr($folder); ?>" <?php selected($selected_folder, $folder); ?>>
                 <?php echo esc_html($label); ?>
@@ -130,16 +130,16 @@ function li_media_add_attachment_context_fields(array $form_fields, WP_Post $pos
     $storage = li_media_get_attachment_storage_label((int) $post->ID);
 
     $form_fields['li_media_context'] = [
-        'label' => __('Lloyds Use', 'lloyds-industrial'),
+        'label' => __('B2B Use', 'b2b-industrial'),
         'input' => 'html',
         'html'  => '<div class="li-media-context-field">' . li_media_get_attachment_context_markup((int) $post->ID) . '</div>',
     ];
 
     $form_fields['li_media_storage'] = [
-        'label' => __('Storage', 'lloyds-industrial'),
+        'label' => __('Storage', 'b2b-industrial'),
         'input' => 'html',
         'html'  => '<code>' . esc_html($storage) . '</code>' . (in_array('sds', array_column($contexts, 'type'), true)
-            ? '<p class="description">' . esc_html__('SDS downloads are served only through the protected stream after access checks.', 'lloyds-industrial') . '</p>'
+            ? '<p class="description">' . esc_html__('SDS downloads are served only through the protected stream after access checks.', 'b2b-industrial') . '</p>'
             : ''),
     ];
 
@@ -149,13 +149,13 @@ function li_media_add_attachment_context_fields(array $form_fields, WP_Post $pos
 function li_media_get_context_filter_options(): array
 {
     return [
-        'product'   => __('WooCommerce product images', 'lloyds-industrial'),
-        'flipbook'  => __('PDF flipbooks', 'lloyds-industrial'),
-        'sds'       => __('Protected SDS', 'lloyds-industrial'),
-        'document'  => __('Documents', 'lloyds-industrial'),
-        'image'     => __('General images', 'lloyds-industrial'),
-        'pdf'       => __('General PDFs', 'lloyds-industrial'),
-        'unassigned'=> __('Unassigned', 'lloyds-industrial'),
+        'product'   => __('WooCommerce product images', 'b2b-industrial'),
+        'flipbook'  => __('PDF flipbooks', 'b2b-industrial'),
+        'sds'       => __('Protected SDS', 'b2b-industrial'),
+        'document'  => __('Documents', 'b2b-industrial'),
+        'image'     => __('General images', 'b2b-industrial'),
+        'pdf'       => __('General PDFs', 'b2b-industrial'),
+        'unassigned'=> __('Unassigned', 'b2b-industrial'),
     ];
 }
 
@@ -166,7 +166,7 @@ function li_media_get_folder_filter_options(): array
     foreach (li_media_get_library_folder_counts() as $folder => $count) {
         $folders[$folder] = sprintf(
             /* translators: 1: folder path, 2: attachment count */
-            __('%1$s (%2$d)', 'lloyds-industrial'),
+            __('%1$s (%2$d)', 'b2b-industrial'),
             $folder,
             $count
         );
@@ -180,7 +180,7 @@ function li_media_get_attachment_context_markup(int $attachment_id): string
     $contexts = li_media_get_attachment_contexts($attachment_id);
 
     if (!$contexts) {
-        return '<span class="li-media-pill li-media-pill--muted">' . esc_html__('Unassigned', 'lloyds-industrial') . '</span>';
+        return '<span class="li-media-pill li-media-pill--muted">' . esc_html__('Unassigned', 'b2b-industrial') . '</span>';
     }
 
     $markup = '';
@@ -203,7 +203,7 @@ function li_media_get_attachment_contexts(int $attachment_id): array
         if ($product_ids) {
             $contexts[] = [
                 'type'  => 'product',
-                'label' => sprintf(_n('%d product', '%d products', count($product_ids), 'lloyds-industrial'), count($product_ids)),
+                'label' => sprintf(_n('%d product', '%d products', count($product_ids), 'b2b-industrial'), count($product_ids)),
             ];
         }
     }
@@ -214,7 +214,7 @@ function li_media_get_attachment_contexts(int $attachment_id): array
         if ($flipbook_ids) {
             $contexts[] = [
                 'type'  => 'flipbook',
-                'label' => sprintf(_n('%d flipbook', '%d flipbooks', count($flipbook_ids), 'lloyds-industrial'), count($flipbook_ids)),
+                'label' => sprintf(_n('%d flipbook', '%d flipbooks', count($flipbook_ids), 'b2b-industrial'), count($flipbook_ids)),
             ];
         }
     }
@@ -223,7 +223,7 @@ function li_media_get_attachment_contexts(int $attachment_id): array
         $is_sds = function_exists('li_is_sds_document') && li_is_sds_document($document_id);
         $contexts[] = [
             'type'  => $is_sds ? 'sds' : 'document',
-            'label' => $is_sds ? __('Protected SDS', 'lloyds-industrial') : __('Document', 'lloyds-industrial'),
+            'label' => $is_sds ? __('Protected SDS', 'b2b-industrial') : __('Document', 'b2b-industrial'),
         ];
     }
 
@@ -231,9 +231,9 @@ function li_media_get_attachment_contexts(int $attachment_id): array
         $mime = (string) get_post_mime_type($attachment_id);
 
         if (str_starts_with($mime, 'image/')) {
-            $contexts[] = ['type' => 'image', 'label' => __('General image', 'lloyds-industrial')];
+            $contexts[] = ['type' => 'image', 'label' => __('General image', 'b2b-industrial')];
         } elseif ($mime === 'application/pdf') {
-            $contexts[] = ['type' => 'pdf', 'label' => __('General PDF', 'lloyds-industrial')];
+            $contexts[] = ['type' => 'pdf', 'label' => __('General PDF', 'b2b-industrial')];
         }
     }
 
@@ -263,11 +263,11 @@ function li_media_get_attachment_storage_label(int $attachment_id): string
     $file = get_attached_file($attachment_id);
 
     if (!is_string($file) || $file === '') {
-        return __('No file path', 'lloyds-industrial');
+        return __('No file path', 'b2b-industrial');
     }
 
     if (function_exists('li_document_path_is_in_protected_storage') && li_document_path_is_in_protected_storage($file)) {
-        return __('Protected storage', 'lloyds-industrial');
+        return __('Protected storage', 'b2b-industrial');
     }
 
     $uploads = wp_upload_dir(null, false);
@@ -278,7 +278,7 @@ function li_media_get_attachment_storage_label(int $attachment_id): string
         return ltrim(substr($normalized, strlen(trailingslashit($base_dir))), '/');
     }
 
-    return __('Custom path', 'lloyds-industrial');
+    return __('Custom path', 'b2b-industrial');
 }
 
 function li_media_get_attachment_storage_folder(int $attachment_id): string
@@ -332,7 +332,7 @@ function li_media_get_library_folder_counts(): array
 
         if (
             !str_starts_with($folder, 'woocommerce/products/')
-            && !str_starts_with($folder, 'lloyds-pdf-flipbook/')
+            && !str_starts_with($folder, 'b2b-pdf-flipbook/')
             && !str_starts_with($folder, 'li-protected-documents/')
         ) {
             continue;
@@ -372,7 +372,7 @@ function li_media_get_attachment_ids_for_context(string $context): array
     }
 
     if ($context === 'flipbook') {
-        return li_media_get_meta_attachment_ids('lloyds_flipbook', '_lloyds_flipbook_pdf_id');
+        return li_media_get_meta_attachment_ids('b2b_flipbook', '_b2b_flipbook_pdf_id');
     }
 
     if ($context === 'sds' || $context === 'document') {
@@ -394,7 +394,7 @@ function li_media_get_attachment_ids_for_context(string $context): array
     if ($context === 'unassigned') {
         $assigned = array_unique(array_merge(
             li_media_get_product_attachment_ids(),
-            li_media_get_meta_attachment_ids('lloyds_flipbook', '_lloyds_flipbook_pdf_id'),
+            li_media_get_meta_attachment_ids('b2b_flipbook', '_b2b_flipbook_pdf_id'),
             li_media_get_document_attachment_ids(true),
             li_media_get_document_attachment_ids(false)
         ));

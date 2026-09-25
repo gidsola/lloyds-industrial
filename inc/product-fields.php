@@ -11,27 +11,27 @@ add_action('woocommerce_product_options_general_product_data', function (): void
 
     $product_id = $post instanceof WP_Post ? (int) $post->ID : 0;
     $sds_file_id = $product_id ? li_get_product_sds_file_id($product_id) : 0;
-    $sds_file_label = $sds_file_id ? get_the_title($sds_file_id) : __('No SDS file selected', 'lloyds-industrial');
+    $sds_file_label = $sds_file_id ? get_the_title($sds_file_id) : __('No SDS file selected', 'b2b-industrial');
 
     echo '<div class="options_group li-product-admin-panel">';
 
     woocommerce_wp_textarea_input([
         'id'          => '_li_public_summary',
-        'label'       => __('Public Summary', 'lloyds-industrial'),
-        'description' => __('Short public-facing product summary used for search, APIs and product cards.', 'lloyds-industrial'),
+        'label'       => __('Public Summary', 'b2b-industrial'),
+        'description' => __('Short public-facing product summary used for search, APIs and product cards.', 'b2b-industrial'),
         'desc_tip'    => true,
     ]);
 
     woocommerce_wp_text_input([
         'id'          => '_li_certifications',
-        'label'       => __('Certifications', 'lloyds-industrial'),
-        'description' => __('Comma-separated certification or compliance highlights.', 'lloyds-industrial'),
+        'label'       => __('Certifications', 'b2b-industrial'),
+        'description' => __('Comma-separated certification or compliance highlights.', 'b2b-industrial'),
         'desc_tip'    => true,
     ]);
 
     ?>
     <p class="form-field li_sds_file_field">
-        <label for="_li_sds_file_id"><?php esc_html_e('SDS File', 'lloyds-industrial'); ?></label>
+        <label for="_li_sds_file_id"><?php esc_html_e('SDS File', 'b2b-industrial'); ?></label>
         <span data-li-media-picker>
             <input
                 type="hidden"
@@ -45,17 +45,17 @@ add_action('woocommerce_product_options_general_product_data', function (): void
                 type="button"
                 class="button"
                 data-li-media-select
-                data-li-media-title="<?php esc_attr_e('Select SDS File', 'lloyds-industrial'); ?>"
-                data-li-media-button="<?php esc_attr_e('Use This SDS', 'lloyds-industrial'); ?>"
+                data-li-media-title="<?php esc_attr_e('Select SDS File', 'b2b-industrial'); ?>"
+                data-li-media-button="<?php esc_attr_e('Use This SDS', 'b2b-industrial'); ?>"
                 data-li-media-type="application/pdf"
             >
-                <?php esc_html_e('Select / Upload SDS', 'lloyds-industrial'); ?>
+                <?php esc_html_e('Select / Upload SDS', 'b2b-industrial'); ?>
             </button>
             <button type="button" class="button" data-li-media-remove <?php echo $sds_file_id ? '' : 'hidden'; ?>>
-                <?php esc_html_e('Remove', 'lloyds-industrial'); ?>
+                <?php esc_html_e('Remove', 'b2b-industrial'); ?>
             </button>
             <span class="description">
-                <?php esc_html_e('Saving the product creates or updates the related SDS document and protected download copy.', 'lloyds-industrial'); ?>
+                <?php esc_html_e('Saving the product creates or updates the related SDS document and protected download copy.', 'b2b-industrial'); ?>
             </span>
         </span>
     </p>

@@ -1,8 +1,8 @@
 <?php
 /**
  * Title: Trust Bar
- * Slug: lloyds-industrial/trust-bar
- * Categories: lloyds-industrial
+ * Slug: b2b-industrial/trust-bar
+ * Categories: b2b-industrial
  */
 ?>
 

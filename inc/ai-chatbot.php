@@ -30,12 +30,12 @@ function li_chatbot_get_defaults(): array
 {
     return [
         'enabled'                => false,
-        'greeting'               => __('Hi, I can help with Lloyds products, documents, resellers, and SDS access.', 'lloyds-industrial'),
-        'placeholder'            => __('Ask about a product, application, reseller, or SDS...', 'lloyds-industrial'),
-        'widget_title'           => __('Lloyds Assistant', 'lloyds-industrial'),
+        'greeting'               => __('Hi, I can help with B2B products, documents, resellers, and SDS access.', 'b2b-industrial'),
+        'placeholder'            => __('Ask about a product, application, reseller, or SDS...', 'b2b-industrial'),
+        'widget_title'           => __('B2B Assistant', 'b2b-industrial'),
         'widget_position'        => 'bottom-right',
         'accent_color'           => '#17443b',
-        'button_label'           => __('Chat', 'lloyds-industrial'),
+        'button_label'           => __('Chat', 'b2b-industrial'),
         'avatar_text'            => 'L',
         'endpoint_url'           => '',
         'endpoint_mode'          => 'custom',
@@ -47,7 +47,7 @@ function li_chatbot_get_defaults(): array
         'timeout'                => 20,
         'max_context_chunks'     => 6,
         'temperature'            => '0.3',
-        'system_prompt'          => __('You are the Lloyds Laboratories website assistant. Answer only from supplied Lloyds context and available tool results. If context is insufficient, say so and offer the next useful Lloyds action.', 'lloyds-industrial'),
+        'system_prompt'          => __('You are the B2B Laboratories website assistant. Answer only from supplied B2B context and available tool results. If context is insufficient, say so and offer the next useful B2B action.', 'b2b-industrial'),
         'source_pages'           => true,
         'source_products'        => true,
         'source_documents'       => true,
@@ -196,30 +196,30 @@ function li_chatbot_maybe_install(): void
 function li_chatbot_register_admin_menu(): void
 {
     add_menu_page(
-        __('Lloyds Intelligence', 'lloyds-industrial'),
-        __('Intelligence', 'lloyds-industrial'),
+        __('B2B Intelligence', 'b2b-industrial'),
+        __('Intelligence', 'b2b-industrial'),
         'manage_options',
-        'lloyds-intelligence',
+        'b2b-intelligence',
         'li_chatbot_render_overview_page',
         'dashicons-chart-line',
         59
     );
 
     add_submenu_page(
-        'lloyds-intelligence',
-        __('Lloyds AI Overview', 'lloyds-industrial'),
-        __('AI Overview', 'lloyds-industrial'),
+        'b2b-intelligence',
+        __('B2B AI Overview', 'b2b-industrial'),
+        __('AI Overview', 'b2b-industrial'),
         'manage_options',
-        'lloyds-intelligence',
+        'b2b-intelligence',
         'li_chatbot_render_overview_page'
     );
 
     add_submenu_page(
-        'lloyds-intelligence',
-        __('Lloyds AI Chatbot', 'lloyds-industrial'),
-        __('AI Chatbot', 'lloyds-industrial'),
+        'b2b-intelligence',
+        __('B2B AI Chatbot', 'b2b-industrial'),
+        __('AI Chatbot', 'b2b-industrial'),
         'manage_options',
-        'lloyds-ai-chatbot',
+        'b2b-ai-chatbot',
         'li_chatbot_render_admin_page'
     );
 }
@@ -234,7 +234,7 @@ function li_chatbot_handle_admin_actions(): void
         check_admin_referer('li_chatbot_rebuild_index');
         $result = li_chatbot_rebuild_index();
         set_transient('li_chatbot_notice', ['type' => 'index', 'count' => $result['count']], MINUTE_IN_SECONDS);
-        wp_safe_redirect(admin_url('admin.php?page=lloyds-ai-chatbot'));
+        wp_safe_redirect(admin_url('admin.php?page=b2b-ai-chatbot'));
         exit;
     }
 
@@ -265,7 +265,7 @@ function li_chatbot_handle_admin_actions(): void
             set_transient('li_chatbot_notice', ['type' => 'manual_added'], MINUTE_IN_SECONDS);
         }
 
-        wp_safe_redirect(admin_url('admin.php?page=lloyds-ai-chatbot'));
+        wp_safe_redirect(admin_url('admin.php?page=b2b-ai-chatbot'));
         exit;
     }
 
@@ -289,7 +289,7 @@ function li_chatbot_handle_admin_actions(): void
             ], MINUTE_IN_SECONDS);
         }
 
-        wp_safe_redirect(admin_url('admin.php?page=lloyds-ai-chatbot'));
+        wp_safe_redirect(admin_url('admin.php?page=b2b-ai-chatbot'));
         exit;
     }
 }
@@ -320,8 +320,8 @@ function li_chatbot_rebuild_index(): array
         $count += li_chatbot_index_posts('li_reseller', 'reseller', 'public');
     }
 
-    if (!empty($settings['source_flipbooks']) && post_type_exists('lloyds_flipbook')) {
-        $count += li_chatbot_index_posts('lloyds_flipbook', 'flipbook', 'public');
+    if (!empty($settings['source_flipbooks']) && post_type_exists('b2b_flipbook')) {
+        $count += li_chatbot_index_posts('b2b_flipbook', 'flipbook', 'public');
     }
 
     if (!empty($settings['source_media_metadata'])) {
@@ -433,7 +433,7 @@ function li_chatbot_index_documents(): int
         $content = $is_sds
             ? sprintf(
                 /* translators: %s is a product title. */
-                __('Safety Data Sheet metadata for %s. The SDS file itself is protected and requires verified access.', 'lloyds-industrial'),
+                __('Safety Data Sheet metadata for %s. The SDS file itself is protected and requires verified access.', 'b2b-industrial'),
                 $related_product ?: get_the_title($document_id)
             )
             : li_chatbot_clean_text(get_post_field('post_excerpt', $document_id) . "\n\n" . get_post_field('post_content', $document_id));
@@ -706,7 +706,7 @@ function li_chatbot_handle_message(): void
     $history = li_chatbot_normalize_history(is_array($history) ? $history : []);
 
     if ($message === '') {
-        wp_send_json_error(['message' => __('Please enter a message.', 'lloyds-industrial')], 400);
+        wp_send_json_error(['message' => __('Please enter a message.', 'b2b-industrial')], 400);
     }
 
     $history_replay = li_chatbot_maybe_replay_history_actions($message, $history);
@@ -806,7 +806,7 @@ function li_chatbot_handle_save_history(): void
     $history = li_chatbot_normalize_history(is_array($history) ? $history : []);
 
     if ($session_id === '') {
-        wp_send_json_error(['message' => __('Missing chat session.', 'lloyds-industrial')], 400);
+        wp_send_json_error(['message' => __('Missing chat session.', 'b2b-industrial')], 400);
     }
 
     li_chatbot_save_user_history(get_current_user_id(), $session_id, $history);
@@ -972,7 +972,7 @@ function li_chatbot_maybe_replay_history_actions(string $message, array $history
             }
 
             return [
-                'message' => __('Here are the same links again.', 'lloyds-industrial'),
+                'message' => __('Here are the same links again.', 'b2b-industrial'),
                 'actions' => $link_actions,
             ];
         }
@@ -1175,7 +1175,7 @@ function li_chatbot_call_intent_endpoint(string $message, array $history, array 
             'response_format' => ['type' => 'json_object'],
             'messages' => array_merge(
                 [
-                    ['role' => 'system', 'content' => 'You classify Lloyds chatbot requests for retrieval. ' . $schema],
+                    ['role' => 'system', 'content' => 'You classify B2B chatbot requests for retrieval. ' . $schema],
                 ],
                 li_chatbot_conversation_history($history),
                 [['role' => 'user', 'content' => $message]]
@@ -1297,16 +1297,16 @@ function li_chatbot_generate_response(string $message, array $context, array $hi
 
     if (!$context) {
         if (in_array((string) ($intent['intent'] ?? ''), ['product_lookup', 'compare_products'], true)) {
-            return __('I could not find a strong Lloyds product match for that. Try naming the surface, material, or job, such as stainless steel cleaner, household-safe degreaser, or aluminum cleaner.', 'lloyds-industrial');
+            return __('I could not find a strong B2B product match for that. Try naming the surface, material, or job, such as stainless steel cleaner, household-safe degreaser, or aluminum cleaner.', 'b2b-industrial');
         }
 
-        return __('I could not find enough Lloyds site context to answer that confidently. Try asking about a product name, application, document, or reseller location.', 'lloyds-industrial');
+        return __('I could not find enough B2B site context to answer that confidently. Try asking about a product name, application, document, or reseller location.', 'b2b-industrial');
     }
 
     if (li_chatbot_is_broad_recommendation_query($message) && count($context) > 1) {
         $items = array_slice($context, 0, 5);
 
-        return __('Here are the closest Lloyds matches I found:', 'lloyds-industrial') . "\n" . implode("\n", array_map(static function (array $row): string {
+        return __('Here are the closest B2B matches I found:', 'b2b-industrial') . "\n" . implode("\n", array_map(static function (array $row): string {
             return '- ' . (string) $row['title'] . ': ' . li_chatbot_truncate((string) $row['content'], 150);
         }, $items));
     }
@@ -1322,7 +1322,7 @@ function li_chatbot_generate_response(string $message, array $context, array $hi
 
     return sprintf(
         /* translators: 1: source title, 2: source summary. */
-        __('Based on Lloyds site information, the closest match is %1$s. %2$s', 'lloyds-industrial'),
+        __('Based on B2B site information, the closest match is %1$s. %2$s', 'b2b-industrial'),
         $title,
         $content
     );
@@ -1357,35 +1357,35 @@ function li_chatbot_format_product_answer(array $row): string
     $industries = array_filter(array_map('strval', (array) ($terms['li_industry'] ?? [])));
 
     $lines = [
-        sprintf(__('Here is what I found for %s:', 'lloyds-industrial'), $title),
+        sprintf(__('Here is what I found for %s:', 'b2b-industrial'), $title),
     ];
 
     if ($sku !== '') {
-        $lines[] = sprintf(__('SKU: %s', 'lloyds-industrial'), $sku);
+        $lines[] = sprintf(__('SKU: %s', 'b2b-industrial'), $sku);
     }
 
     if ($brands) {
-        $lines[] = sprintf(__('Brand: %s', 'lloyds-industrial'), implode(', ', array_slice($brands, 0, 3)));
+        $lines[] = sprintf(__('Brand: %s', 'b2b-industrial'), implode(', ', array_slice($brands, 0, 3)));
     }
 
     if ($categories) {
-        $lines[] = sprintf(__('Product family: %s', 'lloyds-industrial'), implode(', ', array_slice($categories, 0, 3)));
+        $lines[] = sprintf(__('Product family: %s', 'b2b-industrial'), implode(', ', array_slice($categories, 0, 3)));
     }
 
     if ($applications) {
-        $lines[] = sprintf(__('Applications: %s', 'lloyds-industrial'), implode(', ', array_slice($applications, 0, 4)));
+        $lines[] = sprintf(__('Applications: %s', 'b2b-industrial'), implode(', ', array_slice($applications, 0, 4)));
     }
 
     if ($industries) {
-        $lines[] = sprintf(__('Industries: %s', 'lloyds-industrial'), implode(', ', array_slice($industries, 0, 4)));
+        $lines[] = sprintf(__('Industries: %s', 'b2b-industrial'), implode(', ', array_slice($industries, 0, 4)));
     }
 
     $summary = li_chatbot_summarize_product_content($content);
 
     if ($summary !== '') {
-        $lines[] = sprintf(__('Summary: %s', 'lloyds-industrial'), $summary);
+        $lines[] = sprintf(__('Summary: %s', 'b2b-industrial'), $summary);
     } else {
-        $lines[] = __('The product record is currently light on long-description detail, so I am using the indexed catalogue fields available on the site.', 'lloyds-industrial');
+        $lines[] = __('The product record is currently light on long-description detail, so I am using the indexed catalogue fields available on the site.', 'b2b-industrial');
     }
 
     return implode("\n", $lines);
@@ -1435,7 +1435,7 @@ function li_chatbot_call_model_endpoint(string $message, array $context, array $
                 [
                     ['role' => 'system', 'content' => (string) $settings['system_prompt']],
                     ['role' => 'system', 'content' => 'Intent analysis: ' . wp_json_encode($intent)],
-                    ['role' => 'system', 'content' => "Lloyds context:\n" . $context_text],
+                    ['role' => 'system', 'content' => "B2B context:\n" . $context_text],
                 ],
                 $history,
                 [['role' => 'user', 'content' => $message]]
@@ -1500,10 +1500,10 @@ function li_chatbot_maybe_handle_sds_intent(string $message, array $context): ?a
         ]);
 
         return [
-            'message' => __('SDS downloads are protected. Sign in here and I will keep this chat open, then I can check which SDS files your account can access.', 'lloyds-industrial'),
+            'message' => __('SDS downloads are protected. Sign in here and I will keep this chat open, then I can check which SDS files your account can access.', 'b2b-industrial'),
             'actions' => [[
                 'type' => 'login',
-                'label' => __('Sign in to check SDS access', 'lloyds-industrial'),
+                'label' => __('Sign in to check SDS access', 'b2b-industrial'),
             ]],
         ];
     }
@@ -1528,7 +1528,7 @@ function li_chatbot_maybe_handle_sds_intent(string $message, array $context): ?a
         ]);
 
         return [
-            'message' => __('I found SDS downloads your account can access. Select a document below to download it securely.', 'lloyds-industrial'),
+            'message' => __('I found SDS downloads your account can access. Select a document below to download it securely.', 'b2b-industrial'),
             'actions' => $downloads,
         ];
     }
@@ -1539,10 +1539,10 @@ function li_chatbot_maybe_handle_sds_intent(string $message, array $context): ?a
     ]);
 
     return [
-        'message' => __('I could not find an SDS download currently available to this account for that request. If this looks wrong, contact Lloyds support and we can help match the order history.', 'lloyds-industrial'),
+        'message' => __('I could not find an SDS download currently available to this account for that request. If this looks wrong, contact B2B support and we can help match the order history.', 'b2b-industrial'),
         'actions' => [[
             'type' => 'link',
-            'label' => __('Get SDS access help', 'lloyds-industrial'),
+            'label' => __('Get SDS access help', 'b2b-industrial'),
             'url' => home_url('/contact/?type=sds_access'),
         ]],
     ];
@@ -1605,7 +1605,7 @@ function li_chatbot_context_actions(array $context): array
         if (!empty($row['url']) && ($row['access_level'] ?? 'public') === 'public') {
             $actions[] = [
                 'type' => 'link',
-                'label' => sprintf(__('Open %s', 'lloyds-industrial'), (string) $row['title']),
+                'label' => sprintf(__('Open %s', 'b2b-industrial'), (string) $row['title']),
                 'url' => (string) $row['url'],
             ];
         }
@@ -1623,7 +1623,7 @@ function li_chatbot_handle_login(): void
     $remember = !empty($_POST['remember']);
 
     if ($username === '' || $password === '') {
-        wp_send_json_error(['message' => __('Enter your username/email and password.', 'lloyds-industrial')], 400);
+        wp_send_json_error(['message' => __('Enter your username/email and password.', 'b2b-industrial')], 400);
     }
 
     $user = wp_signon([
@@ -1637,7 +1637,7 @@ function li_chatbot_handle_login(): void
             'username' => $username,
         ]);
 
-        wp_send_json_error(['message' => __('The login details did not work. Please try again.', 'lloyds-industrial')], 403);
+        wp_send_json_error(['message' => __('The login details did not work. Please try again.', 'b2b-industrial')], 403);
     }
 
     wp_set_current_user($user->ID);
@@ -1647,7 +1647,7 @@ function li_chatbot_handle_login(): void
     ]);
 
     wp_send_json_success([
-        'message' => __('You are signed in. I can now check protected Lloyds resources without closing this chat.', 'lloyds-industrial'),
+        'message' => __('You are signed in. I can now check protected B2B resources without closing this chat.', 'b2b-industrial'),
         'user' => li_chatbot_current_user_payload(),
     ]);
 }
@@ -1662,7 +1662,7 @@ function li_chatbot_handle_track_action(): void
     $session_id = sanitize_text_field(wp_unslash((string) ($_POST['session_id'] ?? '')));
 
     if (!in_array($event, ['open', 'action_click', 'download_click'], true)) {
-        wp_send_json_error(['message' => __('Unknown chatbot event.', 'lloyds-industrial')], 400);
+        wp_send_json_error(['message' => __('Unknown chatbot event.', 'b2b-industrial')], 400);
     }
 
     li_chatbot_track_event('chatbot_' . $event, [
@@ -1737,21 +1737,21 @@ function li_chatbot_enqueue_frontend_assets(): void
     }
 
     wp_enqueue_style(
-        'lloyds-chatbot',
+        'b2b-chatbot',
         get_template_directory_uri() . '/assets/css/chatbot.css',
         [],
         filemtime(get_template_directory() . '/assets/css/chatbot.css')
     );
 
     wp_enqueue_script(
-        'lloyds-chatbot',
+        'b2b-chatbot',
         get_template_directory_uri() . '/assets/js/chatbot.js',
         [],
         filemtime(get_template_directory() . '/assets/js/chatbot.js'),
         true
     );
 
-    wp_localize_script('lloyds-chatbot', 'lloydsChatbot', [
+    wp_localize_script('b2b-chatbot', 'b2bChatbot', [
         'ajaxUrl' => admin_url('admin-ajax.php'),
         'nonce' => wp_create_nonce('li_chatbot_message'),
         'settings' => [
@@ -1765,15 +1765,15 @@ function li_chatbot_enqueue_frontend_assets(): void
         ],
         'user' => li_chatbot_current_user_payload(),
         'i18n' => [
-            'send' => __('Send', 'lloyds-industrial'),
-            'newChat' => __('New', 'lloyds-industrial'),
-            'close' => __('Close chat', 'lloyds-industrial'),
-            'open' => __('Open chat', 'lloyds-industrial'),
-            'username' => __('Username or email', 'lloyds-industrial'),
-            'password' => __('Password', 'lloyds-industrial'),
-            'login' => __('Sign In', 'lloyds-industrial'),
-            'thinking' => __('Checking Lloyds context...', 'lloyds-industrial'),
-            'error' => __('I could not reach the assistant right now.', 'lloyds-industrial'),
+            'send' => __('Send', 'b2b-industrial'),
+            'newChat' => __('New', 'b2b-industrial'),
+            'close' => __('Close chat', 'b2b-industrial'),
+            'open' => __('Open chat', 'b2b-industrial'),
+            'username' => __('Username or email', 'b2b-industrial'),
+            'password' => __('Password', 'b2b-industrial'),
+            'login' => __('Sign In', 'b2b-industrial'),
+            'thinking' => __('Checking B2B context...', 'b2b-industrial'),
+            'error' => __('I could not reach the assistant right now.', 'b2b-industrial'),
         ],
     ]);
 }
@@ -1786,7 +1786,7 @@ function li_chatbot_render_widget_root(): void
         return;
     }
 
-    echo '<div id="lloyds-chatbot-root" class="lloyds-chatbot-root" data-position="' . esc_attr((string) $settings['widget_position']) . '"></div>';
+    echo '<div id="b2b-chatbot-root" class="b2b-chatbot-root" data-position="' . esc_attr((string) $settings['widget_position']) . '"></div>';
 }
 
 function li_chatbot_render_overview_page(): void
@@ -1811,97 +1811,97 @@ function li_chatbot_render_overview_page(): void
     <div class="wrap li-settings-page li-chatbot-overview">
         <div class="li-settings-hero">
             <div>
-                <p class="li-settings-kicker"><?php esc_html_e('AI Intelligence', 'lloyds-industrial'); ?></p>
-                <h1><?php esc_html_e('AI Knowledge Overview', 'lloyds-industrial'); ?></h1>
-                <p><?php esc_html_e('Audit everything the assistant can retrieve, how fresh the knowledge base is, which sources are active, and how visitors are using the chatbot.', 'lloyds-industrial'); ?></p>
+                <p class="li-settings-kicker"><?php esc_html_e('AI Intelligence', 'b2b-industrial'); ?></p>
+                <h1><?php esc_html_e('AI Knowledge Overview', 'b2b-industrial'); ?></h1>
+                <p><?php esc_html_e('Audit everything the assistant can retrieve, how fresh the knowledge base is, which sources are active, and how visitors are using the chatbot.', 'b2b-industrial'); ?></p>
             </div>
             <div class="li-settings-summary">
-                <div><span><?php esc_html_e('Widget', 'lloyds-industrial'); ?></span><strong><?php echo esc_html(!empty($settings['enabled']) ? __('Enabled', 'lloyds-industrial') : __('Disabled', 'lloyds-industrial')); ?></strong></div>
-                <div><span><?php esc_html_e('Context Items', 'lloyds-industrial'); ?></span><strong><?php echo esc_html(number_format_i18n((int) $knowledge['total'])); ?></strong></div>
-                <div><span><?php esc_html_e('Messages', 'lloyds-industrial'); ?></span><strong><?php echo esc_html(number_format_i18n((int) $usage['messages'])); ?></strong></div>
+                <div><span><?php esc_html_e('Widget', 'b2b-industrial'); ?></span><strong><?php echo esc_html(!empty($settings['enabled']) ? __('Enabled', 'b2b-industrial') : __('Disabled', 'b2b-industrial')); ?></strong></div>
+                <div><span><?php esc_html_e('Context Items', 'b2b-industrial'); ?></span><strong><?php echo esc_html(number_format_i18n((int) $knowledge['total'])); ?></strong></div>
+                <div><span><?php esc_html_e('Messages', 'b2b-industrial'); ?></span><strong><?php echo esc_html(number_format_i18n((int) $usage['messages'])); ?></strong></div>
             </div>
         </div>
 
         <form class="li-analytics-filter" method="get">
-            <input type="hidden" name="page" value="lloyds-intelligence">
+            <input type="hidden" name="page" value="b2b-intelligence">
             <label>
-                <span><?php esc_html_e('Usage range', 'lloyds-industrial'); ?></span>
+                <span><?php esc_html_e('Usage range', 'b2b-industrial'); ?></span>
                 <select name="range">
-                    <option value="7" <?php selected($range['preset'], '7'); ?>><?php esc_html_e('Last 7 days', 'lloyds-industrial'); ?></option>
-                    <option value="30" <?php selected($range['preset'], '30'); ?>><?php esc_html_e('Last 30 days', 'lloyds-industrial'); ?></option>
-                    <option value="90" <?php selected($range['preset'], '90'); ?>><?php esc_html_e('Last 90 days', 'lloyds-industrial'); ?></option>
-                    <option value="365" <?php selected($range['preset'], '365'); ?>><?php esc_html_e('Last 12 months', 'lloyds-industrial'); ?></option>
-                    <option value="custom" <?php selected($range['preset'], 'custom'); ?>><?php esc_html_e('Custom', 'lloyds-industrial'); ?></option>
+                    <option value="7" <?php selected($range['preset'], '7'); ?>><?php esc_html_e('Last 7 days', 'b2b-industrial'); ?></option>
+                    <option value="30" <?php selected($range['preset'], '30'); ?>><?php esc_html_e('Last 30 days', 'b2b-industrial'); ?></option>
+                    <option value="90" <?php selected($range['preset'], '90'); ?>><?php esc_html_e('Last 90 days', 'b2b-industrial'); ?></option>
+                    <option value="365" <?php selected($range['preset'], '365'); ?>><?php esc_html_e('Last 12 months', 'b2b-industrial'); ?></option>
+                    <option value="custom" <?php selected($range['preset'], 'custom'); ?>><?php esc_html_e('Custom', 'b2b-industrial'); ?></option>
                 </select>
             </label>
             <label>
-                <span><?php esc_html_e('Start', 'lloyds-industrial'); ?></span>
+                <span><?php esc_html_e('Start', 'b2b-industrial'); ?></span>
                 <input type="date" name="start" value="<?php echo esc_attr($range['start_date']); ?>">
             </label>
             <label>
-                <span><?php esc_html_e('End', 'lloyds-industrial'); ?></span>
+                <span><?php esc_html_e('End', 'b2b-industrial'); ?></span>
                 <input type="date" name="end" value="<?php echo esc_attr($range['end_date']); ?>">
             </label>
-            <button class="button button-primary" type="submit"><?php esc_html_e('Apply', 'lloyds-industrial'); ?></button>
+            <button class="button button-primary" type="submit"><?php esc_html_e('Apply', 'b2b-industrial'); ?></button>
         </form>
 
         <div class="li-analytics-kpi-grid">
             <?php
-            li_render_analytics_kpi(__('Knowledge Sources', 'lloyds-industrial'), number_format_i18n(count($knowledge['by_source'])), __('Distinct source types currently indexed.', 'lloyds-industrial'));
-            li_render_analytics_kpi(__('Public Context', 'lloyds-industrial'), number_format_i18n((int) ($knowledge['by_access']['public'] ?? 0)), __('Immediately available to anonymous chatbot sessions.', 'lloyds-industrial'));
-            li_render_analytics_kpi(__('SDS Metadata', 'lloyds-industrial'), number_format_i18n((int) ($knowledge['by_access']['sds'] ?? 0)), __('Protected files are excluded; safe SDS metadata is indexed.', 'lloyds-industrial'));
-            li_render_analytics_kpi(__('Manual Context', 'lloyds-industrial'), number_format_i18n((int) ($knowledge['by_source']['manual'] ?? 0)), __('Admin-added knowledge entries.', 'lloyds-industrial'));
-            li_render_analytics_kpi(__('Chat Sessions', 'lloyds-industrial'), number_format_i18n((int) $usage['sessions']), __('Distinct chatbot sessions in range.', 'lloyds-industrial'));
-            li_render_analytics_kpi(__('SDS Requests', 'lloyds-industrial'), number_format_i18n((int) $usage['sds_requests']), __('SDS-related chatbot events.', 'lloyds-industrial'));
-            li_render_analytics_kpi(__('Login Prompts', 'lloyds-industrial'), number_format_i18n((int) $usage['login_prompts']), __('In-chat sign-in prompts shown.', 'lloyds-industrial'));
-            li_render_analytics_kpi(__('Action Clicks', 'lloyds-industrial'), number_format_i18n((int) $usage['action_clicks']), __('Links and secure downloads clicked inside chat.', 'lloyds-industrial'));
-            li_render_analytics_kpi(__('Avg Context', 'lloyds-industrial'), number_format_i18n((float) $usage['avg_context'], 1), __('Average retrieved chunks per message.', 'lloyds-industrial'));
+            li_render_analytics_kpi(__('Knowledge Sources', 'b2b-industrial'), number_format_i18n(count($knowledge['by_source'])), __('Distinct source types currently indexed.', 'b2b-industrial'));
+            li_render_analytics_kpi(__('Public Context', 'b2b-industrial'), number_format_i18n((int) ($knowledge['by_access']['public'] ?? 0)), __('Immediately available to anonymous chatbot sessions.', 'b2b-industrial'));
+            li_render_analytics_kpi(__('SDS Metadata', 'b2b-industrial'), number_format_i18n((int) ($knowledge['by_access']['sds'] ?? 0)), __('Protected files are excluded; safe SDS metadata is indexed.', 'b2b-industrial'));
+            li_render_analytics_kpi(__('Manual Context', 'b2b-industrial'), number_format_i18n((int) ($knowledge['by_source']['manual'] ?? 0)), __('Admin-added knowledge entries.', 'b2b-industrial'));
+            li_render_analytics_kpi(__('Chat Sessions', 'b2b-industrial'), number_format_i18n((int) $usage['sessions']), __('Distinct chatbot sessions in range.', 'b2b-industrial'));
+            li_render_analytics_kpi(__('SDS Requests', 'b2b-industrial'), number_format_i18n((int) $usage['sds_requests']), __('SDS-related chatbot events.', 'b2b-industrial'));
+            li_render_analytics_kpi(__('Login Prompts', 'b2b-industrial'), number_format_i18n((int) $usage['login_prompts']), __('In-chat sign-in prompts shown.', 'b2b-industrial'));
+            li_render_analytics_kpi(__('Action Clicks', 'b2b-industrial'), number_format_i18n((int) $usage['action_clicks']), __('Links and secure downloads clicked inside chat.', 'b2b-industrial'));
+            li_render_analytics_kpi(__('Avg Context', 'b2b-industrial'), number_format_i18n((float) $usage['avg_context'], 1), __('Average retrieved chunks per message.', 'b2b-industrial'));
             ?>
         </div>
 
         <div class="li-ai-overview-grid">
             <section class="li-analytics-panel">
-                <h2><?php esc_html_e('Knowledge by Source', 'lloyds-industrial'); ?></h2>
+                <h2><?php esc_html_e('Knowledge by Source', 'b2b-industrial'); ?></h2>
                 <?php li_chatbot_render_bar_chart($knowledge['by_source']); ?>
             </section>
             <section class="li-analytics-panel">
-                <h2><?php esc_html_e('Access Levels', 'lloyds-industrial'); ?></h2>
+                <h2><?php esc_html_e('Access Levels', 'b2b-industrial'); ?></h2>
                 <?php li_chatbot_render_bar_chart($knowledge['by_access']); ?>
             </section>
             <section class="li-analytics-panel">
-                <h2><?php esc_html_e('Chatbot Event Mix', 'lloyds-industrial'); ?></h2>
+                <h2><?php esc_html_e('Chatbot Event Mix', 'b2b-industrial'); ?></h2>
                 <?php li_chatbot_render_bar_chart($usage['event_mix']); ?>
             </section>
             <section class="li-analytics-panel">
-                <h2><?php esc_html_e('Source Types Used in Chat', 'lloyds-industrial'); ?></h2>
+                <h2><?php esc_html_e('Source Types Used in Chat', 'b2b-industrial'); ?></h2>
                 <?php li_chatbot_render_bar_chart($usage['source_usage']); ?>
             </section>
         </div>
 
         <section class="li-analytics-panel li-analytics-panel--wide">
             <div class="li-settings-section-heading">
-                <p class="li-settings-kicker"><?php esc_html_e('Trend', 'lloyds-industrial'); ?></p>
-                <h2><?php esc_html_e('Daily Chatbot Messages', 'lloyds-industrial'); ?></h2>
-                <p><?php esc_html_e('Message volume and sessions by day for the selected range.', 'lloyds-industrial'); ?></p>
+                <p class="li-settings-kicker"><?php esc_html_e('Trend', 'b2b-industrial'); ?></p>
+                <h2><?php esc_html_e('Daily Chatbot Messages', 'b2b-industrial'); ?></h2>
+                <p><?php esc_html_e('Message volume and sessions by day for the selected range.', 'b2b-industrial'); ?></p>
             </div>
             <?php li_chatbot_render_daily_usage_table($usage['daily']); ?>
         </section>
 
         <div class="li-ai-overview-grid">
             <section class="li-analytics-panel">
-                <h2><?php esc_html_e('Largest Context Entries', 'lloyds-industrial'); ?></h2>
-                <?php li_chatbot_render_context_table($knowledge['largest'], __('Characters', 'lloyds-industrial')); ?>
+                <h2><?php esc_html_e('Largest Context Entries', 'b2b-industrial'); ?></h2>
+                <?php li_chatbot_render_context_table($knowledge['largest'], __('Characters', 'b2b-industrial')); ?>
             </section>
             <section class="li-analytics-panel">
-                <h2><?php esc_html_e('Recently Updated Context', 'lloyds-industrial'); ?></h2>
-                <?php li_chatbot_render_context_table($knowledge['recent'], __('Updated', 'lloyds-industrial')); ?>
+                <h2><?php esc_html_e('Recently Updated Context', 'b2b-industrial'); ?></h2>
+                <?php li_chatbot_render_context_table($knowledge['recent'], __('Updated', 'b2b-industrial')); ?>
             </section>
             <section class="li-analytics-panel">
-                <h2><?php esc_html_e('Top User Prompts', 'lloyds-industrial'); ?></h2>
-                <?php li_chatbot_render_usage_table($usage['top_prompts'], __('Prompt', 'lloyds-industrial')); ?>
+                <h2><?php esc_html_e('Top User Prompts', 'b2b-industrial'); ?></h2>
+                <?php li_chatbot_render_usage_table($usage['top_prompts'], __('Prompt', 'b2b-industrial')); ?>
             </section>
             <section class="li-analytics-panel">
-                <h2><?php esc_html_e('Recent Conversations', 'lloyds-industrial'); ?></h2>
+                <h2><?php esc_html_e('Recent Conversations', 'b2b-industrial'); ?></h2>
                 <?php li_chatbot_render_log_table($usage['recent_logs']); ?>
             </section>
         </div>
@@ -2009,7 +2009,7 @@ function li_chatbot_pairs_to_map(?array $rows): array
         $label = (string) ($row['label'] ?? '');
 
         if ($label === '') {
-            $label = __('Unlabelled', 'lloyds-industrial');
+            $label = __('Unlabelled', 'b2b-industrial');
         }
 
         $map[$label] = (int) ($row['total'] ?? 0);
@@ -2096,7 +2096,7 @@ function li_chatbot_render_bar_chart(array $items): void
     ?>
     <div class="li-ai-bars">
         <?php if (!$items) : ?>
-            <p><?php esc_html_e('No data yet.', 'lloyds-industrial'); ?></p>
+            <p><?php esc_html_e('No data yet.', 'b2b-industrial'); ?></p>
         <?php endif; ?>
         <?php foreach ($items as $label => $value) : ?>
             <?php $width = $max > 0 ? max(4, ((int) $value / $max) * 100) : 0; ?>
@@ -2116,10 +2116,10 @@ function li_chatbot_render_daily_usage_table(array $rows): void
 {
     ?>
     <table class="widefat striped li-analytics-table">
-        <thead><tr><th><?php esc_html_e('Day', 'lloyds-industrial'); ?></th><th><?php esc_html_e('Messages', 'lloyds-industrial'); ?></th><th><?php esc_html_e('Sessions', 'lloyds-industrial'); ?></th></tr></thead>
+        <thead><tr><th><?php esc_html_e('Day', 'b2b-industrial'); ?></th><th><?php esc_html_e('Messages', 'b2b-industrial'); ?></th><th><?php esc_html_e('Sessions', 'b2b-industrial'); ?></th></tr></thead>
         <tbody>
             <?php if (!$rows) : ?>
-                <tr><td colspan="3"><?php esc_html_e('No chatbot usage in this range yet.', 'lloyds-industrial'); ?></td></tr>
+                <tr><td colspan="3"><?php esc_html_e('No chatbot usage in this range yet.', 'b2b-industrial'); ?></td></tr>
             <?php endif; ?>
             <?php foreach ($rows as $row) : ?>
                 <tr>
@@ -2137,10 +2137,10 @@ function li_chatbot_render_context_table(array $rows, string $metric_label): voi
 {
     ?>
     <table class="widefat striped li-analytics-table">
-        <thead><tr><th><?php esc_html_e('Context', 'lloyds-industrial'); ?></th><th><?php esc_html_e('Source', 'lloyds-industrial'); ?></th><th><?php echo esc_html($metric_label); ?></th></tr></thead>
+        <thead><tr><th><?php esc_html_e('Context', 'b2b-industrial'); ?></th><th><?php esc_html_e('Source', 'b2b-industrial'); ?></th><th><?php echo esc_html($metric_label); ?></th></tr></thead>
         <tbody>
             <?php if (!$rows) : ?>
-                <tr><td colspan="3"><?php esc_html_e('No context has been indexed yet.', 'lloyds-industrial'); ?></td></tr>
+                <tr><td colspan="3"><?php esc_html_e('No context has been indexed yet.', 'b2b-industrial'); ?></td></tr>
             <?php endif; ?>
             <?php foreach ($rows as $row) : ?>
                 <tr>
@@ -2158,10 +2158,10 @@ function li_chatbot_render_usage_table(array $rows, string $label_heading): void
 {
     ?>
     <table class="widefat striped li-analytics-table">
-        <thead><tr><th><?php echo esc_html($label_heading); ?></th><th><?php esc_html_e('Uses', 'lloyds-industrial'); ?></th><th><?php esc_html_e('Visitors', 'lloyds-industrial'); ?></th></tr></thead>
+        <thead><tr><th><?php echo esc_html($label_heading); ?></th><th><?php esc_html_e('Uses', 'b2b-industrial'); ?></th><th><?php esc_html_e('Visitors', 'b2b-industrial'); ?></th></tr></thead>
         <tbody>
             <?php if (!$rows) : ?>
-                <tr><td colspan="3"><?php esc_html_e('No usage yet.', 'lloyds-industrial'); ?></td></tr>
+                <tr><td colspan="3"><?php esc_html_e('No usage yet.', 'b2b-industrial'); ?></td></tr>
             <?php endif; ?>
             <?php foreach ($rows as $row) : ?>
                 <tr>
@@ -2179,10 +2179,10 @@ function li_chatbot_render_log_table(array $rows): void
 {
     ?>
     <table class="widefat striped li-analytics-table">
-        <thead><tr><th><?php esc_html_e('When', 'lloyds-industrial'); ?></th><th><?php esc_html_e('Prompt', 'lloyds-industrial'); ?></th><th><?php esc_html_e('Reply', 'lloyds-industrial'); ?></th></tr></thead>
+        <thead><tr><th><?php esc_html_e('When', 'b2b-industrial'); ?></th><th><?php esc_html_e('Prompt', 'b2b-industrial'); ?></th><th><?php esc_html_e('Reply', 'b2b-industrial'); ?></th></tr></thead>
         <tbody>
             <?php if (!$rows) : ?>
-                <tr><td colspan="3"><?php esc_html_e('Conversation logging is off or no logs exist yet.', 'lloyds-industrial'); ?></td></tr>
+                <tr><td colspan="3"><?php esc_html_e('Conversation logging is off or no logs exist yet.', 'b2b-industrial'); ?></td></tr>
             <?php endif; ?>
             <?php foreach ($rows as $row) : ?>
                 <tr>
@@ -2215,14 +2215,14 @@ function li_chatbot_render_admin_page(): void
     <div class="wrap li-settings-page li-chatbot-admin">
         <div class="li-settings-hero">
             <div>
-                <p class="li-settings-kicker"><?php esc_html_e('AI Support', 'lloyds-industrial'); ?></p>
-                <h1><?php esc_html_e('Lloyds AI Chatbot', 'lloyds-industrial'); ?></h1>
-                <p><?php esc_html_e('Control the on-site assistant, model endpoint, retrieval context, SDS-safe access behavior, and visual chat widget from one Lloyds-owned admin surface.', 'lloyds-industrial'); ?></p>
+                <p class="li-settings-kicker"><?php esc_html_e('AI Support', 'b2b-industrial'); ?></p>
+                <h1><?php esc_html_e('B2B AI Chatbot', 'b2b-industrial'); ?></h1>
+                <p><?php esc_html_e('Control the on-site assistant, model endpoint, retrieval context, SDS-safe access behavior, and visual chat widget from one B2B-owned admin surface.', 'b2b-industrial'); ?></p>
             </div>
             <div class="li-settings-summary">
-                <div><span><?php esc_html_e('Status', 'lloyds-industrial'); ?></span><strong><?php echo esc_html(!empty($settings['enabled']) ? __('Enabled', 'lloyds-industrial') : __('Disabled', 'lloyds-industrial')); ?></strong></div>
-                <div><span><?php esc_html_e('Context Chunks', 'lloyds-industrial'); ?></span><strong><?php echo esc_html(number_format_i18n($context_count)); ?></strong></div>
-                <div><span><?php esc_html_e('Manual Entries', 'lloyds-industrial'); ?></span><strong><?php echo esc_html(number_format_i18n($manual_count)); ?></strong></div>
+                <div><span><?php esc_html_e('Status', 'b2b-industrial'); ?></span><strong><?php echo esc_html(!empty($settings['enabled']) ? __('Enabled', 'b2b-industrial') : __('Disabled', 'b2b-industrial')); ?></strong></div>
+                <div><span><?php esc_html_e('Context Chunks', 'b2b-industrial'); ?></span><strong><?php echo esc_html(number_format_i18n($context_count)); ?></strong></div>
+                <div><span><?php esc_html_e('Manual Entries', 'b2b-industrial'); ?></span><strong><?php echo esc_html(number_format_i18n($manual_count)); ?></strong></div>
             </div>
         </div>
 
@@ -2231,117 +2231,117 @@ function li_chatbot_render_admin_page(): void
                 <p>
                     <?php
                     echo esc_html($notice['type'] === 'index'
-                        ? sprintf(__('Knowledge index rebuilt with %d generated entries.', 'lloyds-industrial'), absint($notice['count'] ?? 0))
-                        : __('Manual chatbot context added.', 'lloyds-industrial'));
+                        ? sprintf(__('Knowledge index rebuilt with %d generated entries.', 'b2b-industrial'), absint($notice['count'] ?? 0))
+                        : __('Manual chatbot context added.', 'b2b-industrial'));
                     ?>
                 </p>
-                <button type="button" class="li-admin-notice__dismiss" data-li-dismiss-notice aria-label="<?php esc_attr_e('Dismiss notice', 'lloyds-industrial'); ?>">&times;</button>
+                <button type="button" class="li-admin-notice__dismiss" data-li-dismiss-notice aria-label="<?php esc_attr_e('Dismiss notice', 'b2b-industrial'); ?>">&times;</button>
             </div>
         <?php endif; ?>
 
-        <nav class="li-admin-tabs" data-li-admin-tabs=".li-chatbot-admin" data-li-tabs-key="li-chatbot-admin-tab" aria-label="<?php esc_attr_e('Chatbot settings sections', 'lloyds-industrial'); ?>">
-            <button class="li-admin-tab" type="button" data-li-tab-target="chatbot-general"><?php esc_html_e('General', 'lloyds-industrial'); ?></button>
-            <button class="li-admin-tab" type="button" data-li-tab-target="chatbot-endpoint"><?php esc_html_e('Model Endpoint', 'lloyds-industrial'); ?></button>
-            <button class="li-admin-tab" type="button" data-li-tab-target="chatbot-context"><?php esc_html_e('Context Sources', 'lloyds-industrial'); ?></button>
-            <button class="li-admin-tab" type="button" data-li-tab-target="chatbot-appearance"><?php esc_html_e('Appearance', 'lloyds-industrial'); ?></button>
-            <button class="li-admin-tab" type="button" data-li-tab-target="chatbot-index"><?php esc_html_e('Knowledge Index', 'lloyds-industrial'); ?></button>
-            <button class="li-admin-tab" type="button" data-li-tab-target="chatbot-manual"><?php esc_html_e('Manual Context', 'lloyds-industrial'); ?></button>
-            <button class="li-admin-tab" type="button" data-li-tab-target="chatbot-testing"><?php esc_html_e('Testing', 'lloyds-industrial'); ?></button>
+        <nav class="li-admin-tabs" data-li-admin-tabs=".li-chatbot-admin" data-li-tabs-key="li-chatbot-admin-tab" aria-label="<?php esc_attr_e('Chatbot settings sections', 'b2b-industrial'); ?>">
+            <button class="li-admin-tab" type="button" data-li-tab-target="chatbot-general"><?php esc_html_e('General', 'b2b-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="chatbot-endpoint"><?php esc_html_e('Model Endpoint', 'b2b-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="chatbot-context"><?php esc_html_e('Context Sources', 'b2b-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="chatbot-appearance"><?php esc_html_e('Appearance', 'b2b-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="chatbot-index"><?php esc_html_e('Knowledge Index', 'b2b-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="chatbot-manual"><?php esc_html_e('Manual Context', 'b2b-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="chatbot-testing"><?php esc_html_e('Testing', 'b2b-industrial'); ?></button>
         </nav>
 
         <form class="li-settings-form li-admin-tab-panels" method="post" action="options.php">
             <?php settings_fields('li_chatbot_settings'); ?>
 
             <section class="li-admin-panel li-admin-tab-panel" data-li-tab-panel="chatbot-general">
-                <h2><?php esc_html_e('General', 'lloyds-industrial'); ?></h2>
-                <?php li_chatbot_render_checkbox('enabled', __('Enable chatbot on the public site', 'lloyds-industrial'), $settings); ?>
-                <?php li_chatbot_render_text('widget_title', __('Widget title', 'lloyds-industrial'), $settings); ?>
-                <?php li_chatbot_render_textarea('greeting', __('Greeting', 'lloyds-industrial'), $settings, 3); ?>
-                <?php li_chatbot_render_text('placeholder', __('Input placeholder', 'lloyds-industrial'), $settings); ?>
-                <?php submit_button(__('Save Chatbot Settings', 'lloyds-industrial'), 'primary', 'submit', false); ?>
+                <h2><?php esc_html_e('General', 'b2b-industrial'); ?></h2>
+                <?php li_chatbot_render_checkbox('enabled', __('Enable chatbot on the public site', 'b2b-industrial'), $settings); ?>
+                <?php li_chatbot_render_text('widget_title', __('Widget title', 'b2b-industrial'), $settings); ?>
+                <?php li_chatbot_render_textarea('greeting', __('Greeting', 'b2b-industrial'), $settings, 3); ?>
+                <?php li_chatbot_render_text('placeholder', __('Input placeholder', 'b2b-industrial'), $settings); ?>
+                <?php submit_button(__('Save Chatbot Settings', 'b2b-industrial'), 'primary', 'submit', false); ?>
             </section>
 
             <section class="li-admin-panel li-admin-tab-panel" data-li-tab-panel="chatbot-endpoint">
-                <h2><?php esc_html_e('Model Endpoint', 'lloyds-industrial'); ?></h2>
-                <?php li_chatbot_render_text('endpoint_url', __('Endpoint URL', 'lloyds-industrial'), $settings, 'https://example.com/chat'); ?>
-                <?php li_chatbot_render_select('endpoint_mode', __('Endpoint format', 'lloyds-industrial'), $settings, ['custom' => __('Custom Lloyds payload', 'lloyds-industrial'), 'openai' => __('OpenAI-compatible chat completions', 'lloyds-industrial')]); ?>
-                <?php li_chatbot_render_checkbox('intent_pass_enabled', __('Use intent pass for ambiguous messages', 'lloyds-industrial'), $settings); ?>
-                <?php li_chatbot_render_text('model', __('Model name', 'lloyds-industrial'), $settings); ?>
-                <?php li_chatbot_render_select('auth_type', __('Authentication', 'lloyds-industrial'), $settings, ['bearer' => __('Bearer token', 'lloyds-industrial'), 'header' => __('Custom header', 'lloyds-industrial'), 'none' => __('None', 'lloyds-industrial')]); ?>
-                <?php li_chatbot_render_text('auth_header', __('Auth header', 'lloyds-industrial'), $settings); ?>
-                <?php li_chatbot_render_password('auth_key', __('Auth key', 'lloyds-industrial'), $settings); ?>
-                <?php li_chatbot_render_number('timeout', __('Timeout seconds', 'lloyds-industrial'), $settings, 5, 60); ?>
-                <?php li_chatbot_render_number('max_context_chunks', __('Max context chunks', 'lloyds-industrial'), $settings, 1, 12); ?>
-                <?php li_chatbot_render_textarea('system_prompt', __('System/tone prompt', 'lloyds-industrial'), $settings, 5); ?>
-                <?php submit_button(__('Save Chatbot Settings', 'lloyds-industrial'), 'primary', 'submit', false); ?>
+                <h2><?php esc_html_e('Model Endpoint', 'b2b-industrial'); ?></h2>
+                <?php li_chatbot_render_text('endpoint_url', __('Endpoint URL', 'b2b-industrial'), $settings, 'https://example.com/chat'); ?>
+                <?php li_chatbot_render_select('endpoint_mode', __('Endpoint format', 'b2b-industrial'), $settings, ['custom' => __('Custom B2B payload', 'b2b-industrial'), 'openai' => __('OpenAI-compatible chat completions', 'b2b-industrial')]); ?>
+                <?php li_chatbot_render_checkbox('intent_pass_enabled', __('Use intent pass for ambiguous messages', 'b2b-industrial'), $settings); ?>
+                <?php li_chatbot_render_text('model', __('Model name', 'b2b-industrial'), $settings); ?>
+                <?php li_chatbot_render_select('auth_type', __('Authentication', 'b2b-industrial'), $settings, ['bearer' => __('Bearer token', 'b2b-industrial'), 'header' => __('Custom header', 'b2b-industrial'), 'none' => __('None', 'b2b-industrial')]); ?>
+                <?php li_chatbot_render_text('auth_header', __('Auth header', 'b2b-industrial'), $settings); ?>
+                <?php li_chatbot_render_password('auth_key', __('Auth key', 'b2b-industrial'), $settings); ?>
+                <?php li_chatbot_render_number('timeout', __('Timeout seconds', 'b2b-industrial'), $settings, 5, 60); ?>
+                <?php li_chatbot_render_number('max_context_chunks', __('Max context chunks', 'b2b-industrial'), $settings, 1, 12); ?>
+                <?php li_chatbot_render_textarea('system_prompt', __('System/tone prompt', 'b2b-industrial'), $settings, 5); ?>
+                <?php submit_button(__('Save Chatbot Settings', 'b2b-industrial'), 'primary', 'submit', false); ?>
             </section>
 
             <section class="li-admin-panel li-admin-tab-panel" data-li-tab-panel="chatbot-context">
-                <h2><?php esc_html_e('Context Sources', 'lloyds-industrial'); ?></h2>
-                <?php foreach (['source_pages' => __('Pages', 'lloyds-industrial'), 'source_products' => __('Products', 'lloyds-industrial'), 'source_documents' => __('Documents and SDS metadata', 'lloyds-industrial'), 'source_resellers' => __('Resellers', 'lloyds-industrial'), 'source_flipbooks' => __('PDF Flipbooks', 'lloyds-industrial'), 'source_media_metadata' => __('Media metadata', 'lloyds-industrial')] as $key => $label) : ?>
+                <h2><?php esc_html_e('Context Sources', 'b2b-industrial'); ?></h2>
+                <?php foreach (['source_pages' => __('Pages', 'b2b-industrial'), 'source_products' => __('Products', 'b2b-industrial'), 'source_documents' => __('Documents and SDS metadata', 'b2b-industrial'), 'source_resellers' => __('Resellers', 'b2b-industrial'), 'source_flipbooks' => __('PDF Flipbooks', 'b2b-industrial'), 'source_media_metadata' => __('Media metadata', 'b2b-industrial')] as $key => $label) : ?>
                     <?php li_chatbot_render_checkbox($key, $label, $settings); ?>
                 <?php endforeach; ?>
-                <?php li_chatbot_render_checkbox('log_conversations', __('Log conversations for admin review', 'lloyds-industrial'), $settings); ?>
-                <?php submit_button(__('Save Chatbot Settings', 'lloyds-industrial'), 'primary', 'submit', false); ?>
+                <?php li_chatbot_render_checkbox('log_conversations', __('Log conversations for admin review', 'b2b-industrial'), $settings); ?>
+                <?php submit_button(__('Save Chatbot Settings', 'b2b-industrial'), 'primary', 'submit', false); ?>
             </section>
 
             <section class="li-admin-panel li-admin-tab-panel" data-li-tab-panel="chatbot-appearance">
-                <h2><?php esc_html_e('Widget Appearance', 'lloyds-industrial'); ?></h2>
-                <?php li_chatbot_render_select('widget_position', __('Icon position', 'lloyds-industrial'), $settings, ['bottom-right' => __('Bottom right', 'lloyds-industrial'), 'bottom-left' => __('Bottom left', 'lloyds-industrial'), 'top-right' => __('Top right', 'lloyds-industrial'), 'top-left' => __('Top left', 'lloyds-industrial')]); ?>
-                <?php li_chatbot_render_text('button_label', __('Button label', 'lloyds-industrial'), $settings); ?>
-                <?php li_chatbot_render_text('avatar_text', __('Avatar text', 'lloyds-industrial'), $settings); ?>
-                <?php li_chatbot_render_text('accent_color', __('Accent color', 'lloyds-industrial'), $settings, '#17443b'); ?>
-                <?php submit_button(__('Save Chatbot Settings', 'lloyds-industrial'), 'primary', 'submit', false); ?>
+                <h2><?php esc_html_e('Widget Appearance', 'b2b-industrial'); ?></h2>
+                <?php li_chatbot_render_select('widget_position', __('Icon position', 'b2b-industrial'), $settings, ['bottom-right' => __('Bottom right', 'b2b-industrial'), 'bottom-left' => __('Bottom left', 'b2b-industrial'), 'top-right' => __('Top right', 'b2b-industrial'), 'top-left' => __('Top left', 'b2b-industrial')]); ?>
+                <?php li_chatbot_render_text('button_label', __('Button label', 'b2b-industrial'), $settings); ?>
+                <?php li_chatbot_render_text('avatar_text', __('Avatar text', 'b2b-industrial'), $settings); ?>
+                <?php li_chatbot_render_text('accent_color', __('Accent color', 'b2b-industrial'), $settings, '#17443b'); ?>
+                <?php submit_button(__('Save Chatbot Settings', 'b2b-industrial'), 'primary', 'submit', false); ?>
             </section>
         </form>
 
         <div class="li-settings-maintenance li-chatbot-tools li-admin-tab-panels">
             <section class="li-admin-panel li-admin-tab-panel" data-li-tab-panel="chatbot-index">
-                <h2><?php esc_html_e('Knowledge Index', 'lloyds-industrial'); ?></h2>
-                <p><?php esc_html_e('Rebuild the local retrieval index from the selected source toggles. Protected SDS files are not indexed as readable text; only safe metadata is stored.', 'lloyds-industrial'); ?></p>
+                <h2><?php esc_html_e('Knowledge Index', 'b2b-industrial'); ?></h2>
+                <p><?php esc_html_e('Rebuild the local retrieval index from the selected source toggles. Protected SDS files are not indexed as readable text; only safe metadata is stored.', 'b2b-industrial'); ?></p>
                 <form method="post">
                     <?php wp_nonce_field('li_chatbot_rebuild_index'); ?>
-                    <button class="button button-primary" type="submit" name="li_chatbot_rebuild_index" value="1"><?php esc_html_e('Rebuild Index', 'lloyds-industrial'); ?></button>
+                    <button class="button button-primary" type="submit" name="li_chatbot_rebuild_index" value="1"><?php esc_html_e('Rebuild Index', 'b2b-industrial'); ?></button>
                 </form>
             </section>
 
             <section class="li-admin-panel li-admin-tab-panel" data-li-tab-panel="chatbot-manual">
-                <h2><?php esc_html_e('Manual Context', 'lloyds-industrial'); ?></h2>
-                <p><?php esc_html_e('Add controlled knowledge that does not live in normal WordPress content. Text, Markdown, CSV, and JSON uploads are accepted.', 'lloyds-industrial'); ?></p>
+                <h2><?php esc_html_e('Manual Context', 'b2b-industrial'); ?></h2>
+                <p><?php esc_html_e('Add controlled knowledge that does not live in normal WordPress content. Text, Markdown, CSV, and JSON uploads are accepted.', 'b2b-industrial'); ?></p>
                 <form method="post" enctype="multipart/form-data">
                     <?php wp_nonce_field('li_chatbot_add_manual_context'); ?>
                     <label>
-                        <span><?php esc_html_e('Title', 'lloyds-industrial'); ?></span>
+                        <span><?php esc_html_e('Title', 'b2b-industrial'); ?></span>
                         <input class="regular-text" type="text" name="li_chatbot_manual_title">
                     </label>
                     <label>
-                        <span><?php esc_html_e('Context text', 'lloyds-industrial'); ?></span>
+                        <span><?php esc_html_e('Context text', 'b2b-industrial'); ?></span>
                         <textarea class="large-text" name="li_chatbot_manual_content" rows="6"></textarea>
                     </label>
                     <label>
-                        <span><?php esc_html_e('Upload context file', 'lloyds-industrial'); ?></span>
+                        <span><?php esc_html_e('Upload context file', 'b2b-industrial'); ?></span>
                         <input type="file" name="li_chatbot_manual_file" accept=".txt,.md,.csv,.json">
                     </label>
-                    <button class="button button-secondary" type="submit" name="li_chatbot_add_manual_context" value="1"><?php esc_html_e('Add Manual Context', 'lloyds-industrial'); ?></button>
+                    <button class="button button-secondary" type="submit" name="li_chatbot_add_manual_context" value="1"><?php esc_html_e('Add Manual Context', 'b2b-industrial'); ?></button>
                 </form>
             </section>
 
             <section class="li-admin-panel li-chatbot-test-console li-admin-tab-panel" data-li-tab-panel="chatbot-testing">
-                <h2><?php esc_html_e('Testing Console', 'lloyds-industrial'); ?></h2>
-                <p><?php esc_html_e('Send a test prompt through the same retrieval and endpoint layer used by the public widget.', 'lloyds-industrial'); ?></p>
+                <h2><?php esc_html_e('Testing Console', 'b2b-industrial'); ?></h2>
+                <p><?php esc_html_e('Send a test prompt through the same retrieval and endpoint layer used by the public widget.', 'b2b-industrial'); ?></p>
                 <form method="post">
                     <?php wp_nonce_field('li_chatbot_test_message'); ?>
                     <label>
-                        <span><?php esc_html_e('Test prompt', 'lloyds-industrial'); ?></span>
+                        <span><?php esc_html_e('Test prompt', 'b2b-industrial'); ?></span>
                         <textarea class="large-text" name="li_chatbot_test_prompt" rows="4"><?php echo esc_textarea(is_array($test_result) ? (string) ($test_result['message'] ?? '') : ''); ?></textarea>
                     </label>
-                    <button class="button button-secondary" type="submit" name="li_chatbot_test_message" value="1"><?php esc_html_e('Run Test Prompt', 'lloyds-industrial'); ?></button>
+                    <button class="button button-secondary" type="submit" name="li_chatbot_test_message" value="1"><?php esc_html_e('Run Test Prompt', 'b2b-industrial'); ?></button>
                 </form>
                 <?php if (is_array($test_result)) : ?>
                     <div class="li-chatbot-test-result">
-                        <strong><?php esc_html_e('Assistant reply', 'lloyds-industrial'); ?></strong>
+                        <strong><?php esc_html_e('Assistant reply', 'b2b-industrial'); ?></strong>
                         <p><?php echo esc_html((string) ($test_result['reply'] ?? '')); ?></p>
-                        <strong><?php esc_html_e('Retrieved context', 'lloyds-industrial'); ?></strong>
+                        <strong><?php esc_html_e('Retrieved context', 'b2b-industrial'); ?></strong>
                         <ul>
                             <?php foreach ((array) ($test_result['context'] ?? []) as $source) : ?>
                                 <li><?php echo esc_html((string) $source); ?></li>

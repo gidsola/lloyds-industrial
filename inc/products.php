@@ -10,8 +10,8 @@ add_action('init', function (): void {
     if (!taxonomy_exists('product_brand')) {
         register_taxonomy('product_brand', ['product'], [
             'labels' => [
-                'name'          => __('Brands', 'lloyds-industrial'),
-                'singular_name' => __('Brand', 'lloyds-industrial'),
+                'name'          => __('Brands', 'b2b-industrial'),
+                'singular_name' => __('Brand', 'b2b-industrial'),
             ],
             'public'       => true,
             'show_ui'      => true,
@@ -25,8 +25,8 @@ add_action('init', function (): void {
 
     register_taxonomy('li_industry', ['product'], [
         'labels' => [
-            'name'          => __('Industries', 'lloyds-industrial'),
-            'singular_name' => __('Industry', 'lloyds-industrial'),
+            'name'          => __('Industries', 'b2b-industrial'),
+            'singular_name' => __('Industry', 'b2b-industrial'),
         ],
         'public'       => true,
         'show_ui'      => true,
@@ -39,8 +39,8 @@ add_action('init', function (): void {
 
     register_taxonomy('li_application', ['product'], [
         'labels' => [
-            'name'          => __('Applications', 'lloyds-industrial'),
-            'singular_name' => __('Application', 'lloyds-industrial'),
+            'name'          => __('Applications', 'b2b-industrial'),
+            'singular_name' => __('Application', 'b2b-industrial'),
         ],
         'public'       => true,
         'show_ui'      => true,
@@ -125,9 +125,9 @@ function li_render_product_filter_group(string $taxonomy, string $label): string
 function li_render_product_filters(): string
 {
     $groups = [
-        li_render_product_filter_group('product_cat', __('Category', 'lloyds-industrial')),
-        li_render_product_filter_group('li_industry', __('Industry', 'lloyds-industrial')),
-        li_render_product_filter_group('li_application', __('Application', 'lloyds-industrial')),
+        li_render_product_filter_group('product_cat', __('Category', 'b2b-industrial')),
+        li_render_product_filter_group('li_industry', __('Industry', 'b2b-industrial')),
+        li_render_product_filter_group('li_application', __('Application', 'b2b-industrial')),
     ];
 
     $groups = array_filter($groups);
@@ -150,7 +150,7 @@ function li_render_product_filters(): string
             'product_cat'    => '',
             'li_industry'    => '',
             'li_application' => '',
-        ])) . '">' . esc_html__('Clear filters', 'lloyds-industrial') . '</a>';
+        ])) . '">' . esc_html__('Clear filters', 'b2b-industrial') . '</a>';
     }
 
     $output .= '</div>';
@@ -210,14 +210,14 @@ function li_render_product_category_cards(): string
                         <?php
                         echo esc_html(sprintf(
                             /* translators: %s: product category name */
-                            __('Browse Lloyds products in %s.', 'lloyds-industrial'),
+                            __('Browse B2B products in %s.', 'b2b-industrial'),
                             $term->name
                         ));
                         ?>
                     </p>
                 <?php endif; ?>
                 <p class="li-card-link">
-                    <a href="<?php echo esc_url($url); ?>"><?php esc_html_e('View Products', 'lloyds-industrial'); ?></a>
+                    <a href="<?php echo esc_url($url); ?>"><?php esc_html_e('View Products', 'b2b-industrial'); ?></a>
                 </p>
             </article>
         <?php endforeach; ?>
@@ -229,7 +229,7 @@ function li_render_product_category_cards(): string
 
 function li_register_product_category_cards_block(): void
 {
-    register_block_type('lloyds-industrial/product-category-grid', [
+    register_block_type('b2b-industrial/product-category-grid', [
         'api_version'     => 2,
         'render_callback' => 'li_render_product_category_cards',
         'supports'        => [
@@ -247,8 +247,8 @@ function li_render_product_search_form(): string
 
     $output = '<div class="li-product-search" data-li-product-search>';
     $output .= '<form class="li-product-search-form" role="search" method="get" action="' . esc_url(home_url('/')) . '" data-li-product-search-form>';
-    $output .= '<label class="screen-reader-text" for="' . esc_attr($instance_id) . '">' . esc_html__('Search products', 'lloyds-industrial') . '</label>';
-    $output .= '<input id="' . esc_attr($instance_id) . '" type="search" name="s" placeholder="' . esc_attr__('Search products, applications, or industries...', 'lloyds-industrial') . '" value="' . esc_attr($search) . '" autocomplete="off" data-li-product-search-input>';
+    $output .= '<label class="screen-reader-text" for="' . esc_attr($instance_id) . '">' . esc_html__('Search products', 'b2b-industrial') . '</label>';
+    $output .= '<input id="' . esc_attr($instance_id) . '" type="search" name="s" placeholder="' . esc_attr__('Search products, applications, or industries...', 'b2b-industrial') . '" value="' . esc_attr($search) . '" autocomplete="off" data-li-product-search-input>';
     $output .= '<input type="hidden" name="post_type" value="product">';
 
     foreach (['product_cat', 'li_industry', 'li_application'] as $taxonomy) {
@@ -259,7 +259,7 @@ function li_render_product_search_form(): string
         }
     }
 
-    $output .= '<button type="submit">' . esc_html__('Search', 'lloyds-industrial') . '</button>';
+    $output .= '<button type="submit">' . esc_html__('Search', 'b2b-industrial') . '</button>';
     $output .= '</form>';
     $output .= '<div class="li-product-search-results" data-li-product-search-results hidden aria-live="polite"></div>';
     $output .= '</div>';
@@ -399,9 +399,9 @@ function li_render_product_card_meta(): string
     }
 
     if ($has_sds) {
-        $items[] = esc_html__('SDS after purchase', 'lloyds-industrial');
+        $items[] = esc_html__('SDS after purchase', 'b2b-industrial');
     } elseif ($documents) {
-        $items[] = esc_html__('Technical documents', 'lloyds-industrial');
+        $items[] = esc_html__('Technical documents', 'b2b-industrial');
     }
 
     if (!$items) {
@@ -458,35 +458,35 @@ function li_render_product_b2b_actions(): string
     ?>
     <div class="li-product-b2b-actions">
         <?php if (!is_user_logged_in()) : ?>
-            <p><?php esc_html_e('Lloyds products are supplied through approved reseller and distributor channels.', 'lloyds-industrial'); ?></p>
+            <p><?php esc_html_e('B2B products are supplied through approved reseller and distributor channels.', 'b2b-industrial'); ?></p>
             <a class="li-button-primary" href="<?php echo esc_url($reseller_url); ?>">
-                <?php esc_html_e('Find A Reseller For This Product', 'lloyds-industrial'); ?>
+                <?php esc_html_e('Find A Reseller For This Product', 'b2b-industrial'); ?>
             </a>
             <a class="li-button-secondary" href="<?php echo esc_url(li_get_account_login_url(get_permalink($product_id))); ?>">
-                <?php esc_html_e('Sign In', 'lloyds-industrial'); ?>
+                <?php esc_html_e('Sign In', 'b2b-industrial'); ?>
             </a>
         <?php elseif (li_current_user_is_reseller()) : ?>
-            <p><?php esc_html_e('Use your reseller account to request pricing or access eligible product SDS documents.', 'lloyds-industrial'); ?></p>
+            <p><?php esc_html_e('Use your reseller account to request pricing or access eligible product SDS documents.', 'b2b-industrial'); ?></p>
             <a class="li-button-primary" href="<?php echo esc_url($quote_url); ?>">
-                <?php esc_html_e('Request Quote', 'lloyds-industrial'); ?>
+                <?php esc_html_e('Request Quote', 'b2b-industrial'); ?>
             </a>
             <?php if ($sds_download_url) : ?>
                 <a class="li-button-secondary" href="<?php echo esc_url($sds_download_url); ?>">
-                    <?php esc_html_e('Download SDS', 'lloyds-industrial'); ?>
+                    <?php esc_html_e('Download SDS', 'b2b-industrial'); ?>
                 </a>
             <?php elseif ($sds_document_id) : ?>
                 <span class="li-button-secondary" aria-disabled="true">
-                    <?php esc_html_e('SDS Available After Purchase', 'lloyds-industrial'); ?>
+                    <?php esc_html_e('SDS Available After Purchase', 'b2b-industrial'); ?>
                 </span>
             <?php endif; ?>
         <?php else : ?>
-            <p><?php esc_html_e('Need pricing or SDS access? Contact Lloyds support or use the account tied to your purchase history.', 'lloyds-industrial'); ?></p>
+            <p><?php esc_html_e('Need pricing or SDS access? Contact B2B support or use the account tied to your purchase history.', 'b2b-industrial'); ?></p>
             <a class="li-button-primary" href="<?php echo esc_url($quote_url); ?>">
-                <?php esc_html_e('Request Support', 'lloyds-industrial'); ?>
+                <?php esc_html_e('Request Support', 'b2b-industrial'); ?>
             </a>
             <?php if ($sds_download_url) : ?>
                 <a class="li-button-secondary" href="<?php echo esc_url($sds_download_url); ?>">
-                    <?php esc_html_e('Download SDS', 'lloyds-industrial'); ?>
+                    <?php esc_html_e('Download SDS', 'b2b-industrial'); ?>
                 </a>
             <?php endif; ?>
         <?php endif; ?>

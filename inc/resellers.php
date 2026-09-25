@@ -9,10 +9,10 @@ if (!defined('ABSPATH')) {
 add_action('init', function (): void {
     register_post_type('li_reseller', [
         'labels' => [
-            'name'          => __('Resellers', 'lloyds-industrial'),
-            'singular_name' => __('Reseller', 'lloyds-industrial'),
-            'add_new_item'  => __('Add Reseller', 'lloyds-industrial'),
-            'edit_item'     => __('Edit Reseller', 'lloyds-industrial'),
+            'name'          => __('Resellers', 'b2b-industrial'),
+            'singular_name' => __('Reseller', 'b2b-industrial'),
+            'add_new_item'  => __('Add Reseller', 'b2b-industrial'),
+            'edit_item'     => __('Edit Reseller', 'b2b-industrial'),
         ],
         'public'              => false,
         'show_ui'             => true,
@@ -28,21 +28,21 @@ add_action('init', function (): void {
 
 add_action('admin_menu', function (): void {
     add_menu_page(
-        __('Lloyds Channels', 'lloyds-industrial'),
-        __('Channels', 'lloyds-industrial'),
+        __('B2B Channels', 'b2b-industrial'),
+        __('Channels', 'b2b-industrial'),
         'edit_posts',
-        'lloyds-channels',
+        'b2b-channels',
         'li_render_reseller_admin_overview',
         'dashicons-store',
         61
     );
 
     add_submenu_page(
-        'lloyds-channels',
-        __('Lloyds Resellers', 'lloyds-industrial'),
-        __('Resellers', 'lloyds-industrial'),
+        'b2b-channels',
+        __('B2B Resellers', 'b2b-industrial'),
+        __('Resellers', 'b2b-industrial'),
         'edit_posts',
-        'lloyds-channels',
+        'b2b-channels',
         'li_render_reseller_admin_overview'
     );
 
@@ -56,24 +56,24 @@ function li_render_reseller_admin_overview(): void
     <div class="wrap li-settings-page">
         <div class="li-settings-hero">
             <div>
-                <p class="li-settings-kicker"><?php esc_html_e('Channel', 'lloyds-industrial'); ?></p>
-                <h1><?php esc_html_e('Lloyds Resellers', 'lloyds-industrial'); ?></h1>
-                <p><?php esc_html_e('Maintain public reseller directory listings and connect approved applications to distributor accounts.', 'lloyds-industrial'); ?></p>
+                <p class="li-settings-kicker"><?php esc_html_e('Channel', 'b2b-industrial'); ?></p>
+                <h1><?php esc_html_e('B2B Resellers', 'b2b-industrial'); ?></h1>
+                <p><?php esc_html_e('Maintain public reseller directory listings and connect approved applications to distributor accounts.', 'b2b-industrial'); ?></p>
             </div>
             <div class="li-settings-summary">
                 <div>
-                    <span><?php esc_html_e('Shortcode', 'lloyds-industrial'); ?></span>
+                    <span><?php esc_html_e('Shortcode', 'b2b-industrial'); ?></span>
                     <strong>[li_reseller_finder]</strong>
                 </div>
                 <div>
-                    <span><?php esc_html_e('Public', 'lloyds-industrial'); ?></span>
-                    <strong><?php esc_html_e('Published only', 'lloyds-industrial'); ?></strong>
+                    <span><?php esc_html_e('Public', 'b2b-industrial'); ?></span>
+                    <strong><?php esc_html_e('Published only', 'b2b-industrial'); ?></strong>
                 </div>
             </div>
         </div>
         <p>
-            <a class="button button-primary" href="<?php echo esc_url($add_url); ?>"><?php esc_html_e('Add Reseller', 'lloyds-industrial'); ?></a>
-            <a class="button button-secondary" href="<?php echo esc_url($all_url); ?>"><?php esc_html_e('View Resellers', 'lloyds-industrial'); ?></a>
+            <a class="button button-primary" href="<?php echo esc_url($add_url); ?>"><?php esc_html_e('Add Reseller', 'b2b-industrial'); ?></a>
+            <a class="button button-secondary" href="<?php echo esc_url($all_url); ?>"><?php esc_html_e('View Resellers', 'b2b-industrial'); ?></a>
         </p>
     </div>
     <?php
@@ -82,31 +82,31 @@ function li_render_reseller_admin_overview(): void
 function li_get_reseller_field_labels(): array
 {
     return [
-        'public_name'     => __('Public Name', 'lloyds-industrial'),
-        'contact_name'    => __('Primary Contact', 'lloyds-industrial'),
-        'email'           => __('Email', 'lloyds-industrial'),
-        'phone'           => __('Phone', 'lloyds-industrial'),
-        'website'         => __('Website', 'lloyds-industrial'),
-        'address'         => __('Address', 'lloyds-industrial'),
-        'city'            => __('City', 'lloyds-industrial'),
-        'province'        => __('Province / State', 'lloyds-industrial'),
-        'postal_code'     => __('Postal / ZIP Code', 'lloyds-industrial'),
-        'country'         => __('Country', 'lloyds-industrial'),
-        'territory'       => __('Service Territory', 'lloyds-industrial'),
-        'product_focus'   => __('Product Focus', 'lloyds-industrial'),
-        'customer_types'  => __('Customer Base', 'lloyds-industrial'),
-        'sales_channels'  => __('Sales Channels', 'lloyds-industrial'),
-        'public_notes'    => __('Public Notes', 'lloyds-industrial'),
-        'internal_notes'  => __('Internal Notes', 'lloyds-industrial'),
-        'linked_user_id'  => __('Linked User ID', 'lloyds-industrial'),
-        'application_id'  => __('Application ID', 'lloyds-industrial'),
+        'public_name'     => __('Public Name', 'b2b-industrial'),
+        'contact_name'    => __('Primary Contact', 'b2b-industrial'),
+        'email'           => __('Email', 'b2b-industrial'),
+        'phone'           => __('Phone', 'b2b-industrial'),
+        'website'         => __('Website', 'b2b-industrial'),
+        'address'         => __('Address', 'b2b-industrial'),
+        'city'            => __('City', 'b2b-industrial'),
+        'province'        => __('Province / State', 'b2b-industrial'),
+        'postal_code'     => __('Postal / ZIP Code', 'b2b-industrial'),
+        'country'         => __('Country', 'b2b-industrial'),
+        'territory'       => __('Service Territory', 'b2b-industrial'),
+        'product_focus'   => __('Product Focus', 'b2b-industrial'),
+        'customer_types'  => __('Customer Base', 'b2b-industrial'),
+        'sales_channels'  => __('Sales Channels', 'b2b-industrial'),
+        'public_notes'    => __('Public Notes', 'b2b-industrial'),
+        'internal_notes'  => __('Internal Notes', 'b2b-industrial'),
+        'linked_user_id'  => __('Linked User ID', 'b2b-industrial'),
+        'application_id'  => __('Application ID', 'b2b-industrial'),
     ];
 }
 
 add_action('add_meta_boxes', function (): void {
     add_meta_box(
         'li_reseller_details',
-        __('Reseller Details', 'lloyds-industrial'),
+        __('Reseller Details', 'b2b-industrial'),
         'li_render_reseller_details_metabox',
         'li_reseller',
         'normal',
@@ -119,7 +119,7 @@ add_filter('enter_title_here', function (string $placeholder, WP_Post $post): st
         return $placeholder;
     }
 
-    return __('Internal reseller record name', 'lloyds-industrial');
+    return __('Internal reseller record name', 'b2b-industrial');
 }, 10, 2);
 
 function li_render_reseller_details_metabox(WP_Post $post): void
@@ -128,23 +128,23 @@ function li_render_reseller_details_metabox(WP_Post $post): void
     $labels = li_get_reseller_field_labels();
     $sections = [
         'profile' => [
-            'title'       => __('Public Profile', 'lloyds-industrial'),
-            'description' => __('These fields appear in the public reseller finder and help customers choose the right channel partner.', 'lloyds-industrial'),
+            'title'       => __('Public Profile', 'b2b-industrial'),
+            'description' => __('These fields appear in the public reseller finder and help customers choose the right channel partner.', 'b2b-industrial'),
             'fields'      => ['public_name', 'website', 'public_notes'],
         ],
         'contact' => [
-            'title'       => __('Contact Details', 'lloyds-industrial'),
-            'description' => __('Primary business contact and location information for customer routing.', 'lloyds-industrial'),
+            'title'       => __('Contact Details', 'b2b-industrial'),
+            'description' => __('Primary business contact and location information for customer routing.', 'b2b-industrial'),
             'fields'      => ['contact_name', 'email', 'phone', 'address', 'city', 'province', 'postal_code', 'country'],
         ],
         'coverage' => [
-            'title'       => __('Coverage and Fit', 'lloyds-industrial'),
-            'description' => __('Use these fields to match reseller listings with product, territory, and customer searches.', 'lloyds-industrial'),
+            'title'       => __('Coverage and Fit', 'b2b-industrial'),
+            'description' => __('Use these fields to match reseller listings with product, territory, and customer searches.', 'b2b-industrial'),
             'fields'      => ['territory', 'product_focus', 'customer_types', 'sales_channels'],
         ],
         'operations' => [
-            'title'       => __('Internal Operations', 'lloyds-industrial'),
-            'description' => __('Private notes and system links are visible to administrators only.', 'lloyds-industrial'),
+            'title'       => __('Internal Operations', 'b2b-industrial'),
+            'description' => __('Private notes and system links are visible to administrators only.', 'b2b-industrial'),
             'fields'      => ['internal_notes', 'linked_user_id', 'application_id'],
         ],
     ];
@@ -153,8 +153,8 @@ function li_render_reseller_details_metabox(WP_Post $post): void
         <div class="li-reseller-builder__intro">
             <span class="dashicons dashicons-store"></span>
             <div>
-                <h2><?php esc_html_e('Reseller Directory Listing', 'lloyds-industrial'); ?></h2>
-                <p><?php esc_html_e('Build the listing customers see when they search for approved Lloyds reseller and distributor channels.', 'lloyds-industrial'); ?></p>
+                <h2><?php esc_html_e('Reseller Directory Listing', 'b2b-industrial'); ?></h2>
+                <p><?php esc_html_e('Build the listing customers see when they search for approved B2B reseller and distributor channels.', 'b2b-industrial'); ?></p>
             </div>
         </div>
 
@@ -298,33 +298,33 @@ function li_render_reseller_finder_shortcode(): string
     ?>
     <section class="li-reseller-finder" aria-labelledby="li-reseller-finder-title">
         <div class="li-reseller-finder__header">
-            <p class="li-eyebrow"><?php esc_html_e('Reseller Directory', 'lloyds-industrial'); ?></p>
-            <h2 id="li-reseller-finder-title"><?php esc_html_e('Find A Reseller Near You', 'lloyds-industrial'); ?></h2>
-            <p><?php esc_html_e('Search by city, province/state, postal code, territory, product focus, or customer segment.', 'lloyds-industrial'); ?></p>
+            <p class="li-eyebrow"><?php esc_html_e('Reseller Directory', 'b2b-industrial'); ?></p>
+            <h2 id="li-reseller-finder-title"><?php esc_html_e('Find A Reseller Near You', 'b2b-industrial'); ?></h2>
+            <p><?php esc_html_e('Search by city, province/state, postal code, territory, product focus, or customer segment.', 'b2b-industrial'); ?></p>
             <?php if ($product_query !== '') : ?>
                 <p class="li-reseller-finder__context">
-                    <?php echo esc_html(sprintf(__('Showing resellers that list product focus matching "%s".', 'lloyds-industrial'), $product_query)); ?>
+                    <?php echo esc_html(sprintf(__('Showing resellers that list product focus matching "%s".', 'b2b-industrial'), $product_query)); ?>
                 </p>
             <?php endif; ?>
         </div>
 
         <form class="li-reseller-finder__search" method="get">
-            <label class="screen-reader-text" for="li_reseller_location"><?php esc_html_e('Location or territory', 'lloyds-industrial'); ?></label>
-            <input id="li_reseller_location" name="reseller_location" type="search" value="<?php echo esc_attr($query); ?>" placeholder="<?php echo esc_attr__('City, province, postal code, territory...', 'lloyds-industrial'); ?>">
+            <label class="screen-reader-text" for="li_reseller_location"><?php esc_html_e('Location or territory', 'b2b-industrial'); ?></label>
+            <input id="li_reseller_location" name="reseller_location" type="search" value="<?php echo esc_attr($query); ?>" placeholder="<?php echo esc_attr__('City, province, postal code, territory...', 'b2b-industrial'); ?>">
             <?php if ($product_query !== '') : ?>
                 <input type="hidden" name="reseller_product" value="<?php echo esc_attr($product_query); ?>">
             <?php endif; ?>
-            <button class="li-button-primary" type="submit"><?php esc_html_e('Search', 'lloyds-industrial'); ?></button>
+            <button class="li-button-primary" type="submit"><?php esc_html_e('Search', 'b2b-industrial'); ?></button>
             <?php if ($query !== '' || $product_query !== '') : ?>
-                <a class="li-button-secondary" href="<?php echo esc_url(get_permalink() ?: home_url('/find-a-reseller/')); ?>"><?php esc_html_e('Clear', 'lloyds-industrial'); ?></a>
+                <a class="li-button-secondary" href="<?php echo esc_url(get_permalink() ?: home_url('/find-a-reseller/')); ?>"><?php esc_html_e('Clear', 'b2b-industrial'); ?></a>
             <?php endif; ?>
         </form>
 
         <?php if (!$resellers) : ?>
             <div class="li-reseller-finder__empty">
-                <h3><?php esc_html_e('No matching resellers found', 'lloyds-industrial'); ?></h3>
-                <p><?php esc_html_e('Contact Lloyds and we will route your request to the right distributor or support team.', 'lloyds-industrial'); ?></p>
-                <a class="li-button-primary" href="<?php echo esc_url(home_url('/contact/')); ?>"><?php esc_html_e('Contact Lloyds', 'lloyds-industrial'); ?></a>
+                <h3><?php esc_html_e('No matching resellers found', 'b2b-industrial'); ?></h3>
+                <p><?php esc_html_e('Contact B2B and we will route your request to the right distributor or support team.', 'b2b-industrial'); ?></p>
+                <a class="li-button-primary" href="<?php echo esc_url(home_url('/contact/')); ?>"><?php esc_html_e('Contact B2B', 'b2b-industrial'); ?></a>
             </div>
         <?php else : ?>
             <div class="li-reseller-grid">
@@ -337,10 +337,10 @@ function li_render_reseller_finder_shortcode(): string
                             </p>
                         <?php endif; ?>
                         <?php if ($reseller['territory'] !== '') : ?>
-                            <p><strong><?php esc_html_e('Territory:', 'lloyds-industrial'); ?></strong> <?php echo esc_html($reseller['territory']); ?></p>
+                            <p><strong><?php esc_html_e('Territory:', 'b2b-industrial'); ?></strong> <?php echo esc_html($reseller['territory']); ?></p>
                         <?php endif; ?>
                         <?php if ($reseller['product_focus'] !== '') : ?>
-                            <p><strong><?php esc_html_e('Product Focus:', 'lloyds-industrial'); ?></strong> <?php echo esc_html($reseller['product_focus']); ?></p>
+                            <p><strong><?php esc_html_e('Product Focus:', 'b2b-industrial'); ?></strong> <?php echo esc_html($reseller['product_focus']); ?></p>
                         <?php endif; ?>
                         <?php if ($reseller['public_notes'] !== '') : ?>
                             <p><?php echo esc_html($reseller['public_notes']); ?></p>
@@ -350,10 +350,10 @@ function li_render_reseller_finder_shortcode(): string
                                 <a class="li-button-secondary" href="tel:<?php echo esc_attr(preg_replace('/[^0-9+]/', '', $reseller['phone'])); ?>"><?php echo esc_html($reseller['phone']); ?></a>
                             <?php endif; ?>
                             <?php if ($reseller['email'] !== '') : ?>
-                                <a class="li-button-primary" href="mailto:<?php echo esc_attr($reseller['email']); ?>"><?php esc_html_e('Email', 'lloyds-industrial'); ?></a>
+                                <a class="li-button-primary" href="mailto:<?php echo esc_attr($reseller['email']); ?>"><?php esc_html_e('Email', 'b2b-industrial'); ?></a>
                             <?php endif; ?>
                             <?php if ($reseller['website'] !== '') : ?>
-                                <a class="li-button-secondary" href="<?php echo esc_url($reseller['website']); ?>"><?php esc_html_e('Website', 'lloyds-industrial'); ?></a>
+                                <a class="li-button-secondary" href="<?php echo esc_url($reseller['website']); ?>"><?php esc_html_e('Website', 'b2b-industrial'); ?></a>
                             <?php endif; ?>
                         </div>
                     </article>
@@ -371,11 +371,11 @@ add_shortcode('li_reseller_finder', 'li_render_reseller_finder_shortcode');
 add_filter('manage_li_reseller_posts_columns', function (array $columns): array {
     return [
         'cb' => $columns['cb'] ?? '',
-        'title' => __('Reseller', 'lloyds-industrial'),
-        'li_reseller_location' => __('Location', 'lloyds-industrial'),
-        'li_reseller_contact' => __('Contact', 'lloyds-industrial'),
-        'li_reseller_focus' => __('Product Focus', 'lloyds-industrial'),
-        'date' => $columns['date'] ?? __('Date', 'lloyds-industrial'),
+        'title' => __('Reseller', 'b2b-industrial'),
+        'li_reseller_location' => __('Location', 'b2b-industrial'),
+        'li_reseller_contact' => __('Contact', 'b2b-industrial'),
+        'li_reseller_focus' => __('Product Focus', 'b2b-industrial'),
+        'date' => $columns['date'] ?? __('Date', 'b2b-industrial'),
     ];
 });
 
@@ -467,7 +467,7 @@ function li_accept_reseller_application(int $application_id): array
         $reseller_id = wp_insert_post([
             'post_type'   => 'li_reseller',
             'post_status' => 'draft',
-            'post_title'  => $company ?: sprintf(__('Reseller Application #%d', 'lloyds-industrial'), $application_id),
+            'post_title'  => $company ?: sprintf(__('Reseller Application #%d', 'b2b-industrial'), $application_id),
         ], true);
 
         if (!is_wp_error($reseller_id) && $reseller_id) {

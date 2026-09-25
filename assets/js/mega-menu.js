@@ -1,5 +1,5 @@
 /**
- * Lloyds Industrial - Mega Menu JavaScript
+ * B2B Industrial - Mega Menu JavaScript
  * Handles mobile accordion behavior and touch interactions
  */
 

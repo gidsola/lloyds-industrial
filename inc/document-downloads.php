@@ -34,8 +34,8 @@ add_action('template_redirect', function (): void {
         }
 
         wp_die(
-            esc_html__('You do not have access to this document.', 'lloyds-industrial'),
-            esc_html__('Document Access Denied', 'lloyds-industrial'),
+            esc_html__('You do not have access to this document.', 'b2b-industrial'),
+            esc_html__('Document Access Denied', 'b2b-industrial'),
             ['response' => 403]
         );
         exit;
@@ -54,8 +54,8 @@ add_action('template_redirect', function (): void {
 
     if (!$download_url) {
         wp_die(
-            esc_html__('The requested document file could not be found.', 'lloyds-industrial'),
-            esc_html__('Document Not Found', 'lloyds-industrial'),
+            esc_html__('The requested document file could not be found.', 'b2b-industrial'),
+            esc_html__('Document Not Found', 'b2b-industrial'),
             ['response' => 404]
         );
         exit;
@@ -86,8 +86,8 @@ function li_stream_protected_document(int $document_id): void
 
     if (!$file_path) {
         wp_die(
-            esc_html__('The requested document file could not be found.', 'lloyds-industrial'),
-            esc_html__('Document Not Found', 'lloyds-industrial'),
+            esc_html__('The requested document file could not be found.', 'b2b-industrial'),
+            esc_html__('Document Not Found', 'b2b-industrial'),
             ['response' => 404]
         );
         exit;

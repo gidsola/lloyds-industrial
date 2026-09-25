@@ -9,14 +9,14 @@ if (!defined('ABSPATH')) {
 function li_get_contact_form_types(): array
 {
     return [
-        'product_support' => __('Product Support', 'lloyds-industrial'),
-        'sds_access'      => __('SDS Access Help', 'lloyds-industrial'),
-        'quote'           => __('Quote Request', 'lloyds-industrial'),
-        'orders'          => __('Order Desk', 'lloyds-industrial'),
-        'distributor'     => __('Distributor Inquiry', 'lloyds-industrial'),
-        'reseller_application' => __('Reseller Application', 'lloyds-industrial'),
-        'accounting'      => __('Accounting', 'lloyds-industrial'),
-        'general'         => __('General Contact', 'lloyds-industrial'),
+        'product_support' => __('Product Support', 'b2b-industrial'),
+        'sds_access'      => __('SDS Access Help', 'b2b-industrial'),
+        'quote'           => __('Quote Request', 'b2b-industrial'),
+        'orders'          => __('Order Desk', 'b2b-industrial'),
+        'distributor'     => __('Distributor Inquiry', 'b2b-industrial'),
+        'reseller_application' => __('Reseller Application', 'b2b-industrial'),
+        'accounting'      => __('Accounting', 'b2b-industrial'),
+        'general'         => __('General Contact', 'b2b-industrial'),
     ];
 }
 
@@ -24,16 +24,16 @@ function li_get_contact_form_settings(): array
 {
     $defaults = [
         'default_recipient'     => get_option('admin_email'),
-        'product_support_email' => 'Marketing@lloydslaboratories.com',
-        'sds_access_email'      => 'Marketing@lloydslaboratories.com',
-        'quote_email'           => 'Orderdesk@lloydslaboratories.com',
-        'orders_email'          => 'Orderdesk@lloydslaboratories.com',
-        'distributor_email'     => 'Marketing@lloydslaboratories.com',
-        'reseller_application_email' => 'Marketing@lloydslaboratories.com',
-        'accounting_email'      => 'Payables@lloydslaboratories.com',
+        'product_support_email' => 'Marketing@b2blaboratories.com',
+        'sds_access_email'      => 'Marketing@b2blaboratories.com',
+        'quote_email'           => 'Orderdesk@b2blaboratories.com',
+        'orders_email'          => 'Orderdesk@b2blaboratories.com',
+        'distributor_email'     => 'Marketing@b2blaboratories.com',
+        'reseller_application_email' => 'Marketing@b2blaboratories.com',
+        'accounting_email'      => 'Payables@b2blaboratories.com',
         'general_email'         => get_option('admin_email'),
-        'confirmation_subject'  => __('We received your Lloyds inquiry', 'lloyds-industrial'),
-        'confirmation_message'  => __('Thank you for contacting Lloyds. Your request has been received and will be routed to the appropriate team.', 'lloyds-industrial'),
+        'confirmation_subject'  => __('We received your B2B inquiry', 'b2b-industrial'),
+        'confirmation_message'  => __('Thank you for contacting B2B. Your request has been received and will be routed to the appropriate team.', 'b2b-industrial'),
     ];
 
     $settings = get_option('li_contact_form_settings', []);
@@ -53,9 +53,9 @@ function li_get_contact_form_recipient(string $type): string
 add_action('init', function (): void {
     register_post_type('li_contact_msg', [
         'labels' => [
-            'name'          => __('Contact Submissions', 'lloyds-industrial'),
-            'singular_name' => __('Contact Submission', 'lloyds-industrial'),
-            'edit_item'     => __('View Contact Submission', 'lloyds-industrial'),
+            'name'          => __('Contact Submissions', 'b2b-industrial'),
+            'singular_name' => __('Contact Submission', 'b2b-industrial'),
+            'edit_item'     => __('View Contact Submission', 'b2b-industrial'),
         ],
         'public'              => false,
         'show_ui'             => true,
@@ -71,19 +71,19 @@ add_action('init', function (): void {
 
 add_action('admin_menu', function (): void {
     add_submenu_page(
-        'lloyds-channels',
-        __('Contact Submissions', 'lloyds-industrial'),
-        __('Contact Submissions', 'lloyds-industrial'),
+        'b2b-channels',
+        __('Contact Submissions', 'b2b-industrial'),
+        __('Contact Submissions', 'b2b-industrial'),
         'edit_posts',
         'edit.php?post_type=li_contact_msg'
     );
 
     add_submenu_page(
-        'lloyds-channels',
-        __('Lloyds Contact Forms', 'lloyds-industrial'),
-        __('Contact Forms', 'lloyds-industrial'),
+        'b2b-channels',
+        __('B2B Contact Forms', 'b2b-industrial'),
+        __('Contact Forms', 'b2b-industrial'),
         'manage_options',
-        'lloyds-contact-forms',
+        'b2b-contact-forms',
         'li_render_contact_forms_settings_page'
     );
 }, 20);
@@ -138,21 +138,21 @@ function li_render_contact_forms_settings_page(): void
     <div class="wrap li-settings-page">
         <div class="li-settings-hero">
             <div>
-                <p class="li-settings-kicker"><?php esc_html_e('Forms', 'lloyds-industrial'); ?></p>
-                <h1><?php esc_html_e('Lloyds Contact Forms', 'lloyds-industrial'); ?></h1>
-                <p><?php esc_html_e('Route quote requests, SDS access help, product support, orders, accounting, and general inquiries from one native theme form.', 'lloyds-industrial'); ?></p>
+                <p class="li-settings-kicker"><?php esc_html_e('Forms', 'b2b-industrial'); ?></p>
+                <h1><?php esc_html_e('B2B Contact Forms', 'b2b-industrial'); ?></h1>
+                <p><?php esc_html_e('Route quote requests, SDS access help, product support, orders, accounting, and general inquiries from one native theme form.', 'b2b-industrial'); ?></p>
             </div>
             <div class="li-settings-summary">
                 <div>
-                    <span><?php esc_html_e('Shortcode', 'lloyds-industrial'); ?></span>
+                    <span><?php esc_html_e('Shortcode', 'b2b-industrial'); ?></span>
                     <strong>[li_contact_form]</strong>
                 </div>
                 <div>
-                    <span><?php esc_html_e('Storage', 'lloyds-industrial'); ?></span>
-                    <strong><?php esc_html_e('Submissions', 'lloyds-industrial'); ?></strong>
+                    <span><?php esc_html_e('Storage', 'b2b-industrial'); ?></span>
+                    <strong><?php esc_html_e('Submissions', 'b2b-industrial'); ?></strong>
                 </div>
                 <div>
-                    <span><?php esc_html_e('Routing', 'lloyds-industrial'); ?></span>
+                    <span><?php esc_html_e('Routing', 'b2b-industrial'); ?></span>
                     <strong><?php echo esc_html(count(li_get_contact_form_types())); ?></strong>
                 </div>
             </div>
@@ -160,28 +160,28 @@ function li_render_contact_forms_settings_page(): void
 
         <p>
             <a class="button button-secondary" href="<?php echo esc_url($submissions_url); ?>">
-                <?php esc_html_e('View Submissions', 'lloyds-industrial'); ?>
+                <?php esc_html_e('View Submissions', 'b2b-industrial'); ?>
             </a>
         </p>
 
         <form class="li-settings-form" method="post" action="options.php">
             <?php settings_fields('li_contact_form_settings'); ?>
 
-            <h2><?php esc_html_e('Routing Recipients', 'lloyds-industrial'); ?></h2>
-            <p><?php esc_html_e('Each inquiry type can route to a different inbox. Empty fields fall back to the default recipient.', 'lloyds-industrial'); ?></p>
+            <h2><?php esc_html_e('Routing Recipients', 'b2b-industrial'); ?></h2>
+            <p><?php esc_html_e('Each inquiry type can route to a different inbox. Empty fields fall back to the default recipient.', 'b2b-industrial'); ?></p>
             <table class="form-table" role="presentation">
                 <tbody>
                     <?php
                     $email_fields = [
-                        'default_recipient'     => __('Default Recipient', 'lloyds-industrial'),
-                        'product_support_email' => __('Product Support', 'lloyds-industrial'),
-                        'sds_access_email'      => __('SDS Access Help', 'lloyds-industrial'),
-                        'quote_email'           => __('Quote Requests', 'lloyds-industrial'),
-                        'orders_email'          => __('Order Desk', 'lloyds-industrial'),
-                        'distributor_email'     => __('Distributor Inquiries', 'lloyds-industrial'),
-                        'reseller_application_email' => __('Reseller Applications', 'lloyds-industrial'),
-                        'accounting_email'      => __('Accounting', 'lloyds-industrial'),
-                        'general_email'         => __('General Contact', 'lloyds-industrial'),
+                        'default_recipient'     => __('Default Recipient', 'b2b-industrial'),
+                        'product_support_email' => __('Product Support', 'b2b-industrial'),
+                        'sds_access_email'      => __('SDS Access Help', 'b2b-industrial'),
+                        'quote_email'           => __('Quote Requests', 'b2b-industrial'),
+                        'orders_email'          => __('Order Desk', 'b2b-industrial'),
+                        'distributor_email'     => __('Distributor Inquiries', 'b2b-industrial'),
+                        'reseller_application_email' => __('Reseller Applications', 'b2b-industrial'),
+                        'accounting_email'      => __('Accounting', 'b2b-industrial'),
+                        'general_email'         => __('General Contact', 'b2b-industrial'),
                     ];
                     ?>
                     <?php foreach ($email_fields as $key => $label) : ?>
@@ -201,12 +201,12 @@ function li_render_contact_forms_settings_page(): void
                 </tbody>
             </table>
 
-            <h2><?php esc_html_e('Confirmation Email', 'lloyds-industrial'); ?></h2>
-            <p><?php esc_html_e('Sent to the visitor after a successful submission when they provide an email address.', 'lloyds-industrial'); ?></p>
+            <h2><?php esc_html_e('Confirmation Email', 'b2b-industrial'); ?></h2>
+            <p><?php esc_html_e('Sent to the visitor after a successful submission when they provide an email address.', 'b2b-industrial'); ?></p>
             <table class="form-table" role="presentation">
                 <tbody>
                     <tr>
-                        <th scope="row"><label for="li_contact_confirmation_subject"><?php esc_html_e('Subject', 'lloyds-industrial'); ?></label></th>
+                        <th scope="row"><label for="li_contact_confirmation_subject"><?php esc_html_e('Subject', 'b2b-industrial'); ?></label></th>
                         <td>
                             <input
                                 class="regular-text"
@@ -218,7 +218,7 @@ function li_render_contact_forms_settings_page(): void
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row"><label for="li_contact_confirmation_message"><?php esc_html_e('Message', 'lloyds-industrial'); ?></label></th>
+                        <th scope="row"><label for="li_contact_confirmation_message"><?php esc_html_e('Message', 'b2b-industrial'); ?></label></th>
                         <td>
                             <textarea
                                 class="large-text"
@@ -231,7 +231,7 @@ function li_render_contact_forms_settings_page(): void
                 </tbody>
             </table>
 
-            <?php submit_button(__('Save Contact Form Settings', 'lloyds-industrial')); ?>
+            <?php submit_button(__('Save Contact Form Settings', 'b2b-industrial')); ?>
         </form>
     </div>
     <?php
@@ -272,11 +272,11 @@ function li_render_contact_form_shortcode(mixed $atts = []): string
 
         <?php if ($status === 'sent') : ?>
             <div class="li-contact-form__notice li-contact-form__notice--success">
-                <?php esc_html_e('Thank you. Your request has been sent to the Lloyds team.', 'lloyds-industrial'); ?>
+                <?php esc_html_e('Thank you. Your request has been sent to the B2B team.', 'b2b-industrial'); ?>
             </div>
         <?php elseif ($status === 'error') : ?>
             <div class="li-contact-form__notice li-contact-form__notice--error">
-                <?php esc_html_e('Please complete the required fields and try again.', 'lloyds-industrial'); ?>
+                <?php esc_html_e('Please complete the required fields and try again.', 'b2b-industrial'); ?>
             </div>
         <?php endif; ?>
 
@@ -285,7 +285,7 @@ function li_render_contact_form_shortcode(mixed $atts = []): string
         <?php wp_nonce_field('li_submit_contact_form', 'li_contact_nonce'); ?>
 
         <p class="li-contact-form__honeypot" aria-hidden="true">
-            <label for="li_contact_company_url"><?php esc_html_e('Company URL', 'lloyds-industrial'); ?></label>
+            <label for="li_contact_company_url"><?php esc_html_e('Company URL', 'b2b-industrial'); ?></label>
             <input id="li_contact_company_url" name="company_url" type="text" tabindex="-1" autocomplete="off">
         </p>
 
@@ -294,9 +294,9 @@ function li_render_contact_form_shortcode(mixed $atts = []): string
                 <input type="hidden" name="inquiry_type" value="reseller_application">
             <?php else : ?>
                 <p>
-                    <label for="li_contact_type"><?php esc_html_e('Request Type', 'lloyds-industrial'); ?> <span>*</span></label>
+                    <label for="li_contact_type"><?php esc_html_e('Request Type', 'b2b-industrial'); ?> <span>*</span></label>
                     <select id="li_contact_type" name="inquiry_type" required>
-                        <option value=""><?php esc_html_e('Select a request type', 'lloyds-industrial'); ?></option>
+                        <option value=""><?php esc_html_e('Select a request type', 'b2b-industrial'); ?></option>
                         <?php foreach ($types as $key => $label) : ?>
                             <?php if ($key === 'reseller_application') : ?>
                                 <?php continue; ?>
@@ -309,75 +309,75 @@ function li_render_contact_form_shortcode(mixed $atts = []): string
                 </p>
             <?php endif; ?>
             <p>
-                <label for="li_contact_name"><?php esc_html_e('Name', 'lloyds-industrial'); ?> <span>*</span></label>
+                <label for="li_contact_name"><?php esc_html_e('Name', 'b2b-industrial'); ?> <span>*</span></label>
                 <input id="li_contact_name" name="name" type="text" autocomplete="name" required>
             </p>
             <p>
-                <label for="li_contact_company"><?php esc_html_e('Company', 'lloyds-industrial'); ?></label>
+                <label for="li_contact_company"><?php esc_html_e('Company', 'b2b-industrial'); ?></label>
                 <input id="li_contact_company" name="company" type="text" autocomplete="organization">
             </p>
             <p>
-                <label for="li_contact_email"><?php esc_html_e('Email', 'lloyds-industrial'); ?> <span>*</span></label>
+                <label for="li_contact_email"><?php esc_html_e('Email', 'b2b-industrial'); ?> <span>*</span></label>
                 <input id="li_contact_email" name="email" type="email" autocomplete="email" required>
             </p>
             <p>
-                <label for="li_contact_phone"><?php esc_html_e('Phone', 'lloyds-industrial'); ?></label>
+                <label for="li_contact_phone"><?php esc_html_e('Phone', 'b2b-industrial'); ?></label>
                 <input id="li_contact_phone" name="phone" type="tel" autocomplete="tel">
             </p>
             <p>
-                <label for="li_contact_product"><?php esc_html_e('Product / Subject', 'lloyds-industrial'); ?></label>
+                <label for="li_contact_product"><?php esc_html_e('Product / Subject', 'b2b-industrial'); ?></label>
                 <input id="li_contact_product" name="product" type="text" value="<?php echo esc_attr($prefill_product); ?>">
             </p>
             <p class="li-contact-form__compact-field">
-                <label for="li_contact_quantity"><?php esc_html_e('Quantity / Volume', 'lloyds-industrial'); ?></label>
+                <label for="li_contact_quantity"><?php esc_html_e('Quantity / Volume', 'b2b-industrial'); ?></label>
                 <input id="li_contact_quantity" name="quantity" type="text">
             </p>
             <p class="li-contact-form__compact-field">
-                <label for="li_contact_order_number"><?php esc_html_e('Order Number', 'lloyds-industrial'); ?></label>
+                <label for="li_contact_order_number"><?php esc_html_e('Order Number', 'b2b-industrial'); ?></label>
                 <input id="li_contact_order_number" name="order_number" type="text">
             </p>
         </div>
 
         <?php if ($is_reseller_application) : ?>
             <div class="li-contact-form__section">
-                <h4><?php esc_html_e('Company Profile', 'lloyds-industrial'); ?></h4>
+                <h4><?php esc_html_e('Company Profile', 'b2b-industrial'); ?></h4>
                 <div class="li-contact-form__grid">
                     <p>
-                        <label for="li_reseller_website"><?php esc_html_e('Company Website', 'lloyds-industrial'); ?></label>
+                        <label for="li_reseller_website"><?php esc_html_e('Company Website', 'b2b-industrial'); ?></label>
                         <input id="li_reseller_website" name="reseller_website" type="url" autocomplete="url">
                     </p>
                     <p>
-                        <label for="li_reseller_address"><?php esc_html_e('Company Address', 'lloyds-industrial'); ?> <span>*</span></label>
+                        <label for="li_reseller_address"><?php esc_html_e('Company Address', 'b2b-industrial'); ?> <span>*</span></label>
                         <input id="li_reseller_address" name="reseller_address" type="text" autocomplete="street-address" required>
                     </p>
                     <p>
-                        <label for="li_reseller_territory"><?php esc_html_e('Primary Territory', 'lloyds-industrial'); ?> <span>*</span></label>
+                        <label for="li_reseller_territory"><?php esc_html_e('Primary Territory', 'b2b-industrial'); ?> <span>*</span></label>
                         <input id="li_reseller_territory" name="reseller_territory" type="text" required>
                     </p>
                     <p>
-                        <label for="li_reseller_years"><?php esc_html_e('Years In Business', 'lloyds-industrial'); ?></label>
+                        <label for="li_reseller_years"><?php esc_html_e('Years In Business', 'b2b-industrial'); ?></label>
                         <input id="li_reseller_years" name="reseller_years" type="text">
                     </p>
                     <p>
-                        <label for="li_reseller_customer_types"><?php esc_html_e('Customer Base', 'lloyds-industrial'); ?> <span>*</span></label>
+                        <label for="li_reseller_customer_types"><?php esc_html_e('Customer Base', 'b2b-industrial'); ?> <span>*</span></label>
                         <input id="li_reseller_customer_types" name="reseller_customer_types" type="text" required>
                     </p>
                     <p>
-                        <label for="li_reseller_current_lines"><?php esc_html_e('Current Product Lines', 'lloyds-industrial'); ?></label>
+                        <label for="li_reseller_current_lines"><?php esc_html_e('Current Product Lines', 'b2b-industrial'); ?></label>
                         <input id="li_reseller_current_lines" name="reseller_current_lines" type="text">
                     </p>
                     <p>
-                        <label for="li_reseller_product_interests"><?php esc_html_e('Lloyds Product Interests', 'lloyds-industrial'); ?> <span>*</span></label>
+                        <label for="li_reseller_product_interests"><?php esc_html_e('B2B Product Interests', 'b2b-industrial'); ?> <span>*</span></label>
                         <input id="li_reseller_product_interests" name="reseller_product_interests" type="text" required>
                     </p>
                     <p>
-                        <label for="li_reseller_sales_channels"><?php esc_html_e('Sales Channels', 'lloyds-industrial'); ?></label>
+                        <label for="li_reseller_sales_channels"><?php esc_html_e('Sales Channels', 'b2b-industrial'); ?></label>
                         <select id="li_reseller_sales_channels" name="reseller_sales_channels">
-                            <option value=""><?php esc_html_e('Select a channel', 'lloyds-industrial'); ?></option>
-                            <option value="outside_sales"><?php esc_html_e('Outside sales', 'lloyds-industrial'); ?></option>
-                            <option value="inside_sales"><?php esc_html_e('Inside sales / counter', 'lloyds-industrial'); ?></option>
-                            <option value="online"><?php esc_html_e('Online sales', 'lloyds-industrial'); ?></option>
-                            <option value="mixed"><?php esc_html_e('Mixed channels', 'lloyds-industrial'); ?></option>
+                            <option value=""><?php esc_html_e('Select a channel', 'b2b-industrial'); ?></option>
+                            <option value="outside_sales"><?php esc_html_e('Outside sales', 'b2b-industrial'); ?></option>
+                            <option value="inside_sales"><?php esc_html_e('Inside sales / counter', 'b2b-industrial'); ?></option>
+                            <option value="online"><?php esc_html_e('Online sales', 'b2b-industrial'); ?></option>
+                            <option value="mixed"><?php esc_html_e('Mixed channels', 'b2b-industrial'); ?></option>
                         </select>
                     </p>
                 </div>
@@ -386,7 +386,7 @@ function li_render_contact_form_shortcode(mixed $atts = []): string
 
         <p>
             <label for="li_contact_message">
-                <?php echo esc_html($is_reseller_application ? __('Application Notes', 'lloyds-industrial') : __('Message', 'lloyds-industrial')); ?> <span>*</span>
+                <?php echo esc_html($is_reseller_application ? __('Application Notes', 'b2b-industrial') : __('Message', 'b2b-industrial')); ?> <span>*</span>
             </label>
             <textarea id="li_contact_message" name="message" rows="4" required></textarea>
         </p>
@@ -394,12 +394,12 @@ function li_render_contact_form_shortcode(mixed $atts = []): string
         <p class="li-contact-form__consent">
             <label>
                 <input name="consent" type="checkbox" value="1" required>
-                <?php esc_html_e('I agree to be contacted by Lloyds about this request.', 'lloyds-industrial'); ?>
+                <?php esc_html_e('I agree to be contacted by B2B about this request.', 'b2b-industrial'); ?>
             </label>
         </p>
 
         <button class="li-button-primary" type="submit">
-            <?php echo esc_html($is_reseller_application ? __('Submit Application', 'lloyds-industrial') : __('Send Request', 'lloyds-industrial')); ?>
+            <?php echo esc_html($is_reseller_application ? __('Submit Application', 'b2b-industrial') : __('Send Request', 'b2b-industrial')); ?>
         </button>
     </form>
     <?php
@@ -498,14 +498,14 @@ function li_handle_contact_form_submission(): void
 function li_get_reseller_application_field_labels(): array
 {
     return [
-        'website'           => __('Company Website', 'lloyds-industrial'),
-        'address'           => __('Company Address', 'lloyds-industrial'),
-        'territory'         => __('Primary Territory', 'lloyds-industrial'),
-        'years'             => __('Years In Business', 'lloyds-industrial'),
-        'customer_types'    => __('Customer Base', 'lloyds-industrial'),
-        'current_lines'     => __('Current Product Lines', 'lloyds-industrial'),
-        'product_interests' => __('Lloyds Product Interests', 'lloyds-industrial'),
-        'sales_channels'    => __('Sales Channels', 'lloyds-industrial'),
+        'website'           => __('Company Website', 'b2b-industrial'),
+        'address'           => __('Company Address', 'b2b-industrial'),
+        'territory'         => __('Primary Territory', 'b2b-industrial'),
+        'years'             => __('Years In Business', 'b2b-industrial'),
+        'customer_types'    => __('Customer Base', 'b2b-industrial'),
+        'current_lines'     => __('Current Product Lines', 'b2b-industrial'),
+        'product_interests' => __('B2B Product Interests', 'b2b-industrial'),
+        'sales_channels'    => __('Sales Channels', 'b2b-industrial'),
     ];
 }
 
@@ -514,7 +514,7 @@ function li_send_contact_form_notifications(string $type, array $data): void
     $types = li_get_contact_form_types();
     $settings = li_get_contact_form_settings();
     $recipient = li_get_contact_form_recipient($type);
-    $subject = sprintf('[%s] %s', get_bloginfo('name'), $types[$type] ?? __('Contact Request', 'lloyds-industrial'));
+    $subject = sprintf('[%s] %s', get_bloginfo('name'), $types[$type] ?? __('Contact Request', 'b2b-industrial'));
     $lines = [
         'Type: ' . ($types[$type] ?? $type),
         'Name: ' . $data['name'],
@@ -562,24 +562,24 @@ add_action('admin_post_nopriv_li_submit_contact_form', 'li_handle_contact_form_s
 add_shortcode('li_contact_form', 'li_render_contact_form_shortcode');
 add_shortcode('contact_form', 'li_render_contact_form_shortcode');
 add_shortcode('quote_request_form', function (): string {
-    return li_render_contact_form_shortcode(['type' => 'quote', 'title' => __('Quote Request', 'lloyds-industrial')]);
+    return li_render_contact_form_shortcode(['type' => 'quote', 'title' => __('Quote Request', 'b2b-industrial')]);
 });
 add_shortcode('li_reseller_application_form', function (): string {
     return li_render_contact_form_shortcode([
         'type'  => 'reseller_application',
-        'title' => __('Reseller Application', 'lloyds-industrial'),
+        'title' => __('Reseller Application', 'b2b-industrial'),
     ]);
 });
 
 add_filter('manage_li_contact_msg_posts_columns', function (array $columns): array {
     return [
         'cb'              => $columns['cb'] ?? '',
-        'title'           => __('Submission', 'lloyds-industrial'),
-        'li_contact_type' => __('Type', 'lloyds-industrial'),
-        'li_contact_status' => __('Status', 'lloyds-industrial'),
-        'li_contact_from' => __('From', 'lloyds-industrial'),
-        'li_contact_meta' => __('Product / Order', 'lloyds-industrial'),
-        'date'            => $columns['date'] ?? __('Date', 'lloyds-industrial'),
+        'title'           => __('Submission', 'b2b-industrial'),
+        'li_contact_type' => __('Type', 'b2b-industrial'),
+        'li_contact_status' => __('Status', 'b2b-industrial'),
+        'li_contact_from' => __('From', 'b2b-industrial'),
+        'li_contact_meta' => __('Product / Order', 'b2b-industrial'),
+        'date'            => $columns['date'] ?? __('Date', 'b2b-industrial'),
     ];
 });
 
@@ -623,7 +623,7 @@ add_action('manage_li_contact_msg_posts_custom_column', function (string $column
             $interests = (string) get_post_meta($post_id, '_li_reseller_product_interests', true);
 
             if ($territory !== '') {
-                echo esc_html(sprintf(__('Territory: %s', 'lloyds-industrial'), $territory));
+                echo esc_html(sprintf(__('Territory: %s', 'b2b-industrial'), $territory));
             }
 
             if ($interests !== '') {
@@ -638,11 +638,11 @@ add_action('manage_li_contact_msg_posts_custom_column', function (string $column
         }
 
         if ($quantity !== '') {
-            echo '<br><span class="description">' . esc_html(sprintf(__('Qty: %s', 'lloyds-industrial'), $quantity)) . '</span>';
+            echo '<br><span class="description">' . esc_html(sprintf(__('Qty: %s', 'b2b-industrial'), $quantity)) . '</span>';
         }
 
         if ($order_number !== '') {
-            echo '<br><span class="description">' . esc_html(sprintf(__('Order: %s', 'lloyds-industrial'), $order_number)) . '</span>';
+            echo '<br><span class="description">' . esc_html(sprintf(__('Order: %s', 'b2b-industrial'), $order_number)) . '</span>';
         }
     }
 }, 10, 2);
@@ -650,7 +650,7 @@ add_action('manage_li_contact_msg_posts_custom_column', function (string $column
 add_action('add_meta_boxes', function (): void {
     add_meta_box(
         'li_contact_submission_details',
-        __('Submission Details', 'lloyds-industrial'),
+        __('Submission Details', 'b2b-industrial'),
         'li_render_contact_submission_details_metabox',
         'li_contact_msg',
         'normal',
@@ -663,15 +663,15 @@ function li_render_contact_submission_details_metabox(WP_Post $post): void
     wp_nonce_field('li_save_contact_submission_details', 'li_contact_submission_nonce');
 
     $fields = [
-        'type'         => __('Type', 'lloyds-industrial'),
-        'name'         => __('Name', 'lloyds-industrial'),
-        'company'      => __('Company', 'lloyds-industrial'),
-        'email'        => __('Email', 'lloyds-industrial'),
-        'phone'        => __('Phone', 'lloyds-industrial'),
-        'product'      => __('Product / Subject', 'lloyds-industrial'),
-        'quantity'     => __('Quantity / Volume', 'lloyds-industrial'),
-        'order_number' => __('Order Number', 'lloyds-industrial'),
-        'source_url'   => __('Source URL', 'lloyds-industrial'),
+        'type'         => __('Type', 'b2b-industrial'),
+        'name'         => __('Name', 'b2b-industrial'),
+        'company'      => __('Company', 'b2b-industrial'),
+        'email'        => __('Email', 'b2b-industrial'),
+        'phone'        => __('Phone', 'b2b-industrial'),
+        'product'      => __('Product / Subject', 'b2b-industrial'),
+        'quantity'     => __('Quantity / Volume', 'b2b-industrial'),
+        'order_number' => __('Order Number', 'b2b-industrial'),
+        'source_url'   => __('Source URL', 'b2b-industrial'),
     ];
     $types = li_get_contact_form_types();
     $submission_type = (string) get_post_meta($post->ID, '_li_contact_type', true);
@@ -682,21 +682,21 @@ function li_render_contact_submission_details_metabox(WP_Post $post): void
         <div class="li-editor-panel__intro">
             <span class="dashicons dashicons-email-alt2"></span>
             <div>
-                <h2><?php esc_html_e('Customer Inquiry Record', 'lloyds-industrial'); ?></h2>
-                <p><?php esc_html_e('Review routing details, update workflow status, and accept reseller applications when the company is approved.', 'lloyds-industrial'); ?></p>
+                <h2><?php esc_html_e('Customer Inquiry Record', 'b2b-industrial'); ?></h2>
+                <p><?php esc_html_e('Review routing details, update workflow status, and accept reseller applications when the company is approved.', 'b2b-industrial'); ?></p>
             </div>
         </div>
 
     <p class="li-editor-panel__field">
-        <label for="li_contact_status"><strong><?php esc_html_e('Status', 'lloyds-industrial'); ?></strong></label>
+        <label for="li_contact_status"><strong><?php esc_html_e('Status', 'b2b-industrial'); ?></strong></label>
         <select id="li_contact_status" name="li_contact_status">
-            <option value="new" <?php selected($status, 'new'); ?>><?php esc_html_e('New', 'lloyds-industrial'); ?></option>
-            <option value="in_progress" <?php selected($status, 'in_progress'); ?>><?php esc_html_e('In Progress', 'lloyds-industrial'); ?></option>
+            <option value="new" <?php selected($status, 'new'); ?>><?php esc_html_e('New', 'b2b-industrial'); ?></option>
+            <option value="in_progress" <?php selected($status, 'in_progress'); ?>><?php esc_html_e('In Progress', 'b2b-industrial'); ?></option>
             <?php if ($submission_type === 'reseller_application') : ?>
-                <option value="accepted" <?php selected($status, 'accepted'); ?>><?php esc_html_e('Accepted', 'lloyds-industrial'); ?></option>
-                <option value="rejected" <?php selected($status, 'rejected'); ?>><?php esc_html_e('Rejected', 'lloyds-industrial'); ?></option>
+                <option value="accepted" <?php selected($status, 'accepted'); ?>><?php esc_html_e('Accepted', 'b2b-industrial'); ?></option>
+                <option value="rejected" <?php selected($status, 'rejected'); ?>><?php esc_html_e('Rejected', 'b2b-industrial'); ?></option>
             <?php endif; ?>
-            <option value="closed" <?php selected($status, 'closed'); ?>><?php esc_html_e('Closed', 'lloyds-industrial'); ?></option>
+            <option value="closed" <?php selected($status, 'closed'); ?>><?php esc_html_e('Closed', 'b2b-industrial'); ?></option>
         </select>
     </p>
     <?php if ($submission_type === 'reseller_application') : ?>
@@ -705,12 +705,12 @@ function li_render_contact_submission_details_metabox(WP_Post $post): void
         $created_reseller_id = (int) get_post_meta($post->ID, '_li_contact_created_reseller_id', true);
         ?>
         <p class="li-editor-panel__notice">
-            <?php esc_html_e('Setting this application to Accepted creates or links a Distributor user account and creates a draft reseller directory listing.', 'lloyds-industrial'); ?>
+            <?php esc_html_e('Setting this application to Accepted creates or links a Distributor user account and creates a draft reseller directory listing.', 'b2b-industrial'); ?>
             <?php if ($created_user_id) : ?>
-                <br><?php echo esc_html(sprintf(__('Linked user ID: %d', 'lloyds-industrial'), $created_user_id)); ?>
+                <br><?php echo esc_html(sprintf(__('Linked user ID: %d', 'b2b-industrial'), $created_user_id)); ?>
             <?php endif; ?>
             <?php if ($created_reseller_id) : ?>
-                <br><a href="<?php echo esc_url(get_edit_post_link($created_reseller_id)); ?>"><?php esc_html_e('Edit reseller listing', 'lloyds-industrial'); ?></a>
+                <br><a href="<?php echo esc_url(get_edit_post_link($created_reseller_id)); ?>"><?php esc_html_e('Edit reseller listing', 'b2b-industrial'); ?></a>
             <?php endif; ?>
         </p>
     <?php endif; ?>
@@ -741,7 +741,7 @@ function li_render_contact_submission_details_metabox(WP_Post $post): void
     </table>
 
     <?php if ($submission_type === 'reseller_application') : ?>
-        <h3><?php esc_html_e('Reseller Application Details', 'lloyds-industrial'); ?></h3>
+        <h3><?php esc_html_e('Reseller Application Details', 'b2b-industrial'); ?></h3>
         <table class="widefat striped li-editor-panel__table">
             <tbody>
                 <?php foreach (li_get_reseller_application_field_labels() as $key => $label) : ?>

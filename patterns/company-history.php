@@ -1,8 +1,8 @@
 <?php
 /**
  * Title: Company History
- * Slug: lloyds-industrial/company-history
- * Categories: lloyds-industrial
+ * Slug: b2b-industrial/company-history
+ * Categories: b2b-industrial
  */
 ?>
 
@@ -34,7 +34,7 @@
             <!-- /wp:heading -->
 
             <!-- wp:paragraph -->
-            <p>Lloyds Laboratories has been a cornerstone of Canadian industry, delivering trusted chemical solutions for over 100 years.</p>
+            <p>B2B Laboratories has been a cornerstone of Canadian industry, delivering trusted chemical solutions for over 100 years.</p>
             <!-- /wp:paragraph -->
 
             <!-- wp:list -->

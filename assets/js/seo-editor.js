@@ -13,7 +13,7 @@
     var SelectControl = wp.components.SelectControl;
     var Button = wp.components.Button;
     var Notice = wp.components.Notice;
-    var settings = window.lloydsSeoEditor || {};
+    var settings = window.b2bSeoEditor || {};
     var supportedPostTypes = settings.supportedPostTypes || [];
     var labels = settings.labels || {};
 
@@ -83,15 +83,15 @@
         return el(
             PluginDocumentSettingPanel,
             {
-                name: 'lloyds-seo-document-panel',
-                title: label('eyebrow', 'Lloyds SEO'),
-                className: 'lloyds-seo-document-panel',
+                name: 'b2b-seo-document-panel',
+                title: label('eyebrow', 'B2B SEO'),
+                className: 'b2b-seo-document-panel',
                 initialOpen: false,
             },
             el(
                 'div',
-                { className: 'lloyds-seo-document-panel__intro' },
-                el('span', null, label('eyebrow', 'Lloyds SEO')),
+                { className: 'b2b-seo-document-panel__intro' },
+                el('span', null, label('eyebrow', 'B2B SEO')),
                 el('h3', null, label('title', 'Search and Social Preview')),
                 el('p', null, label('description', 'Tune how this content appears in search results, social cards, and canonical discovery.'))
             ),
@@ -140,7 +140,7 @@
             }),
             el(
                 'div',
-                { className: 'lloyds-seo-document-panel__social' },
+                { className: 'b2b-seo-document-panel__social' },
                 el('h4', null, label('socialTitle', 'Social Title')),
                 el(TextControl, {
                     label: label('socialTitle', 'Social Title'),
@@ -158,12 +158,12 @@
                 }),
                 el(
                     'div',
-                    { className: 'lloyds-seo-document-panel__media' },
+                    { className: 'b2b-seo-document-panel__media' },
                     el('strong', null, label('socialImage', 'Social Image')),
                     el('span', null, meta._li_seo_social_image_id ? '#' + meta._li_seo_social_image_id : label('noImage', 'No image selected')),
                     el(
                         'div',
-                        { className: 'lloyds-seo-document-panel__actions' },
+                        { className: 'b2b-seo-document-panel__actions' },
                         el(
                             Button,
                             {
@@ -199,7 +199,7 @@
         );
     }
 
-    registerPlugin('lloyds-seo-document-panel', {
+    registerPlugin('b2b-seo-document-panel', {
         render: SeoDocumentPanel,
         icon: 'search',
     });

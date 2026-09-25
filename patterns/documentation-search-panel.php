@@ -1,8 +1,8 @@
 <?php
 /**
  * Title: Documentation Search Panel
- * Slug: lloyds-industrial/documentation-search-panel
- * Categories: lloyds-industrial
+ * Slug: b2b-industrial/documentation-search-panel
+ * Categories: b2b-industrial
  */
 ?>
 

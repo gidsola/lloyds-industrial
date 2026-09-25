@@ -40,11 +40,11 @@ function li_get_admin_menu_state(): array
     if ($taxonomy !== '') {
         $taxonomy_menu_state = [
             'li_document_type' => [
-                'parent' => 'lloyds-documents',
+                'parent' => 'b2b-documents',
                 'submenu' => 'edit-tags.php?taxonomy=li_document_type&post_type=li_document',
             ],
             'li_mail_tag' => [
-                'parent' => 'lloyds-campaigns',
+                'parent' => 'b2b-campaigns',
                 'submenu' => 'edit-tags.php?taxonomy=li_mail_tag&post_type=li_mail_subscriber',
             ],
         ];
@@ -60,24 +60,24 @@ function li_get_admin_menu_state(): array
 
     $post_type_menu_state = [
         'li_document' => [
-            'parent' => 'lloyds-documents',
-            'submenu' => 'lloyds-documents',
+            'parent' => 'b2b-documents',
+            'submenu' => 'b2b-documents',
         ],
         'li_mail_subscriber' => [
-            'parent' => 'lloyds-campaigns',
+            'parent' => 'b2b-campaigns',
             'submenu' => 'edit.php?post_type=li_mail_subscriber',
         ],
         'li_contact_msg' => [
-            'parent' => 'lloyds-channels',
+            'parent' => 'b2b-channels',
             'submenu' => 'edit.php?post_type=li_contact_msg',
         ],
         'li_reseller' => [
-            'parent' => 'lloyds-channels',
-            'submenu' => 'lloyds-channels',
+            'parent' => 'b2b-channels',
+            'submenu' => 'b2b-channels',
         ],
-        'lloyds_flipbook' => [
-            'parent' => 'lloyds',
-            'submenu' => 'edit.php?post_type=lloyds_flipbook',
+        'b2b_flipbook' => [
+            'parent' => 'b2b',
+            'submenu' => 'edit.php?post_type=b2b_flipbook',
         ],
     ];
 

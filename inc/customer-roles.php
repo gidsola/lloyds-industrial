@@ -10,7 +10,7 @@ add_action('init', function (): void {
     if (!get_role('li_verified_customer')) {
         add_role(
             'li_verified_customer',
-            __('Verified Customer', 'lloyds-industrial'),
+            __('Verified Customer', 'b2b-industrial'),
             [
                 'read'              => true,
                 'read_li_documents' => true,
@@ -21,7 +21,7 @@ add_action('init', function (): void {
     if (!get_role('li_distributor')) {
         add_role(
             'li_distributor',
-            __('Distributor', 'lloyds-industrial'),
+            __('Distributor', 'b2b-industrial'),
             [
                 'read'                => true,
                 'read_li_documents'   => true,

@@ -28,7 +28,7 @@ add_action('admin_init', function (): void {
 
     if (!check_admin_referer('li_reseed_site', '_wpnonce', false)) {
         set_transient('li_reseed_site_notice', 'missing_nonce', MINUTE_IN_SECONDS);
-        wp_safe_redirect(admin_url('admin.php?page=lloyds'));
+        wp_safe_redirect(admin_url('admin.php?page=b2b'));
         exit;
     }
 
@@ -309,7 +309,7 @@ function li_bootstrap_ensure_catalogue_flipbook_content(): void
 {
     $catalogue = get_page_by_path('catalogue', OBJECT, 'page');
 
-    if (!$catalogue instanceof WP_Post || str_contains($catalogue->post_content, '[lloyds_pdf_flipbook')) {
+    if (!$catalogue instanceof WP_Post || str_contains($catalogue->post_content, '[b2b_pdf_flipbook')) {
         return;
     }
 
@@ -318,7 +318,7 @@ function li_bootstrap_ensure_catalogue_flipbook_content(): void
 <!-- wp:group {"align":"wide","style":{"spacing":{"padding":{"top":"20px","bottom":"70px"}}}} -->
 <div class="wp-block-group alignwide" style="padding-top:20px;padding-bottom:70px">
     <!-- wp:shortcode -->
-    [lloyds_pdf_flipbook]
+    [b2b_pdf_flipbook]
     <!-- /wp:shortcode -->
 </div>
 <!-- /wp:group -->
@@ -326,7 +326,7 @@ function li_bootstrap_ensure_catalogue_flipbook_content(): void
 <!-- wp:group {"align":"wide","style":{"spacing":{"padding":{"bottom":"70px"}}}} -->
 <div class="wp-block-group alignwide" style="padding-bottom:70px">
     <!-- wp:shortcode -->
-    [lloyds_pdf_catalogue_library]
+    [b2b_pdf_catalogue_library]
     <!-- /wp:shortcode -->
 </div>
 <!-- /wp:group -->
@@ -717,7 +717,7 @@ function li_bootstrap_create_product_terms(): void
     ]);
 
     li_bootstrap_create_terms('product_brand', [
-        'lloyds-laboratories' => 'Lloyds Laboratories',
+        'b2b-laboratories' => 'B2B Laboratories',
     ]);
 
     li_bootstrap_normalize_product_terms();

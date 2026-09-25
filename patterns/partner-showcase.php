@@ -1,8 +1,8 @@
 <?php
 /**
  * Title: Partner Showcase
- * Slug: lloyds-industrial/partner-showcase
- * Categories: lloyds-industrial
+ * Slug: b2b-industrial/partner-showcase
+ * Categories: b2b-industrial
  */
 ?>
 

@@ -1,8 +1,8 @@
 <?php
 /**
  * Title: Contact Form Panel
- * Slug: lloyds-industrial/contact-form-panel
- * Categories: lloyds-industrial
+ * Slug: b2b-industrial/contact-form-panel
+ * Categories: b2b-industrial
  */
 ?>
 
@@ -34,7 +34,7 @@
         <div class="wp-block-column is-vertically-aligned-center li-card">
 
             <!-- wp:shortcode -->
-            [li_contact_form title="Contact Lloyds"]
+            [li_contact_form title="Contact B2B"]
             <!-- /wp:shortcode -->
 
         </div>

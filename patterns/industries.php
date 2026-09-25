@@ -1,8 +1,8 @@
 <?php
 /**
  * Title: Industries
- * Slug: lloyds-industrial/industries
- * Categories: lloyds-industrial
+ * Slug: b2b-industrial/industries
+ * Categories: b2b-industrial
  */
 ?>
 

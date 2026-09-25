@@ -47,28 +47,28 @@ function li_render_account_login_panel(): string
         <?php if (is_user_logged_in()) : ?>
             <?php $user = wp_get_current_user(); ?>
             <div class="li-account-flow__status li-account-flow__status--signed-in">
-                <p class="li-eyebrow"><?php esc_html_e('Signed In', 'lloyds-industrial'); ?></p>
-                <h2><?php echo esc_html(sprintf(__('Welcome, %s', 'lloyds-industrial'), $user->display_name ?: $user->user_login)); ?></h2>
-                <p><?php esc_html_e('Use this account for customer resources and eligible SDS downloads. Once WooCommerce is installed, order history and account details will appear here.', 'lloyds-industrial'); ?></p>
+                <p class="li-eyebrow"><?php esc_html_e('Signed In', 'b2b-industrial'); ?></p>
+                <h2><?php echo esc_html(sprintf(__('Welcome, %s', 'b2b-industrial'), $user->display_name ?: $user->user_login)); ?></h2>
+                <p><?php esc_html_e('Use this account for customer resources and eligible SDS downloads. Once WooCommerce is installed, order history and account details will appear here.', 'b2b-industrial'); ?></p>
                 <div class="li-account-flow__actions">
                     <a class="li-button-primary" href="<?php echo esc_url(home_url('/documentation/sds/')); ?>">
-                        <?php esc_html_e('Review SDS Access', 'lloyds-industrial'); ?>
+                        <?php esc_html_e('Review SDS Access', 'b2b-industrial'); ?>
                     </a>
                     <a class="li-button-secondary" href="<?php echo esc_url(wp_logout_url(li_get_account_url())); ?>">
-                        <?php esc_html_e('Sign Out', 'lloyds-industrial'); ?>
+                        <?php esc_html_e('Sign Out', 'b2b-industrial'); ?>
                     </a>
                 </div>
             </div>
         <?php else : ?>
             <div class="li-account-flow__grid">
                 <div class="li-account-flow__copy">
-                    <p class="li-eyebrow"><?php esc_html_e('Customer Login', 'lloyds-industrial'); ?></p>
-                    <h2><?php esc_html_e('Sign In With Your Customer Account', 'lloyds-industrial'); ?></h2>
-                    <p><?php esc_html_e('Use the account tied to your Lloyds product orders. SDS access is matched against purchase history for the related product.', 'lloyds-industrial'); ?></p>
+                    <p class="li-eyebrow"><?php esc_html_e('Customer Login', 'b2b-industrial'); ?></p>
+                    <h2><?php esc_html_e('Sign In With Your Customer Account', 'b2b-industrial'); ?></h2>
+                    <p><?php esc_html_e('Use the account tied to your B2B product orders. SDS access is matched against purchase history for the related product.', 'b2b-industrial'); ?></p>
                     <ul>
-                        <li><?php esc_html_e('Account login is the front door for customer access.', 'lloyds-industrial'); ?></li>
-                        <li><?php esc_html_e('SDS downloads remain product-specific and purchase-gated.', 'lloyds-industrial'); ?></li>
-                        <li><?php esc_html_e('If your order history is missing, contact support to help match the account.', 'lloyds-industrial'); ?></li>
+                        <li><?php esc_html_e('Account login is the front door for customer access.', 'b2b-industrial'); ?></li>
+                        <li><?php esc_html_e('SDS downloads remain product-specific and purchase-gated.', 'b2b-industrial'); ?></li>
+                        <li><?php esc_html_e('If your order history is missing, contact support to help match the account.', 'b2b-industrial'); ?></li>
                     </ul>
                 </div>
                 <div class="li-account-flow__form">
@@ -76,18 +76,18 @@ function li_render_account_login_panel(): string
                     wp_login_form([
                         'echo'           => true,
                         'redirect'       => $redirect_to,
-                        'label_username' => __('Email or Username', 'lloyds-industrial'),
-                        'label_password' => __('Password', 'lloyds-industrial'),
-                        'label_log_in'   => __('Sign In', 'lloyds-industrial'),
+                        'label_username' => __('Email or Username', 'b2b-industrial'),
+                        'label_password' => __('Password', 'b2b-industrial'),
+                        'label_log_in'   => __('Sign In', 'b2b-industrial'),
                     ]);
                     ?>
                     <p class="li-account-flow__links">
                         <a href="<?php echo esc_url(wp_lostpassword_url(li_get_account_url())); ?>">
-                            <?php esc_html_e('Forgot password?', 'lloyds-industrial'); ?>
+                            <?php esc_html_e('Forgot password?', 'b2b-industrial'); ?>
                         </a>
                         <?php if (get_option('users_can_register')) : ?>
                             <a href="<?php echo esc_url(wp_registration_url()); ?>">
-                                <?php esc_html_e('Create account', 'lloyds-industrial'); ?>
+                                <?php esc_html_e('Create account', 'b2b-industrial'); ?>
                             </a>
                         <?php endif; ?>
                     </p>
@@ -110,41 +110,41 @@ function li_render_sds_access_panel_shortcode(): string
     ?>
     <section class="li-sds-flow" aria-labelledby="li-sds-flow-title">
         <div class="li-sds-flow__header">
-            <p class="li-eyebrow"><?php esc_html_e('How SDS Access Works', 'lloyds-industrial'); ?></p>
-            <h2 id="li-sds-flow-title"><?php esc_html_e('SDS Documents Are Private To Eligible Customers', 'lloyds-industrial'); ?></h2>
-            <p><?php esc_html_e('Safety Data Sheets are not a public library. Sign in with the account connected to your product purchase, then open the related product page to download eligible SDS files.', 'lloyds-industrial'); ?></p>
+            <p class="li-eyebrow"><?php esc_html_e('How SDS Access Works', 'b2b-industrial'); ?></p>
+            <h2 id="li-sds-flow-title"><?php esc_html_e('SDS Documents Are Private To Eligible Customers', 'b2b-industrial'); ?></h2>
+            <p><?php esc_html_e('Safety Data Sheets are not a public library. Sign in with the account connected to your product purchase, then open the related product page to download eligible SDS files.', 'b2b-industrial'); ?></p>
         </div>
 
         <div class="li-sds-flow__steps">
             <article>
                 <span>1</span>
-                <h3><?php esc_html_e('Sign in', 'lloyds-industrial'); ?></h3>
-                <p><?php esc_html_e('Use the same account associated with the product order.', 'lloyds-industrial'); ?></p>
+                <h3><?php esc_html_e('Sign in', 'b2b-industrial'); ?></h3>
+                <p><?php esc_html_e('Use the same account associated with the product order.', 'b2b-industrial'); ?></p>
             </article>
             <article>
                 <span>2</span>
-                <h3><?php esc_html_e('Open the product', 'lloyds-industrial'); ?></h3>
-                <p><?php esc_html_e('SDS access is checked against the related product record.', 'lloyds-industrial'); ?></p>
+                <h3><?php esc_html_e('Open the product', 'b2b-industrial'); ?></h3>
+                <p><?php esc_html_e('SDS access is checked against the related product record.', 'b2b-industrial'); ?></p>
             </article>
             <article>
                 <span>3</span>
-                <h3><?php esc_html_e('Download if eligible', 'lloyds-industrial'); ?></h3>
-                <p><?php esc_html_e('Purchased-product matches can download through protected document streaming.', 'lloyds-industrial'); ?></p>
+                <h3><?php esc_html_e('Download if eligible', 'b2b-industrial'); ?></h3>
+                <p><?php esc_html_e('Purchased-product matches can download through protected document streaming.', 'b2b-industrial'); ?></p>
             </article>
         </div>
 
         <div class="li-sds-flow__actions">
             <?php if (is_user_logged_in()) : ?>
                 <a class="li-button-primary" href="<?php echo esc_url($products_url); ?>">
-                    <?php esc_html_e('Browse Products', 'lloyds-industrial'); ?>
+                    <?php esc_html_e('Browse Products', 'b2b-industrial'); ?>
                 </a>
             <?php else : ?>
                 <a class="li-button-primary" href="<?php echo esc_url($account_url); ?>">
-                    <?php esc_html_e('Sign In For SDS Access', 'lloyds-industrial'); ?>
+                    <?php esc_html_e('Sign In For SDS Access', 'b2b-industrial'); ?>
                 </a>
             <?php endif; ?>
             <a class="li-button-secondary" href="<?php echo esc_url($contact_url); ?>">
-                <?php esc_html_e('Get Access Help', 'lloyds-industrial'); ?>
+                <?php esc_html_e('Get Access Help', 'b2b-industrial'); ?>
             </a>
         </div>
     </section>
@@ -240,15 +240,15 @@ function li_render_account_sds_section(): string
     ?>
     <section class="li-account-sds">
         <div class="li-account-sds__header">
-            <p class="li-eyebrow"><?php esc_html_e('SDS Library', 'lloyds-industrial'); ?></p>
-            <h2><?php esc_html_e('SDS For Purchased Products', 'lloyds-industrial'); ?></h2>
-            <p><?php esc_html_e('Safety Data Sheets appear here when your account has purchase history for the related product.', 'lloyds-industrial'); ?></p>
+            <p class="li-eyebrow"><?php esc_html_e('SDS Library', 'b2b-industrial'); ?></p>
+            <h2><?php esc_html_e('SDS For Purchased Products', 'b2b-industrial'); ?></h2>
+            <p><?php esc_html_e('Safety Data Sheets appear here when your account has purchase history for the related product.', 'b2b-industrial'); ?></p>
         </div>
 
         <?php if (!$items) : ?>
             <div class="li-account-sds__empty">
-                <p><?php esc_html_e('No eligible SDS downloads were found for this account yet.', 'lloyds-industrial'); ?></p>
-                <a class="li-button-secondary" href="<?php echo esc_url(home_url('/contact/')); ?>"><?php esc_html_e('Get SDS Access Help', 'lloyds-industrial'); ?></a>
+                <p><?php esc_html_e('No eligible SDS downloads were found for this account yet.', 'b2b-industrial'); ?></p>
+                <a class="li-button-secondary" href="<?php echo esc_url(home_url('/contact/')); ?>"><?php esc_html_e('Get SDS Access Help', 'b2b-industrial'); ?></a>
             </div>
         <?php else : ?>
             <div class="li-account-sds__list">
@@ -259,8 +259,8 @@ function li_render_account_sds_section(): string
                             <p><?php echo esc_html(get_the_title($item['document_id'])); ?></p>
                         </div>
                         <div class="li-account-sds__actions">
-                            <a class="li-button-secondary" href="<?php echo esc_url($item['product_url']); ?>"><?php esc_html_e('View Product', 'lloyds-industrial'); ?></a>
-                            <a class="li-button-primary" href="<?php echo esc_url($item['download_url']); ?>"><?php esc_html_e('Download SDS', 'lloyds-industrial'); ?></a>
+                            <a class="li-button-secondary" href="<?php echo esc_url($item['product_url']); ?>"><?php esc_html_e('View Product', 'b2b-industrial'); ?></a>
+                            <a class="li-button-primary" href="<?php echo esc_url($item['download_url']); ?>"><?php esc_html_e('Download SDS', 'b2b-industrial'); ?></a>
                         </div>
                     </article>
                 <?php endforeach; ?>

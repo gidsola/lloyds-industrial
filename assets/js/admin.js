@@ -138,7 +138,7 @@
         const idInput = container.querySelector('[data-li-product-id]');
         const results = container.querySelector('[data-li-product-results]');
 
-        if (!searchInput || !idInput || !results || !window.lloydsAdmin?.ajaxUrl) {
+        if (!searchInput || !idInput || !results || !window.b2bAdmin?.ajaxUrl) {
             return;
         }
 
@@ -194,12 +194,12 @@
                 const currentRequestId = ++requestId;
                 const params = new URLSearchParams({
                     action: 'li_search_products',
-                    _ajax_nonce: window.lloydsAdmin.nonce,
+                    _ajax_nonce: window.b2bAdmin.nonce,
                     search: query,
                 });
 
                 try {
-                    const response = await fetch(`${window.lloydsAdmin.ajaxUrl}?${params.toString()}`, {
+                    const response = await fetch(`${window.b2bAdmin.ajaxUrl}?${params.toString()}`, {
                         credentials: 'same-origin',
                     });
                     const payload = await response.json();
@@ -308,8 +308,8 @@
         window.setTimeout(dismiss, 5200);
     });
 
-    if (window.lloydsAdmin?.mediaLibrary?.enabled) {
-        const settings = window.lloydsAdmin.mediaLibrary;
+    if (window.b2bAdmin?.mediaLibrary?.enabled) {
+        const settings = window.b2bAdmin.mediaLibrary;
         const heading = document.querySelector('.wrap h1');
         const existing = document.querySelector('.li-media-library-banner');
 
@@ -319,7 +319,7 @@
             banner.innerHTML = `
                 <div>
                     <p class="li-settings-kicker">Media Library</p>
-                    <h2>${escapeText(settings.title || 'Lloyds Media Library')}</h2>
+                    <h2>${escapeText(settings.title || 'B2B Media Library')}</h2>
                     <p>${escapeText(settings.copy || '')}</p>
                 </div>
                 <div class="li-media-library-banner__cards">
@@ -348,8 +348,8 @@
                 return;
             }
 
-            const contextFilter = buildFilter('li_media_context', settings.contextLabel || 'All Lloyds media uses', settings.contexts);
-            const folderFilter = buildFilter('li_media_folder', settings.folderLabel || 'All Lloyds folders', settings.folders);
+            const contextFilter = buildFilter('li_media_context', settings.contextLabel || 'All B2B media uses', settings.contexts);
+            const folderFilter = buildFilter('li_media_folder', settings.folderLabel || 'All B2B folders', settings.folders);
 
             toolbar.append(contextFilter, folderFilter);
 

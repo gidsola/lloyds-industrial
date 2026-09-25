@@ -1,8 +1,8 @@
 <?php
 /**
  * Title: Contact Specialist
- * Slug: lloyds-industrial/contact-specialist
- * Categories: lloyds-industrial
+ * Slug: b2b-industrial/contact-specialist
+ * Categories: b2b-industrial
  */
 ?>
 

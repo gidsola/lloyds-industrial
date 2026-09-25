@@ -1,8 +1,8 @@
 <?php
 /**
  * Title: Product Category Cards
- * Slug: lloyds-industrial/product-category-cards
- * Categories: lloyds-industrial
+ * Slug: b2b-industrial/product-category-cards
+ * Categories: b2b-industrial
  */
 ?>
 
@@ -21,10 +21,10 @@
         <!-- /wp:heading -->
 
         <!-- wp:paragraph {"align":"center"} -->
-        <p class="has-text-align-center">Browse the current Lloyds catalogue by live product category.</p>
+        <p class="has-text-align-center">Browse the current B2B catalogue by live product category.</p>
         <!-- /wp:paragraph -->
 
-        <!-- wp:lloyds-industrial/product-category-grid /-->
+        <!-- wp:b2b-industrial/product-category-grid /-->
 
     </div>
     <!-- /wp:group -->

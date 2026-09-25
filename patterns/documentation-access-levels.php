@@ -1,8 +1,8 @@
 <?php
 /**
  * Title: Documentation Access Levels
- * Slug: lloyds-industrial/documentation-access-levels
- * Categories: lloyds-industrial
+ * Slug: b2b-industrial/documentation-access-levels
+ * Categories: b2b-industrial
  */
 ?>
 

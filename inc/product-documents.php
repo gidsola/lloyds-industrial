@@ -105,8 +105,8 @@ function li_save_product_sds_document(int $product_id, int $file_id): int
         $document_id = wp_insert_post([
             'post_title'  => sprintf(
                 /* translators: %s: product title */
-                __('%s SDS', 'lloyds-industrial'),
-                $product_title ?: __('Product', 'lloyds-industrial')
+                __('%s SDS', 'b2b-industrial'),
+                $product_title ?: __('Product', 'b2b-industrial')
             ),
             'post_type'   => 'li_document',
             'post_status' => 'publish',
@@ -161,16 +161,16 @@ function li_render_product_documents_block(): string
     ?>
     <section class="li-product-documents">
         <div class="li-product-documents__header">
-            <p class="li-eyebrow"><?php esc_html_e('Documentation', 'lloyds-industrial'); ?></p>
-            <h2><?php esc_html_e('Product Documents', 'lloyds-industrial'); ?></h2>
+            <p class="li-eyebrow"><?php esc_html_e('Documentation', 'b2b-industrial'); ?></p>
+            <h2><?php esc_html_e('Product Documents', 'b2b-industrial'); ?></h2>
             <p>
-                <?php esc_html_e('Access public technical resources. SDS downloads are available to customers who purchased this product.', 'lloyds-industrial'); ?>
+                <?php esc_html_e('Access public technical resources. SDS downloads are available to customers who purchased this product.', 'b2b-industrial'); ?>
             </p>
         </div>
 
         <?php if (!$documents): ?>
             <div class="li-doc-empty">
-                <p><?php esc_html_e('No documents are currently attached to this product.', 'lloyds-industrial'); ?></p>
+                <p><?php esc_html_e('No documents are currently attached to this product.', 'b2b-industrial'); ?></p>
             </div>
         <?php else: ?>
             <div class="li-doc-list">
@@ -198,15 +198,15 @@ function li_render_product_documents_block(): string
                         <div class="li-doc-card__action">
                             <?php if ($download_url): ?>
                                 <a class="li-button-primary" href="<?php echo esc_url(li_get_secure_document_url($document->ID)); ?>">
-                                    <?php esc_html_e('Download', 'lloyds-industrial'); ?>
+                                    <?php esc_html_e('Download', 'b2b-industrial'); ?>
                                 </a>
                             <?php elseif ($is_sds && is_user_logged_in()): ?>
                                 <span class="li-button-primary" aria-disabled="true">
-                                    <?php esc_html_e('Purchase Required', 'lloyds-industrial'); ?>
+                                    <?php esc_html_e('Purchase Required', 'b2b-industrial'); ?>
                                 </span>
                             <?php else: ?>
                                 <a class="li-button-primary" href="<?php echo esc_url(li_get_account_login_url(get_permalink($product_id))); ?>">
-                                    <?php esc_html_e('Sign In', 'lloyds-industrial'); ?>
+                                    <?php esc_html_e('Sign In', 'b2b-industrial'); ?>
                                 </a>
                             <?php endif; ?>
                         </div>

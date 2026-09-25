@@ -8,9 +8,9 @@ if (!defined('ABSPATH')) {
 
 add_action('init', function (): void {
     register_block_pattern_category(
-        'lloyds-industrial',
+        'b2b-industrial',
         [
-            'label' => __('Lloyds Industrial', 'lloyds-industrial'),
+            'label' => __('B2B Industrial', 'b2b-industrial'),
         ]
     );
 });

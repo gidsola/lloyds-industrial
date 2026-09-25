@@ -1,8 +1,8 @@
 <?php
 /**
  * Title: Product Documentation Banner
- * Slug: lloyds-industrial/product-docs-banner
- * Categories: lloyds-industrial
+ * Slug: b2b-industrial/product-docs-banner
+ * Categories: b2b-industrial
  */
 ?>
 

@@ -9,7 +9,7 @@ if (!defined('ABSPATH')) {
 add_action('add_meta_boxes', function (): void {
     add_meta_box(
         'li_document_settings',
-        __('Document Settings', 'lloyds-industrial'),
+        __('Document Settings', 'b2b-industrial'),
         'li_render_document_settings_metabox',
         'li_document',
         'normal',
@@ -24,7 +24,7 @@ function li_render_document_settings_metabox(WP_Post $post): void
     $file_id = (int) get_post_meta($post->ID, '_li_document_file_id', true);
     $related_product_id = (int) get_post_meta($post->ID, '_li_related_product_id', true);
     $access_level = (string) get_post_meta($post->ID, '_li_access_level', true);
-    $file_label = $file_id ? get_the_title($file_id) : __('No file selected', 'lloyds-industrial');
+    $file_label = $file_id ? get_the_title($file_id) : __('No file selected', 'b2b-industrial');
     $is_sds = li_is_sds_document($post->ID);
     $related_product_title = $related_product_id ? get_the_title($related_product_id) : '';
 
@@ -37,14 +37,14 @@ function li_render_document_settings_metabox(WP_Post $post): void
         <div class="li-editor-panel__intro">
             <span class="dashicons dashicons-media-document"></span>
             <div>
-                <h2><?php esc_html_e('Document Access Record', 'lloyds-industrial'); ?></h2>
-                <p><?php esc_html_e('Attach the source file, connect it to a product when needed, and control whether customers can access it publicly or through purchase-gated SDS rules.', 'lloyds-industrial'); ?></p>
+                <h2><?php esc_html_e('Document Access Record', 'b2b-industrial'); ?></h2>
+                <p><?php esc_html_e('Attach the source file, connect it to a product when needed, and control whether customers can access it publicly or through purchase-gated SDS rules.', 'b2b-industrial'); ?></p>
             </div>
         </div>
 
     <p class="li-editor-panel__field">
         <label for="li_document_file_id">
-            <strong><?php esc_html_e('Document File', 'lloyds-industrial'); ?></strong>
+            <strong><?php esc_html_e('Document File', 'b2b-industrial'); ?></strong>
         </label>
         <span data-li-media-picker>
             <input
@@ -60,34 +60,34 @@ function li_render_document_settings_metabox(WP_Post $post): void
                 type="button"
                 class="button"
                 data-li-media-select
-                data-li-media-title="<?php esc_attr_e('Select Document File', 'lloyds-industrial'); ?>"
-                data-li-media-button="<?php esc_attr_e('Use This File', 'lloyds-industrial'); ?>"
+                data-li-media-title="<?php esc_attr_e('Select Document File', 'b2b-industrial'); ?>"
+                data-li-media-button="<?php esc_attr_e('Use This File', 'b2b-industrial'); ?>"
             >
-                <?php esc_html_e('Select / Upload File', 'lloyds-industrial'); ?>
+                <?php esc_html_e('Select / Upload File', 'b2b-industrial'); ?>
             </button>
             <button type="button" class="button" data-li-media-remove <?php echo $file_id ? '' : 'hidden'; ?>>
-                <?php esc_html_e('Remove', 'lloyds-industrial'); ?>
+                <?php esc_html_e('Remove', 'b2b-industrial'); ?>
             </button>
         </span>
         <span class="description">
-            <?php esc_html_e('SDS files are copied into protected storage when this document is saved.', 'lloyds-industrial'); ?>
+            <?php esc_html_e('SDS files are copied into protected storage when this document is saved.', 'b2b-industrial'); ?>
         </span>
     </p>
 
     <p class="li-editor-panel__field">
         <label for="li_related_product_id">
-            <strong><?php esc_html_e('Related Product ID', 'lloyds-industrial'); ?></strong>
+            <strong><?php esc_html_e('Related Product ID', 'b2b-industrial'); ?></strong>
         </label>
         <span data-li-product-finder>
             <input
                 type="search"
                 class="widefat"
-                placeholder="<?php esc_attr_e('Search products by name...', 'lloyds-industrial'); ?>"
+                placeholder="<?php esc_attr_e('Search products by name...', 'b2b-industrial'); ?>"
                 value="<?php echo esc_attr($related_product_title); ?>"
                 data-li-product-search
             >
             <span class="description">
-                <?php esc_html_e('Search and select a product, or enter the product ID manually below.', 'lloyds-industrial'); ?>
+                <?php esc_html_e('Search and select a product, or enter the product ID manually below.', 'b2b-industrial'); ?>
             </span>
             <div class="li-product-search-results" data-li-product-results hidden></div>
         </span>
@@ -103,25 +103,25 @@ function li_render_document_settings_metabox(WP_Post $post): void
 
     <p class="li-editor-panel__field">
         <label for="li_access_level">
-            <strong><?php esc_html_e('Access Level', 'lloyds-industrial'); ?></strong>
+            <strong><?php esc_html_e('Access Level', 'b2b-industrial'); ?></strong>
         </label>
         <?php if ($is_sds): ?>
             <input type="hidden" name="li_access_level" value="sds_purchase">
-            <strong><?php esc_html_e('SDS - Purchase Required', 'lloyds-industrial'); ?></strong>
+            <strong><?php esc_html_e('SDS - Purchase Required', 'b2b-industrial'); ?></strong>
             <span class="description">
-                <?php esc_html_e('SDS files are never public. Customers must be logged in and have purchased the related product.', 'lloyds-industrial'); ?>
+                <?php esc_html_e('SDS files are never public. Customers must be logged in and have purchased the related product.', 'b2b-industrial'); ?>
             </span>
         <?php else: ?>
             <select id="li_access_level" name="li_access_level" class="widefat">
                 <option value="public" <?php selected($access_level, 'public'); ?>>
-                    <?php esc_html_e('Public', 'lloyds-industrial'); ?>
+                    <?php esc_html_e('Public', 'b2b-industrial'); ?>
                 </option>
                 <option value="internal" <?php selected($access_level, 'internal'); ?>>
-                    <?php esc_html_e('Internal', 'lloyds-industrial'); ?>
+                    <?php esc_html_e('Internal', 'b2b-industrial'); ?>
                 </option>
             </select>
             <span class="description">
-                <?php esc_html_e('If this document is assigned the SDS type, this setting is overridden by purchase history.', 'lloyds-industrial'); ?>
+                <?php esc_html_e('If this document is assigned the SDS type, this setting is overridden by purchase history.', 'b2b-industrial'); ?>
             </span>
         <?php endif; ?>
     </p>
@@ -134,7 +134,7 @@ add_action('wp_ajax_li_search_products', function (): void {
 
     if (!current_user_can('edit_products') && !current_user_can('edit_posts') && !current_user_can('manage_options')) {
         wp_send_json_error([
-            'message' => __('You do not have permission to search products.', 'lloyds-industrial'),
+            'message' => __('You do not have permission to search products.', 'b2b-industrial'),
         ], 403);
     }
 

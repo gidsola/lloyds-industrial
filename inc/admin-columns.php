@@ -7,9 +7,9 @@ if (!defined('ABSPATH')) {
 }
 
 add_filter('manage_li_document_posts_columns', function (array $columns): array {
-    $columns['li_document_type'] = __('Type', 'lloyds-industrial');
-    $columns['li_access_level'] = __('Access', 'lloyds-industrial');
-    $columns['li_related_product'] = __('Related Product', 'lloyds-industrial');
+    $columns['li_document_type'] = __('Type', 'b2b-industrial');
+    $columns['li_access_level'] = __('Access', 'b2b-industrial');
+    $columns['li_related_product'] = __('Related Product', 'b2b-industrial');
 
     return $columns;
 });
@@ -31,8 +31,8 @@ add_action('manage_li_document_posts_custom_column', function (string $column, i
 }, 10, 2);
 
 add_filter('manage_edit-product_columns', function (array $columns): array {
-    $columns['li_industries'] = __('Industries', 'lloyds-industrial');
-    $columns['li_applications'] = __('Applications', 'lloyds-industrial');
+    $columns['li_industries'] = __('Industries', 'b2b-industrial');
+    $columns['li_applications'] = __('Applications', 'b2b-industrial');
 
     return $columns;
 });

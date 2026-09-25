@@ -1,8 +1,8 @@
 <?php
 /**
  * Title: Account Request
- * Slug: lloyds-industrial/account-request
- * Categories: lloyds-industrial
+ * Slug: b2b-industrial/account-request
+ * Categories: b2b-industrial
  */
 ?>
 
@@ -38,7 +38,7 @@
             <!-- /wp:heading -->
 
             <!-- wp:paragraph -->
-            <p>Send your company name, email, product name, and any order details available. Lloyds support can help confirm the right account path.</p>
+            <p>Send your company name, email, product name, and any order details available. B2B support can help confirm the right account path.</p>
             <!-- /wp:paragraph -->
 
             <!-- wp:buttons -->

@@ -19,7 +19,7 @@ function li_get_brand_setting(string $key, mixed $default = null): mixed
 
 add_action('customize_register', function (WP_Customize_Manager $wp_customize): void {
     $wp_customize->add_section('li_brand_settings', [
-        'title'    => __('Brand Settings', 'lloyds-industrial'),
+        'title'    => __('Brand Settings', 'b2b-industrial'),
         'priority' => 30,
     ]);
 
@@ -37,7 +37,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize): 
             $wp_customize,
             "li_brand_$key",
             [
-                'label'    => __($label, 'lloyds-industrial'),
+                'label'    => __($label, 'b2b-industrial'),
                 'section'  => 'li_brand_settings',
                 'settings' => "li_brand_settings[$key]",
             ]

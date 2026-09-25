@@ -10,60 +10,60 @@ add_action('wp_enqueue_scripts', function (): void {
     li_enqueue_google_fonts();
 
     wp_enqueue_style(
-        'lloyds-style',
+        'b2b-style',
         get_template_directory_uri() . '/assets/css/main.css',
         [],
         filemtime(get_template_directory() . '/assets/css/main.css')
     );
 
     wp_add_inline_style(
-        'lloyds-style',
+        'b2b-style',
         li_get_dynamic_brand_css()
     );
 
     wp_enqueue_script(
-        'lloyds-theme',
+        'b2b-theme',
         get_template_directory_uri() . '/assets/js/theme.js',
         [],
         filemtime(get_template_directory() . '/assets/js/theme.js'),
         true
     );
 
-    wp_localize_script('lloyds-theme', 'lloydsTheme', [
+    wp_localize_script('b2b-theme', 'b2bTheme', [
         'ajaxUrl' => admin_url('admin-ajax.php'),
         'productSearchNonce' => wp_create_nonce('li_frontend_product_search'),
         'productSearchMinLength' => 2,
         'mailSignup' => [
-            'sending' => __('Joining...', 'lloyds-industrial'),
-            'error' => __('Signup failed. Please try again.', 'lloyds-industrial'),
+            'sending' => __('Joining...', 'b2b-industrial'),
+            'error' => __('Signup failed. Please try again.', 'b2b-industrial'),
         ],
         'i18n' => [
-            'searching' => __('Searching products...', 'lloyds-industrial'),
-            'noResults' => __('No matching products found.', 'lloyds-industrial'),
-            'error' => __('Product search is unavailable right now.', 'lloyds-industrial'),
+            'searching' => __('Searching products...', 'b2b-industrial'),
+            'noResults' => __('No matching products found.', 'b2b-industrial'),
+            'error' => __('Product search is unavailable right now.', 'b2b-industrial'),
         ],
     ]);
 });
 
 add_action('enqueue_block_editor_assets', function (): void {
-    li_enqueue_google_fonts('lloyds-editor-fonts');
+    li_enqueue_google_fonts('b2b-editor-fonts');
 
     wp_enqueue_style(
-        'lloyds-editor-main',
+        'b2b-editor-main',
         get_template_directory_uri() . '/assets/css/main.css',
         [],
         filemtime(get_template_directory() . '/assets/css/main.css')
     );
 
     wp_add_inline_style(
-        'lloyds-editor-main',
+        'b2b-editor-main',
         li_get_dynamic_brand_css()
     );
 
     wp_enqueue_style(
-        'lloyds-editor',
+        'b2b-editor',
         get_template_directory_uri() . '/assets/css/editor.css',
-        ['lloyds-editor-main'],
+        ['b2b-editor-main'],
         filemtime(get_template_directory() . '/assets/css/editor.css')
     );
 });
@@ -78,42 +78,42 @@ add_action('admin_enqueue_scripts', function (string $hook_suffix): void {
         'li_mail_subscriber',
         'li_mail_campaign',
         'li_reseller',
-        'lloyds_flipbook',
+        'b2b_flipbook',
     ];
 
     if (
-        $hook_suffix === 'toplevel_page_lloyds'
-        || $hook_suffix === 'toplevel_page_lloyds-intelligence'
-        || $hook_suffix === 'toplevel_page_lloyds-documents'
-        || $hook_suffix === 'toplevel_page_lloyds-channels'
-        || $hook_suffix === 'toplevel_page_lloyds-campaigns'
-        || $hook_suffix === 'lloyds_page_lloyds-product-carousel'
-        || $hook_suffix === 'lloyds_page_lloyds-product-media-organizer'
-        || $hook_suffix === 'lloyds_page_lloyds-mega-menu'
+        $hook_suffix === 'toplevel_page_b2b'
+        || $hook_suffix === 'toplevel_page_b2b-intelligence'
+        || $hook_suffix === 'toplevel_page_b2b-documents'
+        || $hook_suffix === 'toplevel_page_b2b-channels'
+        || $hook_suffix === 'toplevel_page_b2b-campaigns'
+        || $hook_suffix === 'b2b_page_b2b-product-carousel'
+        || $hook_suffix === 'b2b_page_b2b-product-media-organizer'
+        || $hook_suffix === 'b2b_page_b2b-mega-menu'
         || $hook_suffix === 'upload.php'
         || $hook_suffix === 'media-new.php'
         || in_array($admin_page, [
-            'lloyds',
-            'lloyds-intelligence',
-            'lloyds-documents',
-            'lloyds-channels',
-            'lloyds-campaigns',
-            'lloyds-mega-menu',
-            'lloyds-contact-forms',
-            'lloyds-product-carousel',
-            'lloyds-analytics',
-            'lloyds-seo',
-            'lloyds-mail-campaigns',
-            'lloyds-mail-campaign-builder',
-            'lloyds-ai-chatbot',
-            'lloyds-product-media-organizer',
+            'b2b',
+            'b2b-intelligence',
+            'b2b-documents',
+            'b2b-channels',
+            'b2b-campaigns',
+            'b2b-mega-menu',
+            'b2b-contact-forms',
+            'b2b-product-carousel',
+            'b2b-analytics',
+            'b2b-seo',
+            'b2b-mail-campaigns',
+            'b2b-mail-campaign-builder',
+            'b2b-ai-chatbot',
+            'b2b-product-media-organizer',
         ], true)
         || ($screen && in_array((string) $screen->post_type, $styled_post_types, true))
     ) {
-        li_enqueue_google_fonts('lloyds-settings-admin-fonts');
+        li_enqueue_google_fonts('b2b-settings-admin-fonts');
 
         wp_enqueue_style(
-            'lloyds-settings-admin',
+            'b2b-settings-admin',
             get_template_directory_uri() . '/assets/css/settings-admin.css',
             [],
             filemtime(get_template_directory() . '/assets/css/settings-admin.css')
@@ -122,27 +122,27 @@ add_action('admin_enqueue_scripts', function (string $hook_suffix): void {
 
     if (in_array($hook_suffix, ['upload.php', 'media-new.php'], true)) {
         wp_enqueue_script(
-            'lloyds-admin',
+            'b2b-admin',
             get_template_directory_uri() . '/assets/js/admin.js',
             ['jquery'],
             filemtime(get_template_directory() . '/assets/js/admin.js'),
             true
         );
 
-        wp_localize_script('lloyds-admin', 'lloydsAdmin', [
+        wp_localize_script('b2b-admin', 'b2bAdmin', [
             'ajaxUrl' => admin_url('admin-ajax.php'),
             'nonce'   => wp_create_nonce('li_admin_search_products'),
             'mediaLibrary' => [
                 'enabled' => true,
-                'title' => __('Lloyds Media Library', 'lloyds-industrial'),
-                'copy' => __('Product images, flipbooks, and protected SDS files are now tracked with Lloyds-aware context so the library stays useful after imports.', 'lloyds-industrial'),
+                'title' => __('B2B Media Library', 'b2b-industrial'),
+                'copy' => __('Product images, flipbooks, and protected SDS files are now tracked with B2B-aware context so the library stays useful after imports.', 'b2b-industrial'),
                 'cards' => [
-                    __('Woo product images organize by category and item.', 'lloyds-industrial'),
-                    __('Flipbook PDFs stay with their catalogue records.', 'lloyds-industrial'),
-                    __('SDS files remain protected and purchase-gated.', 'lloyds-industrial'),
+                    __('Woo product images organize by category and item.', 'b2b-industrial'),
+                    __('Flipbook PDFs stay with their catalogue records.', 'b2b-industrial'),
+                    __('SDS files remain protected and purchase-gated.', 'b2b-industrial'),
                 ],
-                'contextLabel' => __('All Lloyds media uses', 'lloyds-industrial'),
-                'folderLabel' => __('All Lloyds folders', 'lloyds-industrial'),
+                'contextLabel' => __('All B2B media uses', 'b2b-industrial'),
+                'folderLabel' => __('All B2B folders', 'b2b-industrial'),
                 'contexts' => function_exists('li_media_get_context_filter_options')
                     ? li_media_get_context_filter_options()
                     : [],
@@ -153,8 +153,8 @@ add_action('admin_enqueue_scripts', function (string $hook_suffix): void {
         ]);
     }
 
-    if ($hook_suffix === 'lloyds_page_lloyds-mega-menu') {
-        li_enqueue_google_fonts('lloyds-mega-menu-admin-fonts');
+    if ($hook_suffix === 'b2b_page_b2b-mega-menu') {
+        li_enqueue_google_fonts('b2b-mega-menu-admin-fonts');
 
         wp_enqueue_style(
             'li-mega-menu-admin',
@@ -168,9 +168,9 @@ add_action('admin_enqueue_scripts', function (string $hook_suffix): void {
         ? li_seo_get_supported_public_post_types()
         : [];
 
-    if (in_array($admin_page, ['lloyds', 'lloyds-campaigns', 'lloyds-product-carousel', 'lloyds-seo', 'lloyds-ai-chatbot', 'lloyds-intelligence'], true)) {
+    if (in_array($admin_page, ['b2b', 'b2b-campaigns', 'b2b-product-carousel', 'b2b-seo', 'b2b-ai-chatbot', 'b2b-intelligence'], true)) {
         wp_enqueue_script(
-            'lloyds-admin',
+            'b2b-admin',
             get_template_directory_uri() . '/assets/js/admin.js',
             [],
             filemtime(get_template_directory() . '/assets/js/admin.js'),
@@ -178,7 +178,7 @@ add_action('admin_enqueue_scripts', function (string $hook_suffix): void {
         );
     }
 
-    if ($admin_page === 'lloyds-seo') {
+    if ($admin_page === 'b2b-seo') {
         wp_enqueue_media();
 
         return;
@@ -191,27 +191,27 @@ add_action('admin_enqueue_scripts', function (string $hook_suffix): void {
     wp_enqueue_media();
 
     wp_enqueue_script(
-        'lloyds-admin',
+        'b2b-admin',
         get_template_directory_uri() . '/assets/js/admin.js',
         ['jquery'],
         filemtime(get_template_directory() . '/assets/js/admin.js'),
         true
     );
 
-    wp_localize_script('lloyds-admin', 'lloydsAdmin', [
+    wp_localize_script('b2b-admin', 'b2bAdmin', [
         'ajaxUrl' => admin_url('admin-ajax.php'),
         'nonce'   => wp_create_nonce('li_admin_search_products'),
     ]);
 
-    wp_register_style('lloyds-admin-style', false, [], null);
-    wp_enqueue_style('lloyds-admin-style');
+    wp_register_style('b2b-admin-style', false, [], null);
+    wp_enqueue_style('b2b-admin-style');
     wp_add_inline_style(
-        'lloyds-admin-style',
+        'b2b-admin-style',
         '.li-product-search-results{margin-top:6px;border:1px solid #c3c4c7;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.08)}.li-product-search-results__item{display:block;width:100%;padding:8px 10px;border:0;border-bottom:1px solid #dcdcde;background:#fff;text-align:left;cursor:pointer}.li-product-search-results__item:hover,.li-product-search-results__item:focus{background:#f0f6fc}.li-product-search-results__empty{padding:8px 10px;color:#646970}'
     );
 });
 
-function li_enqueue_google_fonts(string $handle = 'lloyds-fonts'): void
+function li_enqueue_google_fonts(string $handle = 'b2b-fonts'): void
 {
     wp_enqueue_style(
         $handle,
