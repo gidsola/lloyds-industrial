@@ -24,9 +24,17 @@ function li_get_global_layout_defaults(): array
         'site_width'                 => 1400,
         'footer_density'             => 'comfortable',
         'announcement_enabled'       => true,
+        'announcement_show_message'  => true,
+        'announcement_show_link'     => true,
         'announcement_text'          => __('Industrial chemical solutions engineered for modern industry.', 'lloyds-industrial'),
         'announcement_link_label'    => __('Contact technical support', 'lloyds-industrial'),
         'announcement_link_url'      => '/contact',
+        'announcement_bg_color'      => '#d9a441',
+        'announcement_text_color'    => '#101820',
+        'announcement_link_color'    => '#101820',
+        'announcement_font_size'     => 15,
+        'announcement_font_weight'   => '700',
+        'announcement_text_transform' => 'none',
         'header_primary_label'       => __('Products', 'lloyds-industrial'),
         'header_primary_url'         => '/products',
         'header_secondary_label'     => __('Request Quote', 'lloyds-industrial'),
@@ -223,20 +231,32 @@ add_shortcode('li_announcement_bar', function (): string {
     $text = trim((string) $settings['announcement_text']);
     $link_label = trim((string) $settings['announcement_link_label']);
     $link_url = trim((string) $settings['announcement_link_url']);
+    $show_message = li_theme_setting_checkbox_value($settings, 'announcement_show_message');
+    $show_link = li_theme_setting_checkbox_value($settings, 'announcement_show_link');
 
-    if ($text === '' && ($link_label === '' || $link_url === '')) {
+    if ((!$show_message || $text === '') && (!$show_link || $link_label === '' || $link_url === '')) {
         return '';
     }
 
+    $style = sprintf(
+        '--li-announcement-bg:%1$s;--li-announcement-text:%2$s;--li-announcement-link:%3$s;--li-announcement-font-size:%4$dpx;--li-announcement-font-weight:%5$s;--li-announcement-transform:%6$s;',
+        esc_attr((string) $settings['announcement_bg_color']),
+        esc_attr((string) $settings['announcement_text_color']),
+        esc_attr((string) $settings['announcement_link_color']),
+        absint($settings['announcement_font_size']),
+        esc_attr((string) $settings['announcement_font_weight']),
+        esc_attr((string) $settings['announcement_text_transform'])
+    );
+
     ob_start();
     ?>
-    <div class="li-announcement">
+    <div class="li-announcement" style="<?php echo esc_attr($style); ?>">
         <div class="li-announcement__inner">
-            <?php if ($text !== '') : ?>
+            <?php if ($show_message && $text !== '') : ?>
                 <p><?php echo esc_html($text); ?></p>
             <?php endif; ?>
 
-            <?php if ($link_label !== '' && $link_url !== '') : ?>
+            <?php if ($show_link && $link_label !== '' && $link_url !== '') : ?>
                 <p><a href="<?php echo esc_url(li_resolve_site_url($link_url)); ?>"><?php echo esc_html($link_label); ?></a></p>
             <?php endif; ?>
         </div>

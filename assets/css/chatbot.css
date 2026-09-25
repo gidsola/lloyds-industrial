@@ -68,7 +68,7 @@
     overflow: hidden;
     position: absolute;
     right: 0;
-    width: min(390px, calc(100vw - 30px));
+    width: min(400px, calc(100vw - 30px));
 }
 
 .lloyds-chatbot-root--bottom-left .lloyds-chatbot,
@@ -109,6 +109,31 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.lloyds-chatbot__header-actions {
+    align-items: center;
+    display: flex;
+    gap: 6px;
+}
+
+.lloyds-chatbot__new {
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 999px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 850;
+    line-height: 1;
+    min-height: 30px;
+    padding: 0 10px;
+}
+
+.lloyds-chatbot__new:hover,
+.lloyds-chatbot__new:focus {
+    background: rgba(255, 255, 255, 0.24);
+    outline: none;
 }
 
 .lloyds-chatbot__close {
@@ -211,15 +236,22 @@
     background: #fff;
     border-top: 1px solid #dbe5e1;
     display: grid;
-    gap: 10px;
+    gap: 8px;
     grid-template-columns: minmax(0, 1fr) auto;
-    padding: 12px;
+    padding: 10px;
 }
 
 .lloyds-chatbot__form textarea {
-    max-height: 110px;
-    min-height: 42px;
+    font-size: 13px;
+    line-height: 1.4;
+    max-height: 132px;
+    min-height: 48px;
     resize: none;
+}
+
+.lloyds-chatbot__form button {
+    min-height: 48px;
+    padding-inline: 12px;
 }
 
 .lloyds-chatbot__form.is-busy {

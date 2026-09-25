@@ -17,6 +17,113 @@
 })();
 
 (() => {
+    const forms = document.querySelectorAll('[data-li-mail-signup]');
+    const config = window.lloydsTheme || {};
+
+    if (!forms.length || !config.ajaxUrl) {
+        return;
+    }
+
+    const messages = config.mailSignup || {};
+
+    const currentUrl = new URL(window.location.href);
+
+    if (currentUrl.searchParams.has('li_mail_status')) {
+        currentUrl.searchParams.delete('li_mail_status');
+        window.history.replaceState({}, document.title, currentUrl.toString());
+    }
+
+    const setMessage = (form, message, type) => {
+        const notice = form.querySelector('[data-li-mail-signup-message]');
+
+        if (!notice) {
+            return;
+        }
+
+        notice.textContent = message;
+        notice.hidden = false;
+        notice.classList.toggle('li-contact-form__notice--success', type === 'success');
+        notice.classList.toggle('li-contact-form__notice--error', type === 'error');
+    };
+
+    const parsePayload = (text) => {
+        try {
+            return JSON.parse(text);
+        } catch (error) {
+            const start = text.indexOf('{');
+            const end = text.lastIndexOf('}');
+
+            if (start !== -1 && end !== -1 && end > start) {
+                return JSON.parse(text.slice(start, end + 1));
+            }
+
+            throw error;
+        }
+    };
+
+    forms.forEach((form, index) => {
+        const button = form.querySelector('button[type="submit"]');
+        const defaultButtonText = button ? button.textContent : '';
+        const frameName = `li-mail-signup-frame-${Date.now()}-${index}`;
+        const frame = document.createElement('iframe');
+        let submitted = false;
+
+        frame.name = frameName;
+        frame.hidden = true;
+        frame.setAttribute('title', 'Mailing list signup response');
+        form.after(frame);
+
+        frame.addEventListener('load', () => {
+            if (!submitted) {
+                return;
+            }
+
+            submitted = false;
+
+            if (button) {
+                button.disabled = false;
+                button.textContent = defaultButtonText;
+            }
+
+            try {
+                const text = frame.contentDocument && frame.contentDocument.body
+                    ? frame.contentDocument.body.textContent.trim()
+                    : '';
+                const payload = parsePayload(text);
+                const message = payload && payload.data && payload.data.message
+                    ? payload.data.message
+                    : messages.error || 'Signup failed. Please try again.';
+
+                if (!payload || !payload.success) {
+                    setMessage(form, message, 'error');
+                    return;
+                }
+
+                setMessage(form, message, 'success');
+                form.reset();
+            } catch (error) {
+                setMessage(form, messages.error || 'Signup failed. Please try again.', 'error');
+            }
+        });
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+
+            submitted = true;
+            form.target = frameName;
+
+            if (button) {
+                button.disabled = true;
+                button.textContent = messages.sending || 'Joining...';
+            }
+
+            HTMLFormElement.prototype.submit.call(form);
+        }, true);
+    });
+})();
+
+(() => {
     const containers = document.querySelectorAll('[data-li-product-search]');
     const config = window.lloydsTheme || {};
 

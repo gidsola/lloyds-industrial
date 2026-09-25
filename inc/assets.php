@@ -33,6 +33,10 @@ add_action('wp_enqueue_scripts', function (): void {
         'ajaxUrl' => admin_url('admin-ajax.php'),
         'productSearchNonce' => wp_create_nonce('li_frontend_product_search'),
         'productSearchMinLength' => 2,
+        'mailSignup' => [
+            'sending' => __('Joining...', 'lloyds-industrial'),
+            'error' => __('Signup failed. Please try again.', 'lloyds-industrial'),
+        ],
         'i18n' => [
             'searching' => __('Searching products...', 'lloyds-industrial'),
             'noResults' => __('No matching products found.', 'lloyds-industrial'),
@@ -164,7 +168,7 @@ add_action('admin_enqueue_scripts', function (string $hook_suffix): void {
         ? li_seo_get_supported_public_post_types()
         : [];
 
-    if (in_array($admin_page, ['lloyds', 'lloyds-product-carousel', 'lloyds-seo', 'lloyds-ai-chatbot', 'lloyds-intelligence'], true)) {
+    if (in_array($admin_page, ['lloyds', 'lloyds-campaigns', 'lloyds-product-carousel', 'lloyds-seo', 'lloyds-ai-chatbot', 'lloyds-intelligence'], true)) {
         wp_enqueue_script(
             'lloyds-admin',
             get_template_directory_uri() . '/assets/js/admin.js',

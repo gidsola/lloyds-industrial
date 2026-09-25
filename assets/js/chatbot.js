@@ -15,17 +15,16 @@
         "'": '&#039;',
     }[character]));
 
-    const sessionKey = 'lloydsChatbotSession';
-    const historyKey = 'lloydsChatbotHistory';
-    const sessionId = window.localStorage.getItem(sessionKey) || `li-chat-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    const isLoggedIn = () => Boolean(config.user?.loggedIn && config.user?.id);
+    const userScope = isLoggedIn() ? `user-${config.user.id}` : 'guest';
+    const sessionKey = `lloydsChatbotSession:${userScope}`;
+    let sessionId = isLoggedIn()
+        ? (window.sessionStorage.getItem(sessionKey) || `li-chat-${Date.now()}-${Math.random().toString(16).slice(2)}`)
+        : `li-chat-${Date.now()}-${Math.random().toString(16).slice(2)}`;
     let history = [];
 
-    window.localStorage.setItem(sessionKey, sessionId);
-
-    try {
-        history = JSON.parse(window.localStorage.getItem(historyKey) || '[]');
-    } catch (error) {
-        history = [];
+    if (isLoggedIn()) {
+        window.sessionStorage.setItem(sessionKey, sessionId);
     }
 
     root.style.setProperty('--lloyds-chatbot-accent', settings.accentColor || '#17443b');
@@ -41,7 +40,10 @@
                     <span class="lloyds-chatbot__avatar">${escapeText(settings.avatarText || 'L')}</span>
                     <strong>${escapeText(settings.title || 'Lloyds Assistant')}</strong>
                 </div>
-                <button type="button" class="lloyds-chatbot__close" aria-label="${escapeText(config.i18n?.close || 'Close chat')}">&times;</button>
+                <div class="lloyds-chatbot__header-actions">
+                    <button type="button" class="lloyds-chatbot__new" aria-label="${escapeText(config.i18n?.newChat || 'New chat')}">${escapeText(config.i18n?.newChat || 'New')}</button>
+                    <button type="button" class="lloyds-chatbot__close" aria-label="${escapeText(config.i18n?.close || 'Close chat')}">&times;</button>
+                </div>
             </header>
             <div class="lloyds-chatbot__messages" role="log" aria-live="polite"></div>
             <form class="lloyds-chatbot__form">
@@ -53,20 +55,70 @@
 
     const launcher = root.querySelector('.lloyds-chatbot-launcher');
     const panel = root.querySelector('.lloyds-chatbot');
+    const newChatButton = root.querySelector('.lloyds-chatbot__new');
     const closeButton = root.querySelector('.lloyds-chatbot__close');
     const messages = root.querySelector('.lloyds-chatbot__messages');
     const form = root.querySelector('.lloyds-chatbot__form');
     const input = form.querySelector('textarea');
 
     const persistHistory = () => {
-        window.localStorage.setItem(historyKey, JSON.stringify(history.slice(-12)));
+        history = history.slice(-16);
+
+        if (!isLoggedIn()) {
+            return;
+        }
+
+        const body = new URLSearchParams({
+            action: 'li_chatbot_save_history',
+            nonce: config.nonce,
+            session_id: sessionId,
+            history: JSON.stringify(history),
+        });
+
+        fetch(config.ajaxUrl, {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body,
+        }).catch(() => {});
+    };
+
+    const rememberLoggedInSession = () => {
+        if (!isLoggedIn()) {
+            return;
+        }
+
+        window.sessionStorage.setItem(`lloydsChatbotSession:user-${config.user.id}`, sessionId);
+    };
+
+    const clearServerHistory = () => {
+        if (!isLoggedIn()) {
+            return Promise.resolve();
+        }
+
+        const body = new URLSearchParams({
+            action: 'li_chatbot_clear_history',
+            nonce: config.nonce,
+            session_id: sessionId,
+        });
+
+        return fetch(config.ajaxUrl, {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body,
+        }).catch(() => {});
     };
 
     const scrollMessages = () => {
         messages.scrollTop = messages.scrollHeight;
     };
 
-    const appendMessage = (role, text, actions = [], persist = true) => {
+    const appendMessage = (role, text, actions = [], persist = true, sources = []) => {
         const item = document.createElement('div');
         item.className = `lloyds-chatbot-message lloyds-chatbot-message--${role}`;
         item.innerHTML = `<div class="lloyds-chatbot-message__bubble">${escapeText(text).replace(/\n/g, '<br>')}</div>`;
@@ -94,8 +146,7 @@
                     link.href = action.url;
                     link.className = 'lloyds-chatbot-action';
                     link.textContent = action.label || 'Open';
-                    link.target = action.type === 'download' ? '_self' : '_blank';
-                    link.rel = 'noopener';
+                    link.target = '_self';
                     link.addEventListener('click', () => {
                         trackEvent(action.type === 'download' ? 'download_click' : 'action_click', {
                             label: action.label || '',
@@ -113,7 +164,7 @@
         scrollMessages();
 
         if (persist && role !== 'system') {
-            history.push({ role, content: text });
+            history.push({ role, content: text, actions, sources });
             persistHistory();
         }
     };
@@ -141,7 +192,7 @@
             nonce: config.nonce,
             message,
             session_id: sessionId,
-            history: JSON.stringify(history.slice(-8)),
+            history: JSON.stringify(history.slice(-12)),
         });
 
         const response = await fetch(config.ajaxUrl, {
@@ -212,6 +263,11 @@
                 return;
             }
 
+            if (payload.data?.user) {
+                config.user = payload.data.user;
+                rememberLoggedInSession();
+            }
+
             appendMessage('assistant', payload.data.message);
 
             const lastUserMessage = [...history].reverse().find((item) => item.role === 'user')?.content;
@@ -258,7 +314,7 @@
                 return;
             }
 
-            appendMessage('assistant', payload.data.message, payload.data.actions || []);
+            appendMessage('assistant', payload.data.message, payload.data.actions || [], true, payload.data.sources || []);
         } catch (error) {
             thinking.remove();
             appendMessage('assistant', config.i18n?.error || 'Something went wrong.');
@@ -269,15 +325,67 @@
 
     input.addEventListener('input', () => {
         input.style.height = 'auto';
-        input.style.height = `${Math.min(110, input.scrollHeight)}px`;
+        input.style.height = `${Math.min(132, input.scrollHeight)}px`;
     });
 
     launcher.addEventListener('click', () => setOpen(panel.hidden));
     closeButton.addEventListener('click', () => setOpen(false));
+    newChatButton.addEventListener('click', async () => {
+        await clearServerHistory();
+        history = [];
+        messages.innerHTML = '';
+        sessionId = `li-chat-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+        rememberLoggedInSession();
 
-    if (!history.length && settings.greeting) {
-        appendMessage('assistant', settings.greeting);
-    } else {
-        history.slice(-8).forEach((item) => appendMessage(item.role, item.content, [], false));
-    }
+        if (settings.greeting) {
+            appendMessage('assistant', settings.greeting, [], false);
+        }
+
+        input.value = '';
+        input.style.height = '';
+        input.focus();
+        trackEvent('new_chat');
+    });
+
+    const hydrateHistory = async () => {
+        if (!isLoggedIn()) {
+            if (settings.greeting) {
+                appendMessage('assistant', settings.greeting, [], false);
+            }
+
+            return;
+        }
+
+        try {
+            const body = new URLSearchParams({
+                action: 'li_chatbot_load_history',
+                nonce: config.nonce,
+                session_id: sessionId,
+            });
+            const response = await fetch(config.ajaxUrl, {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body,
+            });
+            const payload = await response.json();
+
+            history = payload.success && Array.isArray(payload.data?.history)
+                ? payload.data.history
+                : [];
+        } catch (error) {
+            history = [];
+        }
+
+        if (!history.length && settings.greeting) {
+            appendMessage('assistant', settings.greeting, [], false);
+            return;
+        }
+
+        history.slice(-12).forEach((item) => appendMessage(item.role, item.content, item.actions || [], false));
+    };
+
+    hydrateHistory();
 })();

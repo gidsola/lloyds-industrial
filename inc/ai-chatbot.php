@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 }
 
 const LI_CHATBOT_SETTINGS_OPTION = 'li_chatbot_settings';
-const LI_CHATBOT_DB_VERSION = '1.0.0';
+const LI_CHATBOT_DB_VERSION = '1.1.0';
 const LI_CHATBOT_DB_VERSION_OPTION = 'li_chatbot_db_version';
 
 add_action('after_switch_theme', 'li_chatbot_install');
@@ -18,6 +18,9 @@ add_action('wp_enqueue_scripts', 'li_chatbot_enqueue_frontend_assets');
 add_action('wp_footer', 'li_chatbot_render_widget_root');
 add_action('wp_ajax_li_chatbot_message', 'li_chatbot_handle_message');
 add_action('wp_ajax_nopriv_li_chatbot_message', 'li_chatbot_handle_message');
+add_action('wp_ajax_li_chatbot_load_history', 'li_chatbot_handle_load_history');
+add_action('wp_ajax_li_chatbot_save_history', 'li_chatbot_handle_save_history');
+add_action('wp_ajax_li_chatbot_clear_history', 'li_chatbot_handle_clear_history');
 add_action('wp_ajax_li_chatbot_login', 'li_chatbot_handle_login');
 add_action('wp_ajax_nopriv_li_chatbot_login', 'li_chatbot_handle_login');
 add_action('wp_ajax_li_chatbot_track_action', 'li_chatbot_handle_track_action');
@@ -36,6 +39,7 @@ function li_chatbot_get_defaults(): array
         'avatar_text'            => 'L',
         'endpoint_url'           => '',
         'endpoint_mode'          => 'custom',
+        'intent_pass_enabled'    => true,
         'model'                  => '',
         'auth_type'              => 'bearer',
         'auth_header'            => 'Authorization',
@@ -81,6 +85,7 @@ function li_chatbot_sanitize_settings(array $input): array
         'avatar_text'            => strtoupper(substr(sanitize_text_field((string) ($input['avatar_text'] ?? $defaults['avatar_text'])), 0, 2)) ?: $defaults['avatar_text'],
         'endpoint_url'           => esc_url_raw((string) ($input['endpoint_url'] ?? '')),
         'endpoint_mode'          => in_array($endpoint_mode, ['custom', 'openai'], true) ? $endpoint_mode : $defaults['endpoint_mode'],
+        'intent_pass_enabled'    => !empty($input['intent_pass_enabled']),
         'model'                  => sanitize_text_field((string) ($input['model'] ?? '')),
         'auth_type'              => in_array($auth_type, ['none', 'bearer', 'header'], true) ? $auth_type : $defaults['auth_type'],
         'auth_header'            => sanitize_text_field((string) ($input['auth_header'] ?? $defaults['auth_header'])),
@@ -113,6 +118,13 @@ function li_chatbot_log_table(): string
     return $wpdb->prefix . 'li_chatbot_logs';
 }
 
+function li_chatbot_history_table(): string
+{
+    global $wpdb;
+
+    return $wpdb->prefix . 'li_chatbot_history';
+}
+
 function li_chatbot_install(): void
 {
     global $wpdb;
@@ -122,6 +134,7 @@ function li_chatbot_install(): void
     $charset_collate = $wpdb->get_charset_collate();
     $context_table = li_chatbot_context_table();
     $log_table = li_chatbot_log_table();
+    $history_table = li_chatbot_history_table();
 
     dbDelta("CREATE TABLE {$context_table} (
         id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -150,6 +163,18 @@ function li_chatbot_install(): void
         PRIMARY KEY  (id),
         KEY session_id (session_id),
         KEY user_id (user_id)
+    ) {$charset_collate};");
+
+    dbDelta("CREATE TABLE {$history_table} (
+        id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+        user_id bigint(20) unsigned NOT NULL,
+        session_id varchar(80) NOT NULL,
+        history longtext NOT NULL,
+        updated_at datetime NOT NULL,
+        PRIMARY KEY  (id),
+        UNIQUE KEY user_session (user_id, session_id),
+        KEY user_id (user_id),
+        KEY updated_at (updated_at)
     ) {$charset_collate};");
 
     update_option(LI_CHATBOT_DB_VERSION_OPTION, LI_CHATBOT_DB_VERSION);
@@ -250,11 +275,13 @@ function li_chatbot_handle_admin_actions(): void
         $message = sanitize_textarea_field(wp_unslash((string) ($_POST['li_chatbot_test_prompt'] ?? '')));
 
         if ($message !== '') {
-            $context = li_chatbot_search_context($message, (int) $settings['max_context_chunks']);
+            $intent = li_chatbot_detect_intent($message, [], $settings);
+            $context_query = li_chatbot_build_retrieval_query((string) $intent['retrieval_query'], []);
+            $context = li_chatbot_search_context($context_query, (int) $settings['max_context_chunks'], $intent);
             $tool_response = li_chatbot_maybe_handle_sds_intent($message, $context);
             $reply = $tool_response
                 ? (string) $tool_response['message']
-                : li_chatbot_generate_response($message, $context, [], $settings);
+                : li_chatbot_generate_response($message, $context, [], $settings, $intent);
             set_transient('li_chatbot_test_result', [
                 'message' => $message,
                 'reply' => $reply,
@@ -354,6 +381,7 @@ function li_chatbot_index_products(): int
 
     foreach ($query->posts as $product_id) {
         $taxonomy_text = [];
+        $taxonomy_meta = [];
 
         foreach (['product_cat', 'product_brand', 'li_industry', 'li_application'] as $taxonomy) {
             if (!taxonomy_exists($taxonomy)) {
@@ -364,6 +392,7 @@ function li_chatbot_index_products(): int
 
             if (!is_wp_error($terms) && $terms) {
                 $taxonomy_text[] = implode(', ', $terms);
+                $taxonomy_meta[$taxonomy] = array_values(array_map('strval', $terms));
             }
         }
 
@@ -378,6 +407,7 @@ function li_chatbot_index_products(): int
         li_chatbot_insert_context('product', (string) $product_id, get_the_title($product_id), $content, get_permalink($product_id) ?: '', 'public', [
             'post_type' => 'product',
             'sku'       => $sku,
+            'terms'     => $taxonomy_meta,
         ]);
         $count++;
     }
@@ -488,17 +518,23 @@ function li_chatbot_insert_context(string $source_type, string $source_id, strin
     ], ['%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s']);
 }
 
-function li_chatbot_search_context(string $message, int $limit = 6): array
+function li_chatbot_search_context(string $message, int $limit = 6, array $intent = []): array
 {
     global $wpdb;
 
     $table = li_chatbot_context_table();
     $rows = $wpdb->get_results("SELECT * FROM {$table} ORDER BY updated_at DESC LIMIT 500", ARRAY_A);
     $tokens = li_chatbot_tokenize($message);
+    $is_broad_cleaner_query = li_chatbot_is_broad_cleaner_query($message);
+    $allowed_sources = li_chatbot_allowed_sources_for_intent($intent);
     $scored = [];
 
     foreach ($rows as $row) {
         if (!li_chatbot_user_can_use_context($row)) {
+            continue;
+        }
+
+        if ($allowed_sources && !in_array((string) ($row['source_type'] ?? ''), $allowed_sources, true)) {
             continue;
         }
 
@@ -515,6 +551,22 @@ function li_chatbot_search_context(string $message, int $limit = 6): array
             }
         }
 
+        if ($is_broad_cleaner_query) {
+            $title = strtolower((string) $row['title']);
+
+            if (str_contains($haystack, 'cleaner') || str_contains($haystack, 'degreaser')) {
+                $score += 6;
+            }
+
+            if (str_contains($title, 'cleaner') || str_contains($title, 'degreaser')) {
+                $score += 10;
+            }
+
+            if (str_contains($title, 'aluminum') || str_contains($title, 'alumaxbrite')) {
+                $score -= 8;
+            }
+        }
+
         if ($score <= 0 && count($tokens) < 2) {
             $score = 1;
         }
@@ -527,7 +579,92 @@ function li_chatbot_search_context(string $message, int $limit = 6): array
 
     usort($scored, static fn (array $a, array $b): int => ($b['score'] <=> $a['score']));
 
+    if (li_chatbot_should_diversify_results($message, $intent)) {
+        $scored = li_chatbot_diversify_product_results($scored, max(1, $limit));
+    }
+
     return array_slice($scored, 0, max(1, $limit));
+}
+
+function li_chatbot_should_diversify_results(string $message, array $intent): bool
+{
+    return in_array((string) ($intent['intent'] ?? ''), ['product_lookup', 'compare_products'], true)
+        && ((string) ($intent['followup_mode'] ?? '') !== 'same_product')
+        && (li_chatbot_is_broad_recommendation_query($message) || li_chatbot_is_general_product_discovery_query($message));
+}
+
+function li_chatbot_diversify_product_results(array $rows, int $limit): array
+{
+    $selected = [];
+    $deferred = [];
+    $seen = [];
+
+    foreach ($rows as $row) {
+        if (($row['source_type'] ?? '') !== 'product') {
+            $deferred[] = $row;
+            continue;
+        }
+
+        $key = li_chatbot_product_family_key($row);
+
+        if (!isset($seen[$key])) {
+            $seen[$key] = true;
+            $selected[] = $row;
+        } else {
+            $deferred[] = $row;
+        }
+
+        if (count($selected) >= $limit) {
+            break;
+        }
+    }
+
+    foreach ($deferred as $row) {
+        if (count($selected) >= $limit) {
+            break;
+        }
+
+        $selected[] = $row;
+    }
+
+    return array_merge($selected, array_slice($rows, count($selected)));
+}
+
+function li_chatbot_product_family_key(array $row): string
+{
+    $title = html_entity_decode((string) ($row['title'] ?? ''), ENT_QUOTES, get_bloginfo('charset') ?: 'UTF-8');
+    $title = strtolower($title);
+    $title = preg_replace('/\b(part|part no|part number|sku)\s*(no\.?)?\s*[-#:]?\s*\d+\b/i', '', $title) ?: $title;
+    $title = preg_replace('/\b\d+(\.\d+)?\s*(ml|l|ltr|litre|liter|litres|liters|g|kg|oz|gal|gallon|pail|drum|jug|aerosol|spray|trigger)\b/i', '', $title) ?: $title;
+    $title = preg_replace('/\b\d+\s*x\s*\d+\b/i', '', $title) ?: $title;
+    $title = preg_replace('/\b\d{4,6}\b/', '', $title) ?: $title;
+    $title = preg_replace('/[^a-z0-9]+/', ' ', $title) ?: $title;
+    $title = trim(preg_replace('/\s+/', ' ', $title) ?: $title);
+
+    if ($title !== '') {
+        return $title;
+    }
+
+    return sanitize_key((string) ($row['source_type'] ?? 'product') . '-' . (string) ($row['source_id'] ?? uniqid('', false)));
+}
+
+function li_chatbot_allowed_sources_for_intent(array $intent): array
+{
+    $intent_name = (string) ($intent['intent'] ?? '');
+
+    if (in_array($intent_name, ['product_lookup', 'compare_products'], true)) {
+        return ['product'];
+    }
+
+    if ($intent_name === 'reseller_lookup') {
+        return ['reseller'];
+    }
+
+    if ($intent_name === 'sds_request') {
+        return ['product', 'document'];
+    }
+
+    return [];
 }
 
 function li_chatbot_user_can_use_context(array $row): bool
@@ -545,11 +682,17 @@ function li_chatbot_tokenize(string $message): array
 {
     $message = strtolower(li_chatbot_clean_text($message));
     $parts = preg_split('/[^a-z0-9]+/', $message) ?: [];
-    $stop = ['the', 'and', 'for', 'with', 'that', 'this', 'from', 'are', 'you', 'can', 'need', 'please', 'about'];
+    $stop = ['the', 'and', 'for', 'with', 'that', 'this', 'from', 'are', 'you', 'can', 'need', 'please', 'about', 'other', 'things', 'types', 'kind', 'kinds', 'have', 'show'];
 
     return array_values(array_unique(array_filter($parts, static function (string $part) use ($stop): bool {
         return strlen($part) >= 3 && !in_array($part, $stop, true);
     })));
+}
+
+function li_chatbot_is_broad_cleaner_query(string $message): bool
+{
+    return (bool) preg_match('/\b(cleaner|cleaners|degreaser|degreasers|cleaning)\b/i', $message)
+        && (bool) preg_match('/\b(other|different|types?|kinds?|options?|products?|things?|else)\b/i', $message);
 }
 
 function li_chatbot_handle_message(): void
@@ -560,13 +703,27 @@ function li_chatbot_handle_message(): void
     $message = sanitize_textarea_field(wp_unslash((string) ($_POST['message'] ?? '')));
     $session_id = sanitize_text_field(wp_unslash((string) ($_POST['session_id'] ?? '')));
     $history = json_decode(wp_unslash((string) ($_POST['history'] ?? '[]')), true);
-    $history = is_array($history) ? array_slice($history, -8) : [];
+    $history = li_chatbot_normalize_history(is_array($history) ? $history : []);
 
     if ($message === '') {
         wp_send_json_error(['message' => __('Please enter a message.', 'lloyds-industrial')], 400);
     }
 
-    $context = li_chatbot_search_context($message, (int) $settings['max_context_chunks']);
+    $history_replay = li_chatbot_maybe_replay_history_actions($message, $history);
+
+    if ($history_replay) {
+        wp_send_json_success([
+            'message' => $history_replay['message'],
+            'actions' => $history_replay['actions'],
+            'user'    => li_chatbot_current_user_payload(),
+            'sources' => [],
+        ]);
+    }
+
+    $intent = li_chatbot_detect_intent($message, $history, $settings);
+    $context_query = li_chatbot_build_retrieval_query((string) $intent['retrieval_query'], $history);
+    $anchored_context = li_chatbot_get_reference_context($message, $history);
+    $context = $anchored_context ?: li_chatbot_search_context($context_query, (int) $settings['max_context_chunks'], $intent);
     $actions = [];
     $tool_response = li_chatbot_maybe_handle_sds_intent($message, $context);
 
@@ -574,7 +731,7 @@ function li_chatbot_handle_message(): void
         $reply = $tool_response['message'];
         $actions = $tool_response['actions'];
     } else {
-        $reply = li_chatbot_generate_response($message, $context, $history, $settings);
+        $reply = li_chatbot_generate_response($message, $context, li_chatbot_conversation_history($history), $settings, $intent);
         $actions = li_chatbot_context_actions($context);
     }
 
@@ -582,15 +739,17 @@ function li_chatbot_handle_message(): void
         li_chatbot_log_message($session_id, $message, $reply, [
             'actions' => $actions,
             'context' => array_map(static fn (array $row): string => $row['source_type'] . ':' . $row['source_id'], $context),
+            'intent' => $intent,
         ]);
     }
 
     li_chatbot_track_event('chatbot_message', [
         'session_id' => $session_id,
-        'message' => $message,
+        'message' => $context_query,
         'context_count' => count($context),
         'actions_count' => count($actions),
-        'intent' => $tool_response ? 'sds' : 'general',
+        'intent' => $tool_response ? 'sds' : (string) $intent['intent'],
+        'intent_result' => $intent,
         'source_types' => array_values(array_unique(array_map(static fn (array $row): string => (string) $row['source_type'], $context))),
         'sources' => array_map(static fn (array $row): string => $row['source_type'] . ':' . $row['source_id'], $context),
     ]);
@@ -609,15 +768,527 @@ function li_chatbot_handle_message(): void
         'sources' => array_map(static fn (array $row): array => [
             'title' => (string) $row['title'],
             'type'  => (string) $row['source_type'],
+            'id'    => (string) $row['source_id'],
             'url'   => (string) $row['url'],
         ], $context),
     ]);
 }
 
-function li_chatbot_generate_response(string $message, array $context, array $history, array $settings): string
+function li_chatbot_handle_load_history(): void
+{
+    check_ajax_referer('li_chatbot_message', 'nonce');
+
+    if (!is_user_logged_in()) {
+        wp_send_json_success(['history' => []]);
+    }
+
+    $session_id = sanitize_text_field(wp_unslash((string) ($_POST['session_id'] ?? '')));
+
+    if ($session_id === '') {
+        wp_send_json_success(['history' => []]);
+    }
+
+    wp_send_json_success([
+        'history' => li_chatbot_load_user_history(get_current_user_id(), $session_id),
+    ]);
+}
+
+function li_chatbot_handle_save_history(): void
+{
+    check_ajax_referer('li_chatbot_message', 'nonce');
+
+    if (!is_user_logged_in()) {
+        wp_send_json_success(['saved' => false]);
+    }
+
+    $session_id = sanitize_text_field(wp_unslash((string) ($_POST['session_id'] ?? '')));
+    $history = json_decode(wp_unslash((string) ($_POST['history'] ?? '[]')), true);
+    $history = li_chatbot_normalize_history(is_array($history) ? $history : []);
+
+    if ($session_id === '') {
+        wp_send_json_error(['message' => __('Missing chat session.', 'lloyds-industrial')], 400);
+    }
+
+    li_chatbot_save_user_history(get_current_user_id(), $session_id, $history);
+
+    wp_send_json_success(['saved' => true]);
+}
+
+function li_chatbot_handle_clear_history(): void
+{
+    check_ajax_referer('li_chatbot_message', 'nonce');
+
+    if (!is_user_logged_in()) {
+        wp_send_json_success(['cleared' => false]);
+    }
+
+    $session_id = sanitize_text_field(wp_unslash((string) ($_POST['session_id'] ?? '')));
+
+    if ($session_id !== '') {
+        li_chatbot_delete_user_history(get_current_user_id(), $session_id);
+    }
+
+    wp_send_json_success(['cleared' => true]);
+}
+
+function li_chatbot_load_user_history(int $user_id, string $session_id): array
+{
+    global $wpdb;
+
+    if ($user_id <= 0 || $session_id === '') {
+        return [];
+    }
+
+    $history = $wpdb->get_var($wpdb->prepare(
+        'SELECT history FROM ' . li_chatbot_history_table() . ' WHERE user_id = %d AND session_id = %s LIMIT 1',
+        $user_id,
+        $session_id
+    ));
+
+    if (!is_string($history) || $history === '') {
+        return [];
+    }
+
+    $decoded = json_decode($history, true);
+
+    return li_chatbot_normalize_history(is_array($decoded) ? $decoded : []);
+}
+
+function li_chatbot_save_user_history(int $user_id, string $session_id, array $history): void
+{
+    global $wpdb;
+
+    if ($user_id <= 0 || $session_id === '') {
+        return;
+    }
+
+    $history = array_slice(li_chatbot_normalize_history($history), -16);
+    $table = li_chatbot_history_table();
+
+    $wpdb->replace($table, [
+        'user_id' => $user_id,
+        'session_id' => sanitize_text_field($session_id),
+        'history' => wp_json_encode($history),
+        'updated_at' => current_time('mysql'),
+    ], ['%d', '%s', '%s', '%s']);
+}
+
+function li_chatbot_delete_user_history(int $user_id, string $session_id): void
+{
+    global $wpdb;
+
+    if ($user_id <= 0 || $session_id === '') {
+        return;
+    }
+
+    $wpdb->delete(li_chatbot_history_table(), [
+        'user_id' => $user_id,
+        'session_id' => sanitize_text_field($session_id),
+    ], ['%d', '%s']);
+}
+
+function li_chatbot_normalize_history(array $history): array
+{
+    $normalized = [];
+
+    foreach (array_slice($history, -12) as $item) {
+        if (!is_array($item)) {
+            continue;
+        }
+
+        $role = sanitize_key((string) ($item['role'] ?? ''));
+        $content = sanitize_textarea_field((string) ($item['content'] ?? ''));
+
+        if (!in_array($role, ['user', 'assistant'], true) || $content === '') {
+            continue;
+        }
+
+        $actions = [];
+        foreach ((array) ($item['actions'] ?? []) as $action) {
+            if (!is_array($action)) {
+                continue;
+            }
+
+            $url = esc_url_raw((string) ($action['url'] ?? ''));
+            if ($url === '') {
+                continue;
+            }
+
+            $actions[] = [
+                'type' => sanitize_key((string) ($action['type'] ?? 'link')),
+                'label' => sanitize_text_field((string) ($action['label'] ?? '')),
+                'url' => $url,
+            ];
+        }
+
+        $sources = [];
+        foreach ((array) ($item['sources'] ?? []) as $source) {
+            if (!is_array($source)) {
+                continue;
+            }
+
+            $sources[] = [
+                'title' => sanitize_text_field((string) ($source['title'] ?? '')),
+                'type' => sanitize_key((string) ($source['type'] ?? '')),
+                'id' => sanitize_text_field((string) ($source['id'] ?? '')),
+                'url' => esc_url_raw((string) ($source['url'] ?? '')),
+            ];
+        }
+
+        $normalized[] = [
+            'role' => $role,
+            'content' => $content,
+            'actions' => $actions,
+            'sources' => $sources,
+        ];
+    }
+
+    return $normalized;
+}
+
+function li_chatbot_conversation_history(array $history): array
+{
+    return array_map(static fn (array $item): array => [
+        'role' => (string) $item['role'],
+        'content' => (string) $item['content'],
+    ], $history);
+}
+
+function li_chatbot_maybe_replay_history_actions(string $message, array $history): ?array
+{
+    if (!li_chatbot_is_history_replay_query($message)) {
+        return null;
+    }
+
+    for ($i = count($history) - 1; $i >= 0; $i--) {
+        $item = $history[$i];
+        $actions = $item['actions'] ?? [];
+
+        if (($item['role'] ?? '') === 'assistant' && is_array($actions) && $actions) {
+            $link_actions = array_values(array_filter($actions, static fn ($action): bool => is_array($action) && !empty($action['url'])));
+
+            if (!$link_actions) {
+                continue;
+            }
+
+            return [
+                'message' => __('Here are the same links again.', 'lloyds-industrial'),
+                'actions' => $link_actions,
+            ];
+        }
+    }
+
+    return null;
+}
+
+function li_chatbot_is_history_replay_query(string $message): bool
+{
+    return (bool) preg_match('/\b(those|same|previous|again|links?|results?|recommendations?)\b/i', $message)
+        && (bool) preg_match('/\b(show|send|give|list|display|open|share|provide)\b/i', $message);
+}
+
+function li_chatbot_get_reference_context(string $message, array $history): array
+{
+    if (li_chatbot_is_topic_pivot($message) || !li_chatbot_is_reference_followup($message)) {
+        return [];
+    }
+
+    for ($i = count($history) - 1; $i >= 0; $i--) {
+        $item = $history[$i];
+
+        foreach ((array) ($item['sources'] ?? []) as $source) {
+            if (($source['type'] ?? '') !== 'product') {
+                continue;
+            }
+
+            $row = !empty($source['id'])
+                ? li_chatbot_get_context_row('product', (string) $source['id'])
+                : li_chatbot_get_product_context_by_url_or_title((string) ($source['url'] ?? ''), (string) ($source['title'] ?? ''));
+
+            if ($row) {
+                return [$row];
+            }
+        }
+
+        foreach ((array) ($item['actions'] ?? []) as $action) {
+            $row = li_chatbot_get_product_context_by_url_or_title((string) ($action['url'] ?? ''), (string) ($action['label'] ?? ''));
+
+            if ($row) {
+                return [$row];
+            }
+        }
+    }
+
+    return [];
+}
+
+function li_chatbot_get_context_row(string $source_type, string $source_id): ?array
+{
+    global $wpdb;
+
+    $row = $wpdb->get_row($wpdb->prepare(
+        'SELECT * FROM ' . li_chatbot_context_table() . ' WHERE source_type = %s AND source_id = %s LIMIT 1',
+        sanitize_key($source_type),
+        sanitize_text_field($source_id)
+    ), ARRAY_A);
+
+    if (!is_array($row) || !li_chatbot_user_can_use_context($row)) {
+        return null;
+    }
+
+    $row['score'] = 999;
+
+    return $row;
+}
+
+function li_chatbot_get_product_context_by_url_or_title(string $url, string $title): ?array
+{
+    $url = esc_url_raw($url);
+    $title = trim((string) preg_replace('/^Open\s+/i', '', $title));
+
+    if ($url !== '') {
+        $post_id = url_to_postid($url);
+
+        if ($post_id > 0) {
+            $row = li_chatbot_get_context_row('product', (string) $post_id);
+
+            if ($row) {
+                return $row;
+            }
+        }
+    }
+
+    if ($title === '') {
+        return null;
+    }
+
+    global $wpdb;
+
+    $row = $wpdb->get_row($wpdb->prepare(
+        'SELECT * FROM ' . li_chatbot_context_table() . ' WHERE source_type = %s AND title = %s LIMIT 1',
+        'product',
+        $title
+    ), ARRAY_A);
+
+    if (!is_array($row) || !li_chatbot_user_can_use_context($row)) {
+        return null;
+    }
+
+    $row['score'] = 998;
+
+    return $row;
+}
+
+function li_chatbot_detect_intent(string $message, array $history, array $settings): array
+{
+    $intent = li_chatbot_rule_intent($message, $history);
+
+    if (li_chatbot_should_use_model_intent($intent, $settings)) {
+        $model_intent = li_chatbot_call_intent_endpoint($message, $history, $settings);
+
+        if ($model_intent) {
+            $intent = array_merge($intent, $model_intent, ['source' => 'model']);
+        }
+    }
+
+    return li_chatbot_sanitize_intent_result($intent, $message);
+}
+
+function li_chatbot_rule_intent(string $message, array $history): array
+{
+    $intent = 'general_site_help';
+    $confidence = 'low';
+    $needs_auth = false;
+    $followup_mode = 'new_topic';
+    $retrieval_query = $message;
+
+    if (preg_match('/\b(sds|msds|safety data|safety-data)\b/i', $message)) {
+        $intent = 'sds_request';
+        $confidence = 'high';
+        $needs_auth = true;
+    } elseif (preg_match('/\b(reseller|distributor|dealer|near|nearby|local)\b/i', $message)) {
+        $intent = 'reseller_lookup';
+        $confidence = 'high';
+    } elseif (preg_match('/\b(quote|price|pricing|buy|order|purchase|checkout|cart)\b/i', $message)) {
+        $intent = 'quote_help';
+        $confidence = 'high';
+    } elseif (preg_match('/\b(compare|comparison|difference|between|versus|vs\.?)\b/i', $message)) {
+        $intent = 'compare_products';
+        $confidence = 'medium';
+    } elseif (preg_match('/\b(product|products|use|using|safe|safely|home|house|household|cleaner|cleaners|degreaser|lubricant|grease|coating|sealant|insecticide|polish|purple|aluminum|aluma)\b/i', $message)) {
+        $intent = 'product_lookup';
+        $confidence = 'medium';
+    }
+
+    if (li_chatbot_is_topic_pivot($message)) {
+        $followup_mode = 'broaden_results';
+    } elseif (li_chatbot_is_history_replay_query($message)) {
+        $followup_mode = 'same_results';
+    } elseif (li_chatbot_is_reference_followup($message)) {
+        $followup_mode = 'same_product';
+    }
+
+    if (in_array($followup_mode, ['same_product', 'same_results'], true)) {
+        $parts = [$message];
+
+        for ($i = count($history) - 1; $i >= 0 && count($parts) < 4; $i--) {
+            foreach ((array) ($history[$i]['sources'] ?? []) as $source) {
+                $title = trim((string) ($source['title'] ?? ''));
+
+                if ($title !== '') {
+                    $parts[] = $title;
+                }
+            }
+        }
+
+        $retrieval_query = implode(' ', array_unique($parts));
+    }
+
+    return [
+        'intent' => $intent,
+        'resolved_subject' => '',
+        'followup_mode' => $followup_mode,
+        'retrieval_query' => $retrieval_query,
+        'needs_auth' => $needs_auth,
+        'confidence' => $confidence,
+        'source' => 'rules',
+    ];
+}
+
+function li_chatbot_should_use_model_intent(array $intent, array $settings): bool
+{
+    return !empty($settings['intent_pass_enabled'])
+        && !empty($settings['endpoint_url'])
+        && in_array((string) ($intent['confidence'] ?? 'low'), ['low', 'medium'], true)
+        && (string) ($intent['intent'] ?? '') !== 'sds_request';
+}
+
+function li_chatbot_call_intent_endpoint(string $message, array $history, array $settings): ?array
+{
+    $headers = li_chatbot_endpoint_headers($settings);
+    $schema = 'Return JSON only with keys: intent, resolved_subject, followup_mode, retrieval_query, needs_auth, confidence. Valid intents: product_lookup, compare_products, sds_request, reseller_lookup, quote_help, general_site_help. Valid followup_mode: new_topic, same_product, same_results, broaden_results.';
+
+    if ($settings['endpoint_mode'] === 'openai') {
+        $body = [
+            'model' => (string) ($settings['model'] ?: 'gpt-4o-mini'),
+            'temperature' => 0,
+            'response_format' => ['type' => 'json_object'],
+            'messages' => array_merge(
+                [
+                    ['role' => 'system', 'content' => 'You classify Lloyds chatbot requests for retrieval. ' . $schema],
+                ],
+                li_chatbot_conversation_history($history),
+                [['role' => 'user', 'content' => $message]]
+            ),
+        ];
+    } else {
+        $body = [
+            'task' => 'intent',
+            'schema' => $schema,
+            'message' => $message,
+            'history' => li_chatbot_conversation_history($history),
+            'user' => li_chatbot_current_user_payload(),
+        ];
+    }
+
+    $response = wp_remote_post((string) $settings['endpoint_url'], [
+        'headers' => $headers,
+        'timeout' => (int) $settings['timeout'],
+        'body'    => wp_json_encode($body),
+    ]);
+
+    if (is_wp_error($response)) {
+        return null;
+    }
+
+    $payload = json_decode((string) wp_remote_retrieve_body($response), true);
+
+    if (!is_array($payload)) {
+        return null;
+    }
+
+    $content = $payload['choices'][0]['message']['content']
+        ?? $payload['intent']
+        ?? $payload['response']
+        ?? $payload['message']
+        ?? $payload['content']
+        ?? '';
+    $intent = is_array($content) ? $content : json_decode((string) $content, true);
+
+    return is_array($intent) ? li_chatbot_sanitize_intent_result($intent, $message) : null;
+}
+
+function li_chatbot_sanitize_intent_result(array $intent, string $message): array
+{
+    $valid_intents = ['product_lookup', 'compare_products', 'sds_request', 'reseller_lookup', 'quote_help', 'general_site_help'];
+    $valid_followups = ['new_topic', 'same_product', 'same_results', 'broaden_results'];
+    $valid_confidence = ['low', 'medium', 'high'];
+    $intent_name = sanitize_key((string) ($intent['intent'] ?? 'general_site_help'));
+    $followup = sanitize_key((string) ($intent['followup_mode'] ?? 'new_topic'));
+    $confidence = sanitize_key((string) ($intent['confidence'] ?? 'low'));
+    $retrieval_query = trim(sanitize_text_field((string) ($intent['retrieval_query'] ?? $message)));
+
+    return [
+        'intent' => in_array($intent_name, $valid_intents, true) ? $intent_name : 'general_site_help',
+        'resolved_subject' => sanitize_text_field((string) ($intent['resolved_subject'] ?? '')),
+        'followup_mode' => in_array($followup, $valid_followups, true) ? $followup : 'new_topic',
+        'retrieval_query' => $retrieval_query !== '' ? $retrieval_query : $message,
+        'needs_auth' => !empty($intent['needs_auth']),
+        'confidence' => in_array($confidence, $valid_confidence, true) ? $confidence : 'low',
+        'source' => sanitize_key((string) ($intent['source'] ?? 'rules')),
+    ];
+}
+
+function li_chatbot_build_retrieval_query(string $message, array $history): string
+{
+    if (li_chatbot_is_topic_pivot($message)) {
+        return $message;
+    }
+
+    if (!li_chatbot_is_reference_followup($message)) {
+        return $message;
+    }
+
+    $parts = [$message];
+
+    for ($i = count($history) - 1; $i >= 0 && count($parts) < 6; $i--) {
+        $item = $history[$i];
+
+        foreach ((array) ($item['sources'] ?? []) as $source) {
+            $title = trim((string) ($source['title'] ?? ''));
+
+            if ($title !== '' && !in_array($title, $parts, true)) {
+                $parts[] = $title;
+            }
+        }
+
+        foreach ((array) ($item['actions'] ?? []) as $action) {
+            $label = trim((string) ($action['label'] ?? ''));
+            $label = preg_replace('/^Open\s+/i', '', $label) ?: $label;
+
+            if ($label !== '' && !in_array($label, $parts, true)) {
+                $parts[] = $label;
+            }
+        }
+    }
+
+    return implode(' ', array_reverse($parts));
+}
+
+function li_chatbot_is_topic_pivot(string $message): bool
+{
+    return (bool) preg_match('/\b(other|different|else|besides|instead|new|another|types?|kinds?|options?)\b/i', $message);
+}
+
+function li_chatbot_is_reference_followup(string $message): bool
+{
+    return (bool) preg_match('/\b(it|that|those|these|same|previous|above|again|one|ones|product|results?|links?)\b/i', $message);
+}
+
+function li_chatbot_generate_response(string $message, array $context, array $history, array $settings, array $intent = []): string
 {
     if (!empty($settings['endpoint_url'])) {
-        $remote = li_chatbot_call_model_endpoint($message, $context, $history, $settings);
+        $remote = li_chatbot_call_model_endpoint($message, $context, $history, $settings, $intent);
 
         if ($remote !== '') {
             return $remote;
@@ -625,10 +1296,27 @@ function li_chatbot_generate_response(string $message, array $context, array $hi
     }
 
     if (!$context) {
+        if (in_array((string) ($intent['intent'] ?? ''), ['product_lookup', 'compare_products'], true)) {
+            return __('I could not find a strong Lloyds product match for that. Try naming the surface, material, or job, such as stainless steel cleaner, household-safe degreaser, or aluminum cleaner.', 'lloyds-industrial');
+        }
+
         return __('I could not find enough Lloyds site context to answer that confidently. Try asking about a product name, application, document, or reseller location.', 'lloyds-industrial');
     }
 
+    if (li_chatbot_is_broad_recommendation_query($message) && count($context) > 1) {
+        $items = array_slice($context, 0, 5);
+
+        return __('Here are the closest Lloyds matches I found:', 'lloyds-industrial') . "\n" . implode("\n", array_map(static function (array $row): string {
+            return '- ' . (string) $row['title'] . ': ' . li_chatbot_truncate((string) $row['content'], 150);
+        }, $items));
+    }
+
     $top = $context[0];
+
+    if (($top['source_type'] ?? '') === 'product' && li_chatbot_is_product_detail_query($message)) {
+        return li_chatbot_format_product_answer($top);
+    }
+
     $content = li_chatbot_truncate((string) $top['content'], 420);
     $title = (string) $top['title'];
 
@@ -640,7 +1328,93 @@ function li_chatbot_generate_response(string $message, array $context, array $hi
     );
 }
 
-function li_chatbot_call_model_endpoint(string $message, array $context, array $history, array $settings): string
+function li_chatbot_is_broad_recommendation_query(string $message): bool
+{
+    return (bool) preg_match('/\b(other|different|types?|kinds?|options?|products?|recommend|recommendations?|show me|what.*have)\b/i', $message);
+}
+
+function li_chatbot_is_general_product_discovery_query(string $message): bool
+{
+    return (bool) preg_match('/\b(products?|use|using|safe|safely|home|house|household|recommend|best)\b/i', $message);
+}
+
+function li_chatbot_is_product_detail_query(string $message): bool
+{
+    return (bool) preg_match('/\b(what|tell|more|about|info|information|details?|describe|explain)\b/i', $message);
+}
+
+function li_chatbot_format_product_answer(array $row): string
+{
+    $title = (string) $row['title'];
+    $content = (string) $row['content'];
+    $metadata = json_decode((string) ($row['metadata'] ?? ''), true);
+    $metadata = is_array($metadata) ? $metadata : [];
+    $sku = (string) ($metadata['sku'] ?? '');
+    $terms = is_array($metadata['terms'] ?? null) ? $metadata['terms'] : [];
+    $categories = array_filter(array_map('strval', (array) ($terms['product_cat'] ?? [])));
+    $brands = array_filter(array_map('strval', (array) ($terms['product_brand'] ?? [])));
+    $applications = array_filter(array_map('strval', (array) ($terms['li_application'] ?? [])));
+    $industries = array_filter(array_map('strval', (array) ($terms['li_industry'] ?? [])));
+
+    $lines = [
+        sprintf(__('Here is what I found for %s:', 'lloyds-industrial'), $title),
+    ];
+
+    if ($sku !== '') {
+        $lines[] = sprintf(__('SKU: %s', 'lloyds-industrial'), $sku);
+    }
+
+    if ($brands) {
+        $lines[] = sprintf(__('Brand: %s', 'lloyds-industrial'), implode(', ', array_slice($brands, 0, 3)));
+    }
+
+    if ($categories) {
+        $lines[] = sprintf(__('Product family: %s', 'lloyds-industrial'), implode(', ', array_slice($categories, 0, 3)));
+    }
+
+    if ($applications) {
+        $lines[] = sprintf(__('Applications: %s', 'lloyds-industrial'), implode(', ', array_slice($applications, 0, 4)));
+    }
+
+    if ($industries) {
+        $lines[] = sprintf(__('Industries: %s', 'lloyds-industrial'), implode(', ', array_slice($industries, 0, 4)));
+    }
+
+    $summary = li_chatbot_summarize_product_content($content);
+
+    if ($summary !== '') {
+        $lines[] = sprintf(__('Summary: %s', 'lloyds-industrial'), $summary);
+    } else {
+        $lines[] = __('The product record is currently light on long-description detail, so I am using the indexed catalogue fields available on the site.', 'lloyds-industrial');
+    }
+
+    return implode("\n", $lines);
+}
+
+function li_chatbot_summarize_product_content(string $content): string
+{
+    $content = preg_replace('/\bSKU:\s*\S+/i', '', $content) ?: $content;
+    $content = preg_replace('/Categories and applications:.*/i', '', $content) ?: $content;
+    $content = trim(li_chatbot_clean_text($content));
+
+    return li_chatbot_truncate($content, 420);
+}
+
+function li_chatbot_endpoint_headers(array $settings): array
+{
+    $headers = ['Content-Type' => 'application/json'];
+    $auth_key = (string) ($settings['auth_key'] ?? '');
+
+    if ($auth_key !== '' && ($settings['auth_type'] ?? '') === 'bearer') {
+        $headers['Authorization'] = 'Bearer ' . $auth_key;
+    } elseif ($auth_key !== '' && ($settings['auth_type'] ?? '') === 'header') {
+        $headers[(string) ($settings['auth_header'] ?: 'Authorization')] = $auth_key;
+    }
+
+    return $headers;
+}
+
+function li_chatbot_call_model_endpoint(string $message, array $context, array $history, array $settings, array $intent = []): string
 {
     $context_text = implode("\n\n", array_map(static function (array $row): string {
         return sprintf(
@@ -651,30 +1425,28 @@ function li_chatbot_call_model_endpoint(string $message, array $context, array $
             li_chatbot_truncate((string) $row['content'], 1600)
         );
     }, $context));
-    $headers = ['Content-Type' => 'application/json'];
-    $auth_key = (string) ($settings['auth_key'] ?? '');
-
-    if ($auth_key !== '' && $settings['auth_type'] === 'bearer') {
-        $headers['Authorization'] = 'Bearer ' . $auth_key;
-    } elseif ($auth_key !== '' && $settings['auth_type'] === 'header') {
-        $headers[(string) ($settings['auth_header'] ?: 'Authorization')] = $auth_key;
-    }
+    $headers = li_chatbot_endpoint_headers($settings);
 
     if ($settings['endpoint_mode'] === 'openai') {
         $body = [
             'model' => (string) ($settings['model'] ?: 'gpt-4o-mini'),
             'temperature' => (float) $settings['temperature'],
-            'messages' => [
-                ['role' => 'system', 'content' => (string) $settings['system_prompt']],
-                ['role' => 'system', 'content' => "Lloyds context:\n" . $context_text],
-                ['role' => 'user', 'content' => $message],
-            ],
+            'messages' => array_merge(
+                [
+                    ['role' => 'system', 'content' => (string) $settings['system_prompt']],
+                    ['role' => 'system', 'content' => 'Intent analysis: ' . wp_json_encode($intent)],
+                    ['role' => 'system', 'content' => "Lloyds context:\n" . $context_text],
+                ],
+                $history,
+                [['role' => 'user', 'content' => $message]]
+            ),
         ];
     } else {
         $body = [
             'model' => (string) $settings['model'],
             'message' => $message,
             'system' => (string) $settings['system_prompt'],
+            'intent' => $intent,
             'context' => $context_text,
             'history' => $history,
             'user' => li_chatbot_current_user_payload(),
@@ -829,7 +1601,7 @@ function li_chatbot_context_actions(array $context): array
 {
     $actions = [];
 
-    foreach (array_slice($context, 0, 3) as $row) {
+    foreach (array_slice($context, 0, 5) as $row) {
         if (!empty($row['url']) && ($row['access_level'] ?? 'public') === 'public') {
             $actions[] = [
                 'type' => 'link',
@@ -936,6 +1708,7 @@ function li_chatbot_current_user_payload(): array
 
     return [
         'loggedIn' => true,
+        'id' => (int) $user->ID,
         'name' => $user->display_name ?: $user->user_login,
         'roles' => (array) $user->roles,
     ];
@@ -993,6 +1766,7 @@ function li_chatbot_enqueue_frontend_assets(): void
         'user' => li_chatbot_current_user_payload(),
         'i18n' => [
             'send' => __('Send', 'lloyds-industrial'),
+            'newChat' => __('New', 'lloyds-industrial'),
             'close' => __('Close chat', 'lloyds-industrial'),
             'open' => __('Open chat', 'lloyds-industrial'),
             'username' => __('Username or email', 'lloyds-industrial'),
@@ -1491,6 +2265,7 @@ function li_chatbot_render_admin_page(): void
                 <h2><?php esc_html_e('Model Endpoint', 'lloyds-industrial'); ?></h2>
                 <?php li_chatbot_render_text('endpoint_url', __('Endpoint URL', 'lloyds-industrial'), $settings, 'https://example.com/chat'); ?>
                 <?php li_chatbot_render_select('endpoint_mode', __('Endpoint format', 'lloyds-industrial'), $settings, ['custom' => __('Custom Lloyds payload', 'lloyds-industrial'), 'openai' => __('OpenAI-compatible chat completions', 'lloyds-industrial')]); ?>
+                <?php li_chatbot_render_checkbox('intent_pass_enabled', __('Use intent pass for ambiguous messages', 'lloyds-industrial'), $settings); ?>
                 <?php li_chatbot_render_text('model', __('Model name', 'lloyds-industrial'), $settings); ?>
                 <?php li_chatbot_render_select('auth_type', __('Authentication', 'lloyds-industrial'), $settings, ['bearer' => __('Bearer token', 'lloyds-industrial'), 'header' => __('Custom header', 'lloyds-industrial'), 'none' => __('None', 'lloyds-industrial')]); ?>
                 <?php li_chatbot_render_text('auth_header', __('Auth header', 'lloyds-industrial'), $settings); ?>

@@ -119,12 +119,19 @@ add_action('admin_init', function (): void {
         'lloyds'
     );
 
+    add_settings_section(
+        'li_announcement_section',
+        __('Announcement Bar', 'lloyds-industrial'),
+        '__return_null',
+        'lloyds'
+    );
+
     add_settings_field(
         'li_announcement',
         __('Announcement Bar', 'lloyds-industrial'),
         'li_render_announcement_field',
         'lloyds',
-        'li_global_layout_section'
+        'li_announcement_section'
     );
 
     add_settings_field(
@@ -333,6 +340,16 @@ function li_sanitize_theme_settings(array $settings): array
 
     $site_width = absint($settings['site_width'] ?? $existing['site_width'] ?? $defaults['site_width']);
     $site_width = min(1800, max(1080, $site_width ?: (int) $defaults['site_width']));
+    $announcement_font_size = absint($settings['announcement_font_size'] ?? $existing['announcement_font_size'] ?? $defaults['announcement_font_size']);
+    $announcement_font_size = min(24, max(11, $announcement_font_size ?: (int) $defaults['announcement_font_size']));
+    $announcement_font_weight = sanitize_key((string) ($settings['announcement_font_weight'] ?? $existing['announcement_font_weight'] ?? $defaults['announcement_font_weight']));
+    if (!in_array($announcement_font_weight, ['500', '600', '700', '800', '900'], true)) {
+        $announcement_font_weight = (string) $defaults['announcement_font_weight'];
+    }
+    $announcement_text_transform = sanitize_key((string) ($settings['announcement_text_transform'] ?? $existing['announcement_text_transform'] ?? $defaults['announcement_text_transform']));
+    if (!in_array($announcement_text_transform, ['none', 'uppercase'], true)) {
+        $announcement_text_transform = (string) $defaults['announcement_text_transform'];
+    }
 
     $sanitized = [
         'partner_mode'              => !empty($settings['partner_mode']),
@@ -345,9 +362,17 @@ function li_sanitize_theme_settings(array $settings): array
         'site_width'                 => $site_width,
         'footer_density'             => $footer_density,
         'announcement_enabled'       => !empty($settings['announcement_enabled']),
+        'announcement_show_message'  => !empty($settings['announcement_show_message']),
+        'announcement_show_link'     => !empty($settings['announcement_show_link']),
         'announcement_text'          => sanitize_text_field($settings['announcement_text'] ?? $existing['announcement_text']),
         'announcement_link_label'    => sanitize_text_field($settings['announcement_link_label'] ?? $existing['announcement_link_label']),
         'announcement_link_url'      => esc_url_raw($settings['announcement_link_url'] ?? $existing['announcement_link_url']),
+        'announcement_bg_color'      => sanitize_hex_color((string) ($settings['announcement_bg_color'] ?? $existing['announcement_bg_color'] ?? $defaults['announcement_bg_color'])) ?: $defaults['announcement_bg_color'],
+        'announcement_text_color'    => sanitize_hex_color((string) ($settings['announcement_text_color'] ?? $existing['announcement_text_color'] ?? $defaults['announcement_text_color'])) ?: $defaults['announcement_text_color'],
+        'announcement_link_color'    => sanitize_hex_color((string) ($settings['announcement_link_color'] ?? $existing['announcement_link_color'] ?? $defaults['announcement_link_color'])) ?: $defaults['announcement_link_color'],
+        'announcement_font_size'     => $announcement_font_size,
+        'announcement_font_weight'   => $announcement_font_weight,
+        'announcement_text_transform' => $announcement_text_transform,
         'header_primary_label'       => sanitize_text_field($settings['header_primary_label'] ?? $existing['header_primary_label']),
         'header_primary_url'         => esc_url_raw($settings['header_primary_url'] ?? $existing['header_primary_url']),
         'header_secondary_label'     => sanitize_text_field($settings['header_secondary_label'] ?? $existing['header_secondary_label']),
@@ -629,50 +654,77 @@ function li_render_announcement_field(): void
 {
     $settings = li_get_global_layout_settings();
     ?>
-    <fieldset>
-        <label>
-            <input
-                type="checkbox"
-                name="li_theme_settings[announcement_enabled]"
-                value="1"
-                <?php checked(li_theme_setting_checkbox_value($settings, 'announcement_enabled')); ?>
-            >
-            <?php esc_html_e('Show the announcement bar.', 'lloyds-industrial'); ?>
-        </label>
+    <div class="li-announcement-settings">
+        <div class="li-settings-section-heading">
+            <p class="li-settings-kicker"><?php esc_html_e('Announcement Bar', 'lloyds-industrial'); ?></p>
+            <h3><?php esc_html_e('Top-of-site message', 'lloyds-industrial'); ?></h3>
+            <p><?php esc_html_e('Control the shortcode-powered announcement bar used in the header template.', 'lloyds-industrial'); ?></p>
+        </div>
 
-        <p>
-            <label for="li_announcement_text"><?php esc_html_e('Message', 'lloyds-industrial'); ?></label><br>
-            <input
-                class="regular-text"
-                id="li_announcement_text"
-                type="text"
-                name="li_theme_settings[announcement_text]"
-                value="<?php echo esc_attr((string) $settings['announcement_text']); ?>"
-            >
-        </p>
+        <div class="li-admin-field-grid">
+            <label class="li-admin-check-card">
+                <input type="checkbox" name="li_theme_settings[announcement_enabled]" value="1" <?php checked(li_theme_setting_checkbox_value($settings, 'announcement_enabled')); ?>>
+                <span><?php esc_html_e('Show announcement bar', 'lloyds-industrial'); ?></span>
+            </label>
+            <label class="li-admin-check-card">
+                <input type="checkbox" name="li_theme_settings[announcement_show_message]" value="1" <?php checked(li_theme_setting_checkbox_value($settings, 'announcement_show_message')); ?>>
+                <span><?php esc_html_e('Show message text', 'lloyds-industrial'); ?></span>
+            </label>
+            <label class="li-admin-check-card">
+                <input type="checkbox" name="li_theme_settings[announcement_show_link]" value="1" <?php checked(li_theme_setting_checkbox_value($settings, 'announcement_show_link')); ?>>
+                <span><?php esc_html_e('Show link item', 'lloyds-industrial'); ?></span>
+            </label>
+        </div>
 
-        <p>
-            <label for="li_announcement_link_label"><?php esc_html_e('Link Label', 'lloyds-industrial'); ?></label><br>
-            <input
-                class="regular-text"
-                id="li_announcement_link_label"
-                type="text"
-                name="li_theme_settings[announcement_link_label]"
-                value="<?php echo esc_attr((string) $settings['announcement_link_label']); ?>"
-            >
-        </p>
+        <div class="li-admin-field-grid li-admin-field-grid--two">
+            <label>
+                <span><?php esc_html_e('Message', 'lloyds-industrial'); ?></span>
+                <input class="regular-text" type="text" name="li_theme_settings[announcement_text]" value="<?php echo esc_attr((string) $settings['announcement_text']); ?>">
+            </label>
+            <label>
+                <span><?php esc_html_e('Link label', 'lloyds-industrial'); ?></span>
+                <input class="regular-text" type="text" name="li_theme_settings[announcement_link_label]" value="<?php echo esc_attr((string) $settings['announcement_link_label']); ?>">
+            </label>
+            <label>
+                <span><?php esc_html_e('Link URL', 'lloyds-industrial'); ?></span>
+                <input class="regular-text code" type="text" name="li_theme_settings[announcement_link_url]" value="<?php echo esc_attr((string) $settings['announcement_link_url']); ?>">
+            </label>
+        </div>
 
-        <p>
-            <label for="li_announcement_link_url"><?php esc_html_e('Link URL', 'lloyds-industrial'); ?></label><br>
-            <input
-                class="regular-text code"
-                id="li_announcement_link_url"
-                type="text"
-                name="li_theme_settings[announcement_link_url]"
-                value="<?php echo esc_attr((string) $settings['announcement_link_url']); ?>"
-            >
-        </p>
-    </fieldset>
+        <div class="li-admin-field-grid li-admin-field-grid--three">
+            <label>
+                <span><?php esc_html_e('Background', 'lloyds-industrial'); ?></span>
+                <input type="color" name="li_theme_settings[announcement_bg_color]" value="<?php echo esc_attr((string) $settings['announcement_bg_color']); ?>">
+            </label>
+            <label>
+                <span><?php esc_html_e('Text color', 'lloyds-industrial'); ?></span>
+                <input type="color" name="li_theme_settings[announcement_text_color]" value="<?php echo esc_attr((string) $settings['announcement_text_color']); ?>">
+            </label>
+            <label>
+                <span><?php esc_html_e('Link color', 'lloyds-industrial'); ?></span>
+                <input type="color" name="li_theme_settings[announcement_link_color]" value="<?php echo esc_attr((string) $settings['announcement_link_color']); ?>">
+            </label>
+            <label>
+                <span><?php esc_html_e('Font size', 'lloyds-industrial'); ?></span>
+                <input type="number" min="11" max="24" name="li_theme_settings[announcement_font_size]" value="<?php echo esc_attr((string) absint($settings['announcement_font_size'])); ?>">
+            </label>
+            <label>
+                <span><?php esc_html_e('Font weight', 'lloyds-industrial'); ?></span>
+                <select name="li_theme_settings[announcement_font_weight]">
+                    <?php foreach (['500', '600', '700', '800', '900'] as $weight) : ?>
+                        <option value="<?php echo esc_attr($weight); ?>" <?php selected((string) $settings['announcement_font_weight'], $weight); ?>><?php echo esc_html($weight); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </label>
+            <label>
+                <span><?php esc_html_e('Text case', 'lloyds-industrial'); ?></span>
+                <select name="li_theme_settings[announcement_text_transform]">
+                    <option value="none" <?php selected((string) $settings['announcement_text_transform'], 'none'); ?>><?php esc_html_e('Normal', 'lloyds-industrial'); ?></option>
+                    <option value="uppercase" <?php selected((string) $settings['announcement_text_transform'], 'uppercase'); ?>><?php esc_html_e('Uppercase', 'lloyds-industrial'); ?></option>
+                </select>
+            </label>
+        </div>
+    </div>
     <?php
 }
 
@@ -1666,6 +1718,7 @@ function li_render_settings_page(): void
             <button class="li-admin-tab" type="button" data-li-tab-target="theme-access"><?php esc_html_e('Access', 'lloyds-industrial'); ?></button>
             <button class="li-admin-tab" type="button" data-li-tab-target="theme-brand"><?php esc_html_e('Brand', 'lloyds-industrial'); ?></button>
             <button class="li-admin-tab" type="button" data-li-tab-target="theme-layout"><?php esc_html_e('Layout', 'lloyds-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="theme-announcement"><?php esc_html_e('Announcement', 'lloyds-industrial'); ?></button>
             <button class="li-admin-tab" type="button" data-li-tab-target="theme-header-footer"><?php esc_html_e('Header & Footer', 'lloyds-industrial'); ?></button>
             <button class="li-admin-tab" type="button" data-li-tab-target="theme-operations"><?php esc_html_e('Operations', 'lloyds-industrial'); ?></button>
         </nav>
@@ -1677,6 +1730,7 @@ function li_render_settings_page(): void
             li_render_settings_section_panel('lloyds', 'li_site_behavior_section', 'theme-access');
             li_render_settings_section_panel('lloyds', 'li_brand_section', 'theme-brand');
             li_render_settings_section_panel('lloyds', 'li_layout_display_section', 'theme-layout');
+            li_render_settings_section_panel('lloyds', 'li_announcement_section', 'theme-announcement');
             li_render_settings_section_panel('lloyds', 'li_global_layout_section', 'theme-header-footer');
             ?>
         </form>

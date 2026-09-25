@@ -193,6 +193,86 @@
     padding: 18px 22px;
 }
 
+.li-announcement-settings {
+    background: #fff;
+    border: 1px solid #dde5e2;
+    border-radius: 8px;
+    box-shadow: 0 10px 28px rgba(24, 33, 38, 0.04);
+    display: grid;
+    gap: 20px;
+    padding: 22px;
+}
+
+.li-announcement-settings .li-settings-section-heading {
+    border-radius: 8px;
+    box-shadow: none;
+    padding: 0;
+}
+
+.li-announcement-settings .li-settings-section-heading,
+.li-announcement-settings .li-settings-section-heading p {
+    border: 0;
+    margin: 0;
+}
+
+.li-announcement-settings .li-settings-section-heading p:not(.li-settings-kicker) {
+    padding: 0;
+}
+
+.li-admin-field-grid {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+}
+
+.li-admin-field-grid--two {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.li-admin-field-grid--three {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+.li-admin-field-grid label,
+.li-admin-check-card {
+    display: grid;
+    gap: 7px;
+}
+
+.li-admin-field-grid label > span,
+.li-admin-check-card span {
+    color: #17443b;
+    font-size: 12px;
+    font-weight: 850;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.li-admin-check-card {
+    align-items: center;
+    background: #f7faf9;
+    border: 1px solid #dde5e2;
+    border-radius: 8px;
+    display: flex;
+    gap: 10px;
+    min-height: 48px;
+    padding: 12px;
+}
+
+.li-announcement-settings input[type="color"] {
+    border: 1px solid #cfd9d5;
+    border-radius: 6px;
+    height: 42px;
+    padding: 4px;
+    width: 100%;
+}
+
+.li-announcement-settings select {
+    border-color: #cfd9d5;
+    border-radius: 6px;
+    min-height: 38px;
+}
+
 .li-settings-page .button,
 .li-settings-page .button-primary {
     border-radius: 6px;
@@ -1124,6 +1204,59 @@
     text-decoration: underline;
 }
 
+.li-mail-shortcode-panel {
+    margin-bottom: 18px;
+}
+
+.li-mail-shortcode-grid {
+    display: grid;
+    gap: 18px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+}
+
+.li-mail-shortcode-grid h3 {
+    color: #17443b;
+    font-size: 15px;
+    margin: 0 0 10px;
+}
+
+.li-mail-shortcode-grid code {
+    background: #f3f6f5;
+    border: 1px solid #dbe5e1;
+    border-radius: 6px;
+    display: block;
+    line-height: 1.5;
+    margin: 0 0 8px;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    padding: 7px 9px;
+}
+
+.li-mail-shortcode-attributes {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+}
+
+.li-mail-shortcode-attributes > div {
+    background: #f6f8f7;
+    border: 1px solid #dbe5e1;
+    border-radius: 8px;
+    display: grid;
+    gap: 8px;
+    grid-template-columns: 130px minmax(0, 1fr);
+    padding: 12px;
+}
+
+.li-mail-shortcode-attributes dt,
+.li-mail-shortcode-attributes dd {
+    margin: 0;
+}
+
+.li-mail-shortcode-attributes dd {
+    color: #52615d;
+}
+
 .post-type-product #titlediv #title,
 .post-type-li_document #titlediv #title,
 .post-type-li_contact_msg #titlediv #title,
@@ -1886,6 +2019,7 @@
 
     .li-mail-campaign-card,
     .li-mail-builder,
+    .li-mail-shortcode-grid,
     .li-carousel-usage-grid,
     .li-editor-panel__grid,
     .lloyds-flipbook-builder__grid,

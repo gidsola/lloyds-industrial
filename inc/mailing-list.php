@@ -19,6 +19,8 @@ add_action('admin_init', 'li_mail_handle_admin_actions');
 add_action('admin_post_li_mail_save_campaign_builder', 'li_mail_handle_campaign_builder_save');
 add_action('admin_post_li_mail_subscribe', 'li_mail_handle_subscribe');
 add_action('admin_post_nopriv_li_mail_subscribe', 'li_mail_handle_subscribe');
+add_action('wp_ajax_li_mail_subscribe', 'li_mail_handle_subscribe');
+add_action('wp_ajax_nopriv_li_mail_subscribe', 'li_mail_handle_subscribe');
 add_action('phpmailer_init', 'li_mail_configure_smtp');
 add_filter('cron_schedules', 'li_mail_register_cron_schedules');
 add_action('li_mail_process_campaign_queue', 'li_mail_process_campaign_queue');
@@ -412,8 +414,11 @@ function li_mail_render_signup_shortcode(mixed $atts = []): string
         'description' => __('Get Lloyds product updates, sales announcements, promotions, and practical industrial resources.', 'lloyds-industrial'),
         'tag' => '',
         'source' => '',
-        'show_company' => 'true',
-        'show_name' => 'true',
+        'show_company' => 'false',
+        'show_name' => 'false',
+        'show_consent' => 'false',
+        'show_privacy' => 'false',
+        'placeholder' => __('Email address', 'lloyds-industrial'),
         'button' => __('Subscribe', 'lloyds-industrial'),
     ], is_array($atts) ? $atts : [], 'li_mailing_list_signup');
     $status = isset($_GET['li_mail_status']) ? sanitize_key((string) $_GET['li_mail_status']) : '';
@@ -421,7 +426,7 @@ function li_mail_render_signup_shortcode(mixed $atts = []): string
 
     ob_start();
     ?>
-    <form class="li-mail-signup li-contact-form" method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+    <form class="li-mail-signup li-contact-form" method="post" action="<?php echo esc_url(admin_url('admin-ajax.php')); ?>" data-li-mail-signup>
         <?php if ((string) $atts['title'] !== '') : ?>
             <h3><?php echo esc_html((string) $atts['title']); ?></h3>
         <?php endif; ?>
@@ -435,6 +440,7 @@ function li_mail_render_signup_shortcode(mixed $atts = []): string
         <?php elseif ($status === 'error') : ?>
             <div class="li-contact-form__notice li-contact-form__notice--error"><?php esc_html_e('Please enter a valid email address and accept the mailing list consent.', 'lloyds-industrial'); ?></div>
         <?php endif; ?>
+        <div class="li-contact-form__notice" data-li-mail-signup-message hidden></div>
 
         <input type="hidden" name="action" value="li_mail_subscribe">
         <input type="hidden" name="source_url" value="<?php echo esc_url($source_url); ?>">
@@ -447,37 +453,46 @@ function li_mail_render_signup_shortcode(mixed $atts = []): string
             <input id="li_mail_website" name="website" type="text" tabindex="-1" autocomplete="off">
         </p>
 
-        <div class="li-contact-form__grid">
-            <?php if ($atts['show_name'] !== 'false') : ?>
-                <p>
-                    <label for="li_mail_name"><?php esc_html_e('Name', 'lloyds-industrial'); ?></label>
-                    <input id="li_mail_name" name="name" type="text" autocomplete="name">
-                </p>
-            <?php endif; ?>
+        <?php if ($atts['show_name'] !== 'false' || $atts['show_company'] !== 'false') : ?>
+            <div class="li-contact-form__grid">
+                <?php if ($atts['show_name'] !== 'false') : ?>
+                    <p>
+                        <label for="li_mail_name"><?php esc_html_e('Name', 'lloyds-industrial'); ?></label>
+                        <input id="li_mail_name" name="name" type="text" autocomplete="name">
+                    </p>
+                <?php endif; ?>
+                <?php if ($atts['show_company'] !== 'false') : ?>
+                    <p>
+                        <label for="li_mail_company"><?php esc_html_e('Company', 'lloyds-industrial'); ?></label>
+                        <input id="li_mail_company" name="company" type="text" autocomplete="organization">
+                    </p>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
+
+        <div class="li-mail-signup__row">
             <p>
-                <label for="li_mail_email"><?php esc_html_e('Email', 'lloyds-industrial'); ?> <span>*</span></label>
-                <input id="li_mail_email" name="email" type="email" autocomplete="email" required>
+                <label class="screen-reader-text" for="li_mail_email"><?php esc_html_e('Email address', 'lloyds-industrial'); ?></label>
+                <input id="li_mail_email" name="email" type="email" autocomplete="email" placeholder="<?php echo esc_attr((string) $atts['placeholder']); ?>" required>
             </p>
-            <?php if ($atts['show_company'] !== 'false') : ?>
-                <p>
-                    <label for="li_mail_company"><?php esc_html_e('Company', 'lloyds-industrial'); ?></label>
-                    <input id="li_mail_company" name="company" type="text" autocomplete="organization">
-                </p>
-            <?php endif; ?>
+            <button class="li-button-primary" type="submit"><?php echo esc_html((string) $atts['button']); ?></button>
         </div>
 
-        <p class="li-contact-form__consent">
-            <label>
-                <input name="consent" type="checkbox" value="1" required>
-                <?php echo esc_html((string) $settings['consent_text']); ?>
-            </label>
-        </p>
+        <?php if ($atts['show_consent'] !== 'false') : ?>
+            <p class="li-contact-form__consent">
+                <label>
+                    <input name="consent" type="checkbox" value="1" required>
+                    <?php echo esc_html((string) $settings['consent_text']); ?>
+                </label>
+            </p>
+        <?php else : ?>
+            <input name="consent" type="hidden" value="1">
+        <?php endif; ?>
 
-        <?php if (!empty($settings['privacy_url'])) : ?>
+        <?php if ($atts['show_privacy'] !== 'false' && !empty($settings['privacy_url'])) : ?>
             <p class="description"><a href="<?php echo esc_url((string) $settings['privacy_url']); ?>"><?php esc_html_e('Privacy policy', 'lloyds-industrial'); ?></a></p>
         <?php endif; ?>
 
-        <button class="li-button-primary" type="submit"><?php echo esc_html((string) $atts['button']); ?></button>
     </form>
     <?php
 
@@ -488,13 +503,22 @@ function li_mail_handle_subscribe(): void
 {
     $source_url = isset($_POST['source_url']) ? esc_url_raw(wp_unslash((string) $_POST['source_url'])) : home_url('/');
     $redirect_error = add_query_arg('li_mail_status', 'error', $source_url);
+    $is_ajax = wp_doing_ajax();
 
     if (!isset($_POST['li_mail_nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['li_mail_nonce'])), 'li_mail_subscribe')) {
+        if ($is_ajax) {
+            wp_send_json_error(['message' => __('Please refresh the page and try again.', 'lloyds-industrial')], 403);
+        }
+
         wp_safe_redirect($redirect_error);
         exit;
     }
 
     if (!empty($_POST['website'])) {
+        if ($is_ajax) {
+            wp_send_json_success(['message' => __('Thank you. You are subscribed.', 'lloyds-industrial'), 'status' => 'subscribed']);
+        }
+
         wp_safe_redirect(add_query_arg('li_mail_status', 'subscribed', $source_url));
         exit;
     }
@@ -503,6 +527,10 @@ function li_mail_handle_subscribe(): void
     $consent = !empty($_POST['consent']);
 
     if ($email === '' || !$consent) {
+        if ($is_ajax) {
+            wp_send_json_error(['message' => __('Please enter a valid email address.', 'lloyds-industrial')], 400);
+        }
+
         wp_safe_redirect($redirect_error);
         exit;
     }
@@ -520,17 +548,29 @@ function li_mail_handle_subscribe(): void
     ]);
 
     if (!$subscriber_id) {
+        if ($is_ajax) {
+            wp_send_json_error(['message' => __('We could not subscribe that email right now.', 'lloyds-industrial')], 500);
+        }
+
         wp_safe_redirect($redirect_error);
         exit;
     }
 
     if ($status === 'pending') {
         li_mail_send_confirmation_email($subscriber_id);
+        if ($is_ajax) {
+            wp_send_json_success(['message' => __('Please check your email to confirm your subscription.', 'lloyds-industrial'), 'status' => 'pending']);
+        }
+
         wp_safe_redirect(add_query_arg('li_mail_status', 'pending', $source_url));
         exit;
     }
 
     li_mail_send_welcome_email($subscriber_id);
+    if ($is_ajax) {
+        wp_send_json_success(['message' => __('Thank you. You are subscribed.', 'lloyds-industrial'), 'status' => 'subscribed']);
+    }
+
     wp_safe_redirect(add_query_arg('li_mail_status', 'subscribed', $source_url));
     exit;
 }
@@ -1089,57 +1129,115 @@ function li_mail_render_settings_page(): void
             <a class="button button-secondary" href="<?php echo esc_url($export_url); ?>"><?php esc_html_e('Export Subscribers', 'lloyds-industrial'); ?></a>
         </p>
 
-        <form class="li-settings-form" method="post" action="options.php">
+        <nav class="li-admin-tabs" data-li-admin-tabs=".li-mail-page" data-li-tabs-key="li-mail-settings-tab" aria-label="<?php esc_attr_e('Mailing list settings sections', 'lloyds-industrial'); ?>">
+            <button class="li-admin-tab" type="button" data-li-tab-target="mail-signup"><?php esc_html_e('Signup Form', 'lloyds-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="mail-sender"><?php esc_html_e('Sender', 'lloyds-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="mail-consent"><?php esc_html_e('Consent', 'lloyds-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="mail-automation"><?php esc_html_e('Automated Emails', 'lloyds-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="mail-delivery"><?php esc_html_e('Delivery', 'lloyds-industrial'); ?></button>
+            <button class="li-admin-tab" type="button" data-li-tab-target="mail-smtp"><?php esc_html_e('SMTP', 'lloyds-industrial'); ?></button>
+        </nav>
+
+        <section class="li-admin-panel li-admin-tab-panel li-mail-shortcode-panel" data-li-tab-panel="mail-signup">
+            <div>
+                <p class="li-settings-kicker"><?php esc_html_e('Signup Form', 'lloyds-industrial'); ?></p>
+                <h2><?php esc_html_e('Place a Join Our Mailing List Box', 'lloyds-industrial'); ?></h2>
+                <p><?php esc_html_e('Add the shortcode to any page, post, product description, template pattern, or reusable block. The default embed is a compact email field and join button.', 'lloyds-industrial'); ?></p>
+            </div>
+
+            <div class="li-mail-shortcode-grid">
+                <div>
+                    <h3><?php esc_html_e('Recommended', 'lloyds-industrial'); ?></h3>
+                    <code>[li_mailing_list_signup title="Join our mailing list" button="Join"]</code>
+                    <h3><?php esc_html_e('Useful Variants', 'lloyds-industrial'); ?></h3>
+                    <code>[li_mailing_list_signup]</code>
+                    <code>[li_mailing_list_signup tag="product-updates" source="footer_signup"]</code>
+                    <code>[li_mailing_list_signup title="" description="" button="Subscribe"]</code>
+                    <code>[li_mailing_list_signup show_name="true" show_company="true" show_consent="true" show_privacy="true"]</code>
+                </div>
+
+                <div>
+                    <h3><?php esc_html_e('Attributes', 'lloyds-industrial'); ?></h3>
+                    <dl class="li-mail-shortcode-attributes">
+                        <div><dt><code>title</code></dt><dd><?php esc_html_e('Changes the form heading.', 'lloyds-industrial'); ?></dd></div>
+                        <div><dt><code>description</code></dt><dd><?php esc_html_e('Changes or hides the intro copy.', 'lloyds-industrial'); ?></dd></div>
+                        <div><dt><code>tag</code></dt><dd><?php esc_html_e('Applies a mailing tag to new subscribers.', 'lloyds-industrial'); ?></dd></div>
+                        <div><dt><code>source</code></dt><dd><?php esc_html_e('Stores where the signup came from.', 'lloyds-industrial'); ?></dd></div>
+                        <div><dt><code>show_name</code></dt><dd><?php esc_html_e('Set to true to show the name field.', 'lloyds-industrial'); ?></dd></div>
+                        <div><dt><code>show_company</code></dt><dd><?php esc_html_e('Set to true to show the company field.', 'lloyds-industrial'); ?></dd></div>
+                        <div><dt><code>show_consent</code></dt><dd><?php esc_html_e('Set to true to show the consent checkbox.', 'lloyds-industrial'); ?></dd></div>
+                        <div><dt><code>show_privacy</code></dt><dd><?php esc_html_e('Set to true to show the privacy policy link.', 'lloyds-industrial'); ?></dd></div>
+                        <div><dt><code>placeholder</code></dt><dd><?php esc_html_e('Changes the email field placeholder.', 'lloyds-industrial'); ?></dd></div>
+                        <div><dt><code>button</code></dt><dd><?php esc_html_e('Changes the submit button text.', 'lloyds-industrial'); ?></dd></div>
+                    </dl>
+                </div>
+            </div>
+        </section>
+
+        <form class="li-settings-form li-admin-tab-panels" method="post" action="options.php">
             <?php settings_fields('li_mailing_list_settings'); ?>
 
-            <h2><?php esc_html_e('Sender Identity', 'lloyds-industrial'); ?></h2>
-            <p><?php esc_html_e('Configure the default sender used for confirmations, welcome messages, and campaigns.', 'lloyds-industrial'); ?></p>
-            <table class="form-table" role="presentation"><tbody>
-                <?php li_mail_render_text_row('from_name', __('From name', 'lloyds-industrial'), $settings); ?>
-                <?php li_mail_render_email_row('from_email', __('From email', 'lloyds-industrial'), $settings); ?>
-                <?php li_mail_render_email_row('reply_to_email', __('Reply-to email', 'lloyds-industrial'), $settings); ?>
-                <?php li_mail_render_text_row('default_tag', __('Default subscriber tag', 'lloyds-industrial'), $settings); ?>
-            </tbody></table>
+            <section class="li-admin-tab-panel" data-li-tab-panel="mail-sender">
+                <h2><?php esc_html_e('Sender Identity', 'lloyds-industrial'); ?></h2>
+                <p><?php esc_html_e('Configure the default sender used for confirmations, welcome messages, and campaigns.', 'lloyds-industrial'); ?></p>
+                <table class="form-table" role="presentation"><tbody>
+                    <?php li_mail_render_text_row('from_name', __('From name', 'lloyds-industrial'), $settings); ?>
+                    <?php li_mail_render_email_row('from_email', __('From email', 'lloyds-industrial'), $settings); ?>
+                    <?php li_mail_render_email_row('reply_to_email', __('Reply-to email', 'lloyds-industrial'), $settings); ?>
+                    <?php li_mail_render_text_row('default_tag', __('Default subscriber tag', 'lloyds-industrial'), $settings); ?>
+                </tbody></table>
+                <?php submit_button(__('Save Mailing List Settings', 'lloyds-industrial')); ?>
+            </section>
 
-            <h2><?php esc_html_e('Signup and Consent', 'lloyds-industrial'); ?></h2>
-            <p><?php esc_html_e('Use the shortcode on any page, pattern, product, or reusable block: [li_mailing_list_signup]', 'lloyds-industrial'); ?></p>
-            <table class="form-table" role="presentation"><tbody>
-                <?php li_mail_render_checkbox_row('double_optin', __('Require email confirmation', 'lloyds-industrial'), $settings); ?>
-                <?php li_mail_render_text_row('consent_text', __('Consent text', 'lloyds-industrial'), $settings); ?>
-                <?php li_mail_render_text_row('privacy_url', __('Privacy policy URL', 'lloyds-industrial'), $settings); ?>
-            </tbody></table>
+            <section class="li-admin-tab-panel" data-li-tab-panel="mail-consent">
+                <h2><?php esc_html_e('Signup and Consent', 'lloyds-industrial'); ?></h2>
+                <p><?php esc_html_e('Configure the consent behavior used by embedded mailing list signup forms.', 'lloyds-industrial'); ?></p>
+                <table class="form-table" role="presentation"><tbody>
+                    <?php li_mail_render_checkbox_row('double_optin', __('Require email confirmation', 'lloyds-industrial'), $settings); ?>
+                    <?php li_mail_render_text_row('consent_text', __('Consent text', 'lloyds-industrial'), $settings); ?>
+                    <?php li_mail_render_text_row('privacy_url', __('Privacy policy URL', 'lloyds-industrial'), $settings); ?>
+                </tbody></table>
+                <?php submit_button(__('Save Mailing List Settings', 'lloyds-industrial')); ?>
+            </section>
 
-            <h2><?php esc_html_e('Automated Emails', 'lloyds-industrial'); ?></h2>
-            <p><?php esc_html_e('Customize confirmation and welcome messages. Confirmation messages can use {{confirm_url}}.', 'lloyds-industrial'); ?></p>
-            <table class="form-table" role="presentation"><tbody>
-                <?php li_mail_render_checkbox_row('welcome_enabled', __('Send welcome email', 'lloyds-industrial'), $settings); ?>
-                <?php li_mail_render_text_row('welcome_subject', __('Welcome subject', 'lloyds-industrial'), $settings); ?>
-                <?php li_mail_render_textarea_row('welcome_message', __('Welcome message', 'lloyds-industrial'), $settings); ?>
-                <?php li_mail_render_text_row('confirmation_subject', __('Confirmation subject', 'lloyds-industrial'), $settings); ?>
-                <?php li_mail_render_textarea_row('confirmation_message', __('Confirmation message', 'lloyds-industrial'), $settings); ?>
-            </tbody></table>
+            <section class="li-admin-tab-panel" data-li-tab-panel="mail-automation">
+                <h2><?php esc_html_e('Automated Emails', 'lloyds-industrial'); ?></h2>
+                <p><?php esc_html_e('Customize confirmation and welcome messages. Confirmation messages can use {{confirm_url}}.', 'lloyds-industrial'); ?></p>
+                <table class="form-table" role="presentation"><tbody>
+                    <?php li_mail_render_checkbox_row('welcome_enabled', __('Send welcome email', 'lloyds-industrial'), $settings); ?>
+                    <?php li_mail_render_text_row('welcome_subject', __('Welcome subject', 'lloyds-industrial'), $settings); ?>
+                    <?php li_mail_render_textarea_row('welcome_message', __('Welcome message', 'lloyds-industrial'), $settings); ?>
+                    <?php li_mail_render_text_row('confirmation_subject', __('Confirmation subject', 'lloyds-industrial'), $settings); ?>
+                    <?php li_mail_render_textarea_row('confirmation_message', __('Confirmation message', 'lloyds-industrial'), $settings); ?>
+                </tbody></table>
+                <?php submit_button(__('Save Mailing List Settings', 'lloyds-industrial')); ?>
+            </section>
 
-            <h2><?php esc_html_e('Campaign Delivery', 'lloyds-industrial'); ?></h2>
-            <p><?php esc_html_e('Queued delivery sends small batches through WP-Cron so mail providers and local servers are not hit with the entire list at once.', 'lloyds-industrial'); ?></p>
-            <table class="form-table" role="presentation"><tbody>
-                <?php li_mail_render_number_row('queue_batch_size', __('Emails per queue batch', 'lloyds-industrial'), $settings, 1, 250); ?>
-                <?php li_mail_render_number_row('queue_interval', __('Queue interval seconds', 'lloyds-industrial'), $settings, 60, HOUR_IN_SECONDS); ?>
-                <?php li_mail_render_textarea_row('footer_text', __('Campaign footer text', 'lloyds-industrial'), $settings); ?>
-            </tbody></table>
+            <section class="li-admin-tab-panel" data-li-tab-panel="mail-delivery">
+                <h2><?php esc_html_e('Campaign Delivery', 'lloyds-industrial'); ?></h2>
+                <p><?php esc_html_e('Queued delivery sends small batches through WP-Cron so mail providers and local servers are not hit with the entire list at once.', 'lloyds-industrial'); ?></p>
+                <table class="form-table" role="presentation"><tbody>
+                    <?php li_mail_render_number_row('queue_batch_size', __('Emails per queue batch', 'lloyds-industrial'), $settings, 1, 250); ?>
+                    <?php li_mail_render_number_row('queue_interval', __('Queue interval seconds', 'lloyds-industrial'), $settings, 60, HOUR_IN_SECONDS); ?>
+                    <?php li_mail_render_textarea_row('footer_text', __('Campaign footer text', 'lloyds-industrial'), $settings); ?>
+                </tbody></table>
+                <?php submit_button(__('Save Mailing List Settings', 'lloyds-industrial')); ?>
+            </section>
 
-            <h2><?php esc_html_e('Optional SMTP Provider', 'lloyds-industrial'); ?></h2>
-            <p><?php esc_html_e('When enabled and configured, all WordPress mail will use this SMTP transport. Leave disabled to use the server default.', 'lloyds-industrial'); ?></p>
-            <table class="form-table" role="presentation"><tbody>
-                <?php li_mail_render_checkbox_row('smtp_enabled', __('Use SMTP provider', 'lloyds-industrial'), $settings); ?>
-                <?php li_mail_render_text_row('smtp_host', __('SMTP host', 'lloyds-industrial'), $settings); ?>
-                <?php li_mail_render_number_row('smtp_port', __('SMTP port', 'lloyds-industrial'), $settings, 1, 65535); ?>
-                <?php li_mail_render_select_row('smtp_encryption', __('Encryption', 'lloyds-industrial'), $settings, ['tls' => 'TLS', 'ssl' => 'SSL', '' => __('None', 'lloyds-industrial')]); ?>
-                <?php li_mail_render_checkbox_row('smtp_auth', __('SMTP authentication', 'lloyds-industrial'), $settings); ?>
-                <?php li_mail_render_text_row('smtp_username', __('SMTP username', 'lloyds-industrial'), $settings); ?>
-                <?php li_mail_render_password_row('smtp_password', __('SMTP password', 'lloyds-industrial'), $settings); ?>
-            </tbody></table>
-
-            <?php submit_button(__('Save Mailing List Settings', 'lloyds-industrial')); ?>
+            <section class="li-admin-tab-panel" data-li-tab-panel="mail-smtp">
+                <h2><?php esc_html_e('Optional SMTP Provider', 'lloyds-industrial'); ?></h2>
+                <p><?php esc_html_e('When enabled and configured, all WordPress mail will use this SMTP transport. Leave disabled to use the server default.', 'lloyds-industrial'); ?></p>
+                <table class="form-table" role="presentation"><tbody>
+                    <?php li_mail_render_checkbox_row('smtp_enabled', __('Use SMTP provider', 'lloyds-industrial'), $settings); ?>
+                    <?php li_mail_render_text_row('smtp_host', __('SMTP host', 'lloyds-industrial'), $settings); ?>
+                    <?php li_mail_render_number_row('smtp_port', __('SMTP port', 'lloyds-industrial'), $settings, 1, 65535); ?>
+                    <?php li_mail_render_select_row('smtp_encryption', __('Encryption', 'lloyds-industrial'), $settings, ['tls' => 'TLS', 'ssl' => 'SSL', '' => __('None', 'lloyds-industrial')]); ?>
+                    <?php li_mail_render_checkbox_row('smtp_auth', __('SMTP authentication', 'lloyds-industrial'), $settings); ?>
+                    <?php li_mail_render_text_row('smtp_username', __('SMTP username', 'lloyds-industrial'), $settings); ?>
+                    <?php li_mail_render_password_row('smtp_password', __('SMTP password', 'lloyds-industrial'), $settings); ?>
+                </tbody></table>
+                <?php submit_button(__('Save Mailing List Settings', 'lloyds-industrial')); ?>
+            </section>
         </form>
     </div>
     <?php

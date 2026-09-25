@@ -960,7 +960,9 @@ function li_seo_cache_output(string $html): string
     li_seo_write_cache_config();
 
     $cache_file = trailingslashit($dir) . li_seo_cache_key() . '.html';
-    file_put_contents($cache_file, $html, LOCK_EX);
+    if (wp_is_writable($dir)) {
+        file_put_contents($cache_file, $html, LOCK_EX);
+    }
 
     return $html;
 }
@@ -979,6 +981,10 @@ function li_seo_write_cache_config(): bool
         'ttl' => (int) $settings['cache_ttl'],
         'mobile_separately' => !empty($settings['cache_mobile_separately']),
     ];
+
+    if (!wp_is_writable($dir)) {
+        return false;
+    }
 
     return file_put_contents(trailingslashit($dir) . 'config.json', wp_json_encode($config), LOCK_EX) !== false;
 }
